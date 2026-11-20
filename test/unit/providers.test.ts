@@ -69,7 +69,7 @@ test("demo: unknown topic → explicit not_in_demo error, never a made-up answer
 
 test("demo: non-school level adds an honest caveat", async () => {
   const out = await new DemoProvider().generateLesson({ question: "التركيب الضوئي", level: "advanced", language: "darija" });
-  assert.ok(out.lesson.caveats.some((c) => /school level only/.test(c)));
+  assert.ok(out.lesson.caveats.some((c) => /بالمستوى المدرسي/.test(c)));
 });
 
 test("demo grading: all keywords present → met with evidence found in answer → correct", async () => {
@@ -243,5 +243,5 @@ test("lesson integrity drops broken exercises with a caveat", () => {
   const { lesson, dropped } = enforceLessonIntegrity(l);
   assert.equal(lesson.exercises.length, 2);
   assert.equal(dropped.length, 2);
-  assert.ok(lesson.caveats.some((c) => /removed/.test(c)));
+  assert.ok(lesson.caveats.some((c) => /تحيدو/.test(c)));
 });

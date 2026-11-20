@@ -221,7 +221,7 @@ test("short_text uncertain: explained, does not count toward estimate, escalatio
   assert.equal(body.result.verdict, "uncertain");
   assert.equal(body.result.score, null);
   assert.equal(body.result.countsTowardEstimate, false);
-  assert.match(body.result.uncertaintyReason, /Could not determine/);
+  assert.match(body.result.uncertaintyReason, /ما قدرش يتأكد من/);
   assert.equal(p.judgeCalls.length, 1);
 });
 

@@ -1,7 +1,18 @@
 {
   "id": "photosynthesis",
   "reviewed": false,
-  "matchKeywords": ["التركيب الضوئي", "التمثيل الضوئي", "photosynthese", "photosynthèse", "photosynthesis", "الماكلة ديال النبات", "كيصاوب النبات", "تغذية النبات", "كيف تتغذى النباتات", "النبات كياكل"],
+  "matchKeywords": [
+    "التركيب الضوئي",
+    "التمثيل الضوئي",
+    "photosynthese",
+    "photosynthèse",
+    "photosynthesis",
+    "الماكلة ديال النبات",
+    "كيصاوب النبات",
+    "تغذية النبات",
+    "كيف تتغذى النباتات",
+    "النبات كياكل"
+  ],
   "lesson": {
     "understood": {
       "subject": "life_earth_sciences",
@@ -30,10 +41,22 @@
         "hint": "فكر فشنو كتاخد العروق من التراب، وشنو كتاخد الورقة من الهوا، وشنو كيجي من الشمس.",
         "explanation": "النبتة كتحتاج الضو (طاقة)، والما (من الجذور)، وثاني أكسيد الكربون (من الهوا). التراب كيعطي الما والأملاح المعدنية ولكن ماشي هو الماكلة ديال النبتة.",
         "choices": [
-          { "id": "a", "text": "الضو، الما، وثاني أكسيد الكربون" },
-          { "id": "b", "text": "التراب بوحدو" },
-          { "id": "c", "text": "الأكسجين والظلام" },
-          { "id": "d", "text": "السكر والملح" }
+          {
+            "id": "a",
+            "text": "الضو، الما، وثاني أكسيد الكربون"
+          },
+          {
+            "id": "b",
+            "text": "التراب بوحدو"
+          },
+          {
+            "id": "c",
+            "text": "الأكسجين والظلام"
+          },
+          {
+            "id": "d",
+            "text": "السكر والملح"
+          }
         ],
         "correctChoiceId": "a"
       },
@@ -44,9 +67,18 @@
         "hint": "هو الغاز اللي كنحتاجوه حنا باش نتنفسو.",
         "explanation": "خلال التركيب الضوئي، النبتة كتطرح ثنائي الأكسجين (O₂).",
         "choices": [
-          { "id": "a", "text": "ثاني أكسيد الكربون (CO₂)" },
-          { "id": "b", "text": "الأكسجين (O₂)" },
-          { "id": "c", "text": "الآزوت (N₂)" }
+          {
+            "id": "a",
+            "text": "ثاني أكسيد الكربون (CO₂)"
+          },
+          {
+            "id": "b",
+            "text": "الأكسجين (O₂)"
+          },
+          {
+            "id": "c",
+            "text": "الآزوت (N₂)"
+          }
         ],
         "correctChoiceId": "b"
       },
@@ -58,9 +90,24 @@
         "explanation": "النبتة كتستعمل الطاقة ديال الضو (بفضل اليخضور) باش تحول الما وثاني أكسيد الكربون لمادة عضوية (سكر)، وكتطرح الأكسجين.",
         "rubric": {
           "criteria": [
-            { "id": "light", "description": "Mentions light / the sun as the energy source", "weight": 1, "required": true },
-            { "id": "water", "description": "Mentions water as an input", "weight": 1, "required": true },
-            { "id": "co2", "description": "Mentions carbon dioxide (CO2) as an input", "weight": 1, "required": true }
+            {
+              "id": "light",
+              "description": "ذكر الضو / الشمس كمصدر ديال الطاقة",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "water",
+              "description": "ذكر الما كمادة كتحتاجها النبتة",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "co2",
+              "description": "ذكر ثاني أكسيد الكربون (CO₂)",
+              "weight": 1,
+              "required": true
+            }
           ],
           "acceptedExamples": [
             "النبتة كتاخد الضو ديال الشمس والما و CO₂ وكتصاوب منهم السكر",
@@ -68,7 +115,10 @@
             "La plante utilise l'énergie lumineuse pour fabriquer de la matière organique à partir de l'eau et du CO2"
           ],
           "misconceptions": [
-            { "id": "soil_food", "description": "Believes plants get their food directly from the soil" }
+            {
+              "id": "soil_food",
+              "description": "الفكرة بلي النبتة كتاكل الماكلة ديالها مباشرة من التراب"
+            }
           ],
           "languageSensitive": false
         },
@@ -80,9 +130,37 @@
   },
   "demoKeywords": {
     "q3": {
-      "light": ["الضو", "ضوء", "الضوئية", "الشمس", "lumiere", "lumière", "soleil", "light", "sun", "daw", "chams"],
-      "water": ["الماء", "ماء", "l'eau", "eau", "water", "lma"],
-      "co2": ["ثاني اكسيد الكربون", "ثنائي اكسيد الكربون", "الكربون", "co2", "co₂", "dioxyde", "carbon dioxide", "karbon"]
+      "light": [
+        "الضو",
+        "ضوء",
+        "الضوئية",
+        "الشمس",
+        "lumiere",
+        "lumière",
+        "soleil",
+        "light",
+        "sun",
+        "daw",
+        "chams"
+      ],
+      "water": [
+        "الماء",
+        "ماء",
+        "l'eau",
+        "eau",
+        "water",
+        "lma"
+      ],
+      "co2": [
+        "ثاني اكسيد الكربون",
+        "ثنائي اكسيد الكربون",
+        "الكربون",
+        "co2",
+        "co₂",
+        "dioxyde",
+        "carbon dioxide",
+        "karbon"
+      ]
     }
   }
 }

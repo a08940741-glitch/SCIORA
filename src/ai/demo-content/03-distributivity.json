@@ -1,7 +1,21 @@
 {
   "id": "distributivity",
   "reviewed": false,
-  "matchKeywords": ["النشر", "ننشر", "نشر", "التوزيعية", "خاصية التوزيع", "نشر تعبير", "développer", "developper", "développement", "distributivité", "distributivite", "distributive", "expand"],
+  "matchKeywords": [
+    "النشر",
+    "ننشر",
+    "نشر",
+    "التوزيعية",
+    "خاصية التوزيع",
+    "نشر تعبير",
+    "développer",
+    "developper",
+    "développement",
+    "distributivité",
+    "distributivite",
+    "distributive",
+    "expand"
+  ],
   "lesson": {
     "understood": {
       "subject": "math",
@@ -29,10 +43,22 @@
         "hint": "ضرب 5 فـ x، ومن بعد ضرب 5 فـ 3.",
         "explanation": "5(x + 3) = 5x + 15، حيت 5 كتضرب فكل حد داخل القوس.",
         "choices": [
-          { "id": "a", "text": "5x + 3" },
-          { "id": "b", "text": "5x + 15" },
-          { "id": "c", "text": "x + 15" },
-          { "id": "d", "text": "8x" }
+          {
+            "id": "a",
+            "text": "5x + 3"
+          },
+          {
+            "id": "b",
+            "text": "5x + 15"
+          },
+          {
+            "id": "c",
+            "text": "x + 15"
+          },
+          {
+            "id": "d",
+            "text": "8x"
+          }
         ],
         "correctChoiceId": "b"
       },
@@ -43,7 +69,9 @@
         "hint": "نشر 2(x + 3) أولا، ومن بعد نقص x.",
         "explanation": "2(x + 3) − x = 2x + 6 − x = x + 6.",
         "answer": "x + 6",
-        "variables": ["x"]
+        "variables": [
+          "x"
+        ]
       },
       {
         "id": "q3",
@@ -53,7 +81,12 @@
         "explanation": "كنضربو العدد اللي برا القوس فكل حد داخل القوس: k(a + b) = ka + kb.",
         "rubric": {
           "criteria": [
-            { "id": "multiply_each", "description": "Explains that the factor outside the parentheses multiplies EACH term inside", "weight": 1, "required": true }
+            {
+              "id": "multiply_each",
+              "description": "العدد اللي برا القوس كيضرب فكل حد داخل القوس",
+              "weight": 1,
+              "required": true
+            }
           ],
           "acceptedExamples": [
             "كنضربو العدد اللي برا فكل واحد من اللي داخل القوس",
@@ -61,7 +94,10 @@
             "On multiplie le facteur par chaque terme de la parenthèse"
           ],
           "misconceptions": [
-            { "id": "first_term_only", "description": "Multiplies only the first term inside the parentheses" }
+            {
+              "id": "first_term_only",
+              "description": "الضرب غير فالحد الأول داخل القوس"
+            }
           ],
           "languageSensitive": false
         },
@@ -73,7 +109,16 @@
   },
   "demoKeywords": {
     "q3": {
-      "multiply_each": ["فكل", "في كل", "كل حد", "chaque", "each", "every", "f kol", "fkol"]
+      "multiply_each": [
+        "فكل",
+        "في كل",
+        "كل حد",
+        "chaque",
+        "each",
+        "every",
+        "f kol",
+        "fkol"
+      ]
     }
   }
 }

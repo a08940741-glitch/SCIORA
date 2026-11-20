@@ -78,13 +78,13 @@ export class DemoProvider implements AIProvider {
     if (!file) {
       throw new ProviderError(
         "not_in_demo",
-        "Demo mode: this topic isn't available without the AI connection. Try one of the listed demo topics.",
+        "وضع DEMO: هاد الموضوع ما متوفرش بلا الاتصال بالذكاء الاصطناعي. جرب واحد من المواضيع المتوفرة فالعرض التجريبي.",
       );
     }
     const caveats = [...file.lesson.caveats];
-    caveats.unshift("DEMO: pre-written sample content, not generated live by AI.");
-    if (req.level !== "school") caveats.push("Demo content is written at school level only; the selected level does not change it.");
-    if (!file.reviewed) caveats.push("This demo lesson has not yet been reviewed by the project owner.");
+    caveats.unshift("DEMO: محتوى تجريبي مكتوب مسبقاً، ماشي مولّد مباشرة بالذكاء الاصطناعي.");
+    if (req.level !== "school") caveats.push("المحتوى التجريبي مكتوب غير بالمستوى المدرسي؛ المستوى اللي اخترتي ما كيبدلوش.");
+    if (!file.reviewed) caveats.push("هاد الدرس التجريبي مازال ما تراجعش من طرف صاحب المشروع.");
     return {
       lesson: { ...file.lesson, caveats: caveats.slice(0, 5) },
       meta: { source: "demo", simulated: true, model: null, fallbackUsed: false, generatedAt: new Date().toISOString() },
@@ -106,8 +106,8 @@ export class DemoProvider implements AIProvider {
       criteria,
       misconceptionId: null,
       feedback: allMet
-        ? "Demo grading: the key ideas were found in your answer."
-        : "Demo grading is limited: it only looks for certain keywords and may miss correct answers written differently. Compare your answer with the model answer.",
+        ? "تصحيح تجريبي: لقينا الأفكار الأساسية فالجواب ديالك."
+        : "التصحيح التجريبي محدود: كيقلب غير على كلمات معينة، وممكن ما يعرفش جواب صحيح مكتوب بطريقة أخرى. قارن الجواب ديالك مع الجواب الصحيح.",
       confidence: "medium",
     };
     return { judgement, source: "demo", simulated: true, model: null, fallbackUsed: false, method: "demo_keywords" };

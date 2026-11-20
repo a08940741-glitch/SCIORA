@@ -40,7 +40,7 @@ export function enforceLessonIntegrity(lesson: GeneratedLesson): { lesson: Gener
   }
   const caveats = [...lesson.caveats];
   if (dropped.length > 0 && caveats.length < 5) {
-    caveats.push("Some generated exercises were removed because they failed SCIORA's automatic checks.");
+    caveats.push("تحيدو بعض التمارين حيت ما دازوش الفحص الأوتوماتيكي ديال SCIORA.");
   }
   return { lesson: { ...lesson, exercises: kept, caveats }, dropped };
 }

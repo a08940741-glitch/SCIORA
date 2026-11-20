@@ -1,1 +1,70 @@
-<!doctype html><title>SCIORA</title>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SCIORA · Darija AI Study</title>
+  <meta name="description" content="SCIORA: Global Knowledge & Learning Intelligence. Phase 1: Darija AI Study.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">تخطى للمحتوى</a>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">S</span>
+      <div>
+        <h1 class="brand-name" dir="ltr">SCIORA</h1>
+        <p class="tagline" id="tagline"></p>
+      </div>
+    </div>
+  </header>
+
+  <div id="mode-banner" class="mode-banner" role="status">…</div>
+
+  <main id="main" class="layout">
+    <div class="main-col">
+      <section class="card ask-card">
+        <form id="ask-form" novalidate>
+          <label id="ask-label" for="question" class="label"></label>
+          <textarea id="question" rows="3" maxlength="1000" required></textarea>
+          <div class="row">
+            <div class="field">
+              <label id="level-label" for="level" class="label"></label>
+              <select id="level"></select>
+            </div>
+            <div class="field">
+              <label id="language-label" for="language" class="label"></label>
+              <select id="language"></select>
+            </div>
+            <button id="ask-btn" type="submit" class="btn btn-primary"></button>
+          </div>
+        </form>
+        <div id="demo-topics"></div>
+      </section>
+
+      <div id="lesson"></div>
+      <div id="exercises"></div>
+    </div>
+
+    <aside class="side-col">
+      <section class="card" id="estimate">
+        <h2 id="estimate-title" class="side-title"></h2>
+        <div id="estimate-body"></div>
+        <button id="clear-btn" type="button" class="btn btn-secondary"></button>
+        <p id="clear-msg" class="muted" role="status"></p>
+      </section>
+      <section class="card" id="responsible">
+        <h2 id="responsible-title" class="side-title"></h2>
+        <ul id="responsible-list" class="responsible"></ul>
+        <p id="phase-note" class="muted"></p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="footer" dir="ltr">
+    SCIORA · Global Knowledge &amp; Learning Intelligence · WAICY 2026 AI Showcase · Phase 1
+  </footer>
+</body>
+</html>

@@ -1,7 +1,18 @@
 {
   "id": "pythagoras",
   "reviewed": false,
-  "matchKeywords": ["فيثاغورس", "فيتاغورس", "pythagore", "pythagoras", "المثلث القائم", "triangle rectangle", "right triangle", "الوتر", "hypoténuse", "hypotenuse"],
+  "matchKeywords": [
+    "فيثاغورس",
+    "فيتاغورس",
+    "pythagore",
+    "pythagoras",
+    "المثلث القائم",
+    "triangle rectangle",
+    "right triangle",
+    "الوتر",
+    "hypoténuse",
+    "hypotenuse"
+  ],
   "lesson": {
     "understood": {
       "subject": "math",
@@ -30,9 +41,18 @@
         "hint": "قلب على الضلع اللي ما كيقيسش الزاوية القائمة.",
         "explanation": "الوتر هو الضلع المقابل للزاوية القائمة، وهو أطول ضلع فالمثلث القائم.",
         "choices": [
-          { "id": "a", "text": "أقصر ضلع فالمثلث" },
-          { "id": "b", "text": "الضلع المقابل للزاوية القائمة" },
-          { "id": "c", "text": "أي ضلع من الأضلاع" }
+          {
+            "id": "a",
+            "text": "أقصر ضلع فالمثلث"
+          },
+          {
+            "id": "b",
+            "text": "الضلع المقابل للزاوية القائمة"
+          },
+          {
+            "id": "c",
+            "text": "أي ضلع من الأضلاع"
+          }
         ],
         "correctChoiceId": "b"
       },
@@ -55,8 +75,18 @@
         "explanation": "فمثلث قائم الزاوية، مربع الوتر كيساوي مجموع مربعي الضلعين الآخرين. كتستعمل غير فالمثلث القائم الزاوية.",
         "rubric": {
           "criteria": [
-            { "id": "relation", "description": "States that the square of the hypotenuse equals the sum of the squares of the other two sides (in words or as a formula)", "weight": 2, "required": true },
-            { "id": "right_triangle", "description": "States that it applies only to right triangles", "weight": 1, "required": true }
+            {
+              "id": "relation",
+              "description": "مربع الوتر كيساوي مجموع مربعي الضلعين لخرين (بالكلام ولا بالصيغة)",
+              "weight": 2,
+              "required": true
+            },
+            {
+              "id": "right_triangle",
+              "description": "المبرهنة كتخدم غير فالمثلث القائم الزاوية",
+              "weight": 1,
+              "required": true
+            }
           ],
           "acceptedExamples": [
             "فالمثلث القائم، مربع الوتر = مجموع مربعات الضلعين لخرين",
@@ -64,8 +94,14 @@
             "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés"
           ],
           "misconceptions": [
-            { "id": "any_triangle", "description": "Believes the theorem applies to any triangle" },
-            { "id": "no_squares", "description": "Adds the side lengths without squaring them" }
+            {
+              "id": "any_triangle",
+              "description": "الفكرة بلي المبرهنة كتخدم فأي مثلث"
+            },
+            {
+              "id": "no_squares",
+              "description": "جمع أطوال الأضلاع بلا ما نربعوهم"
+            }
           ],
           "languageSensitive": false
         },
@@ -77,8 +113,25 @@
   },
   "demoKeywords": {
     "q3": {
-      "relation": ["مربع الوتر", "مربع", "مربعات", "carré", "carre", "square", "^2", "mourabba3"],
-      "right_triangle": ["قائم", "قائمة", "rectangle", "right triangle", "right angle", "90", "9a2im"]
+      "relation": [
+        "مربع الوتر",
+        "مربع",
+        "مربعات",
+        "carré",
+        "carre",
+        "square",
+        "^2",
+        "mourabba3"
+      ],
+      "right_triangle": [
+        "قائم",
+        "قائمة",
+        "rectangle",
+        "right triangle",
+        "right angle",
+        "90",
+        "9a2im"
+      ]
     }
   }
 }

@@ -17,7 +17,7 @@ import { GradeRequest, LessonRequest, toPublicLesson, type GradeResult } from ".
 import { gradeExpression, gradeMcq, gradeNumeric, isValidChoice, type DeterministicOutcome } from "./domain/grading.ts";
 import { normalizeAnswer } from "./domain/normalize.ts";
 import { aggregate } from "./domain/rubric-aggregate.ts";
-import { correctAnswerText, ruleFeedback, UNREADABLE_HINT } from "./domain/feedback.ts";
+import { correctAnswerText, ruleFeedback, uncertaintyText, UNREADABLE_HINT } from "./domain/feedback.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(HERE, "..", "public");
@@ -274,7 +274,7 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
           feedback: agg.verdict === "uncertain" ? `${ruleFeedback(payload.language, "uncertain")} ${judged.judgement.feedback}` : judged.judgement.feedback,
           criteria: agg.criteria.map((c) => ({ id: c.id, description: c.description, judgement: c.judgement, evidence: c.evidence })),
           misconception: agg.misconception,
-          uncertaintyReason: agg.uncertaintyReason,
+          uncertaintyReason: agg.verdict === "uncertain" ? uncertaintyText(payload.language, agg.unclearRequired) : null,
           gradedBy: { source: judged.source, simulated: judged.simulated, model: judged.model },
           countsTowardEstimate: agg.verdict !== "uncertain",
         };

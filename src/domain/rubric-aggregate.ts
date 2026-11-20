@@ -31,6 +31,8 @@ export interface AggregateResult {
   criteria: CriterionOutcome[];
   misconception: string | null;
   uncertaintyReason: string | null;
+  /** Descriptions of required criteria that could not be determined (for localized messages). */
+  unclearRequired: string[];
 }
 
 const VALUE: Record<CriterionJudgement["judgement"], number> = { met: 1, partial: 0.5, not_met: 0, unclear: 0 };
@@ -68,7 +70,7 @@ export function aggregate(rubric: Rubric, judgement: WrittenJudgement, studentAn
       unclearRequired.length > 0
         ? `Could not determine: ${unclearRequired.map((c) => c.description).join("; ")}`
         : "The grader reported low confidence.";
-    return { verdict: "uncertain", score: null, criteria, misconception, uncertaintyReason: reason };
+    return { verdict: "uncertain", score: null, criteria, misconception, uncertaintyReason: reason, unclearRequired: unclearRequired.map((c) => c.description) };
   }
 
   const totalWeight = rubric.criteria.reduce((s, c) => s + c.weight, 0);
@@ -80,5 +82,5 @@ export function aggregate(rubric: Rubric, judgement: WrittenJudgement, studentAn
   else if (required.every((c) => c.judgement === "not_met")) verdict = "incorrect";
   else verdict = "partially_correct";
 
-  return { verdict, score, criteria, misconception, uncertaintyReason: null };
+  return { verdict, score, criteria, misconception, uncertaintyReason: null, unclearRequired: [] };
 }

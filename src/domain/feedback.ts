@@ -51,3 +51,16 @@ export function correctAnswerText(ex: SealedExercise): string {
       return ex.modelAnswer;
   }
 }
+
+/** Localized explanation of WHY a grade is uncertain. */
+export function uncertaintyText(language: Language, unclearRequired: string[]): string {
+  if (unclearRequired.length > 0) {
+    const list = unclearRequired.join(" ؛ ");
+    if (language === "fr") return `SCIORA n'a pas pu déterminer : ${list}`;
+    if (language === "msa") return `لم يتمكن SCIORA من التحقق من: ${list}`;
+    return `SCIORA ما قدرش يتأكد من: ${list}`;
+  }
+  if (language === "fr") return "Le correcteur automatique n'était pas sûr de son jugement.";
+  if (language === "msa") return "لم يكن المصحح الآلي متأكدا من حكمه.";
+  return "المصحح الآلي ما كانش متأكد من الحكم ديالو.";
+}

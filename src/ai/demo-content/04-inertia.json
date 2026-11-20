@@ -1,7 +1,19 @@
 {
   "id": "inertia",
   "reviewed": false,
-  "matchKeywords": ["مبدأ القصور", "مبدا القصور", "القصور", "العطالة", "القانون الأول لنيوتن", "القانون الاول لنيوتن", "نيوتن", "newton", "inertie", "inertia", "principe d'inertie"],
+  "matchKeywords": [
+    "مبدأ القصور",
+    "مبدا القصور",
+    "القصور",
+    "العطالة",
+    "القانون الأول لنيوتن",
+    "القانون الاول لنيوتن",
+    "نيوتن",
+    "newton",
+    "inertie",
+    "inertia",
+    "principe d'inertie"
+  ],
   "lesson": {
     "understood": {
       "subject": "physics",
@@ -29,9 +41,18 @@
         "hint": "رجع للمبدأ: شنو كيوقع فاش المجموع ديال القوى كيساوي صفر؟",
         "explanation": "حسب مبدأ القصور، الحركة المستقيمية المنتظمة كتعني بلي القوى كتعوض بعضياتها (المجموع ديال المتجهات ديالها منعدم). ماشي ضروري تكون ما كايناش حتى قوة.",
         "choices": [
-          { "id": "a", "text": "ما كاينة حتى قوة كتأثر عليه بالضرورة" },
-          { "id": "b", "text": "القوى كتعوض بعضياتها (المجموع ديالها صفر)" },
-          { "id": "c", "text": "كاينة قوة كبيرة كتدفعو لقدام" }
+          {
+            "id": "a",
+            "text": "ما كاينة حتى قوة كتأثر عليه بالضرورة"
+          },
+          {
+            "id": "b",
+            "text": "القوى كتعوض بعضياتها (المجموع ديالها صفر)"
+          },
+          {
+            "id": "c",
+            "text": "كاينة قوة كبيرة كتدفعو لقدام"
+          }
         ],
         "correctChoiceId": "b"
       },
@@ -42,9 +63,18 @@
         "hint": "الجسم ديال الراكب كان كيتحرك قبل الفرانة.",
         "explanation": "الجسم ديال الراكب كيميل يكمل الحركة ديالو (القصور)، والطوبيس هو اللي حبس. إذن الراكب كيبان بحال إلا تدفع لقدام.",
         "choices": [
-          { "id": "a", "text": "حيت الجسم ديالهم كيميل يكمل الحركة ديالو" },
-          { "id": "b", "text": "حيت الطوبيس كيدفعهم لقدام" },
-          { "id": "c", "text": "حيت الريح كيدخل من الشراجم" }
+          {
+            "id": "a",
+            "text": "حيت الجسم ديالهم كيميل يكمل الحركة ديالو"
+          },
+          {
+            "id": "b",
+            "text": "حيت الطوبيس كيدفعهم لقدام"
+          },
+          {
+            "id": "c",
+            "text": "حيت الريح كيدخل من الشراجم"
+          }
         ],
         "correctChoiceId": "a"
       },
@@ -56,8 +86,18 @@
         "explanation": "إلا كانت القوى المطبقة على جسم كتعوض بعضياتها، الجسم إما كيبقى واقف أولا كيبقى يتحرك بخط مستقيم وبسرعة ثابتة.",
         "rubric": {
           "criteria": [
-            { "id": "forces_balance", "description": "Mentions the condition: no net force / forces cancel out (sum of forces is zero)", "weight": 1, "required": true },
-            { "id": "rest_or_uniform", "description": "States the result: the body stays at rest or keeps moving in a straight line at constant speed", "weight": 1, "required": true }
+            {
+              "id": "forces_balance",
+              "description": "الشرط: القوى كتعوض بعضياتها (المجموع ديالها صفر)",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "rest_or_uniform",
+              "description": "النتيجة: الجسم كيبقى واقف ولا كيتحرك بخط مستقيم وبسرعة ثابتة",
+              "weight": 1,
+              "required": true
+            }
           ],
           "acceptedExamples": [
             "إلا كانت القوى كتعوض بعضياتها، الجسم كيبقى واقف ولا كيكمل بنفس السرعة وفخط مستقيم",
@@ -65,7 +105,10 @@
             "Si les forces se compensent, le corps reste immobile ou garde un mouvement rectiligne uniforme"
           ],
           "misconceptions": [
-            { "id": "motion_needs_force", "description": "Believes a constant force is needed to keep a body moving at constant speed" }
+            {
+              "id": "motion_needs_force",
+              "description": "الفكرة بلي خاص قوة ديما باش الجسم يبقى يتحرك بسرعة ثابتة"
+            }
           ],
           "languageSensitive": false
         },
@@ -77,8 +120,34 @@
   },
   "demoKeywords": {
     "q3": {
-      "forces_balance": ["كتعوض", "تتعوض", "تعوض", "منعدم", "صفر", "تتلاشى", "تلغي", "compensent", "nulle", "zero", "cancel", "balanced", "net force"],
-      "rest_or_uniform": ["مستقيم", "ثابتة", "منتظمة", "ساكن", "واقف", "rectiligne", "uniforme", "immobile", "constant", "straight", "at rest"]
+      "forces_balance": [
+        "كتعوض",
+        "تتعوض",
+        "تعوض",
+        "منعدم",
+        "صفر",
+        "تتلاشى",
+        "تلغي",
+        "compensent",
+        "nulle",
+        "zero",
+        "cancel",
+        "balanced",
+        "net force"
+      ],
+      "rest_or_uniform": [
+        "مستقيم",
+        "ثابتة",
+        "منتظمة",
+        "ساكن",
+        "واقف",
+        "rectiligne",
+        "uniforme",
+        "immobile",
+        "constant",
+        "straight",
+        "at rest"
+      ]
     }
   }
 }
