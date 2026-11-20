@@ -43,7 +43,21 @@ Issues found and fixed:
 4. Phase 1 health test asserted Explorer was "planned" — updated narrowly (Explorer not planned, Evidence still planned).
 5. Footer still said "Phase 1" — updated.
 
+## 2026-11-20 — Phase 2B: Evidence Analyzer (autonomous milestone)
+- Re-verified all historical results before changing code: 223/223 unit+API, 12/12 browser, typecheck, audit 0, secret scan OK.
+- Design followed established decisions: D1 (no real retrieval; AI knowledge is never evidence), REASON tier for evidence (approved in Phase 1 Rev 2).
+- Refactor: `runRetrieval()` extracted from `KnowledgeService` (behaviour-preserving; knowledge tests unchanged).
+- Commits `4fe0dd1` … `cd2b88b`.
+
+Issues found and fixed:
+1. Health assertions still expected `evidence_analyzer` in "planned" — updated narrowly (`real_source_retrieval` still planned).
+2. Phase 1 E2E "planned features absent" check targeted the Evidence tab — now targets Google Sign-In (the remaining planned UI feature).
+3. Keyboard tab-order test assumed 3 tabs — extended to the 4-tab order with wrap-around.
+4. Quality review: AI-provided sub-claim ids could collide — ids now assigned by the server (test added).
+5. UX: evidence language label reused "answer language" — own label added; Retry-After now shown in error messages (technical debt from the roadmap).
+
 ## Next actions
 - Owner: review demo lessons and grading labels (Darija + science); decide on API key and live tests.
 - Owner: review Knowledge Explorer demo content; decide on a real source retriever (Wikipedia network approval or paid web search).
-- Then: Phase 2B (Evidence Analyzer) after approval, deployment, submission package.
+- Owner: review Evidence Analyzer demo analyses.
+- Then: decide on real retrieval; deployment preparation; submission package.

@@ -4,10 +4,10 @@
 
 SCIORA is an AI-assisted learning platform. Its first implementation, **Darija AI Study**, helps Moroccan students understand school topics in Moroccan Darija and Arabic, practise with exercises, and get honest, explained feedback.
 
-> **Current status: Phase 1 (learning loop) and Phase 2A (Knowledge Explorer) implemented and tested in demo mode.**
+> **Current status: Phase 1 (learning loop), Phase 2A (Knowledge Explorer) and Phase 2B (Evidence Analyzer) implemented and tested in demo mode.**
 > Live AI mode is built but has **not yet been run against the real API** (no live calls without the project owner's approval).
-> **No real source retrieval exists yet:** live Knowledge Explorer answers are labelled *not source-verified*.
-> Evidence Analyzer (Phase 2B), the Progress screen and optional Google Sign-In are **planned, not implemented.**
+> **No real source retrieval exists yet:** live Knowledge Explorer answers are labelled *not source-verified*, and factual claims in the Evidence Analyzer receive *Insufficient Evidence*.
+> The Progress screen and optional Google Sign-In are **planned, not implemented.**
 > See [`FEATURE_STATUS.md`](FEATURE_STATUS.md).
 
 ## What Phase 1 does
@@ -33,6 +33,13 @@ Question → Understanding → Explanation (Darija + formal) → Example → Exe
 - **Related concepts**, always labelled as AI suggestions.
 - **Learning mode:** simplify, examples, or a short self-check quiz (not graded, not recorded).
 - **Knowledge cards** saved in the browser, organised in collections, with their verification status.
+
+## What Phase 2B (Evidence Analyzer) adds
+
+- Enter a claim (Darija, Arabic, French, English, Arabizi). SCIORA splits it into sub-claims and classifies each as **factual, opinion, prediction, value judgment or ambiguous**.
+- **Verdicts are computed by SCIORA's server, not the AI:** Supported / Contradicted / Mixed / Insufficient Evidence / Not checkable.
+- **Evidence = a quote from a retrieved source that the server has checked.** AI knowledge is never evidence; it appears only as a separate "background — not evidence" note.
+- For every sub-claim SCIORA explains **what evidence would be needed** to check it.
 
 ## Run it
 

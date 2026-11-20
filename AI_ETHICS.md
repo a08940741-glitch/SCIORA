@@ -29,6 +29,16 @@ _This document describes real risks and the safeguards that are actually impleme
 | **Quiz mistaken for assessment** | Quiz is labelled self-check, checked locally, never sent or recorded, never affects the level estimate. | — |
 | **Card misuse** | Cards keep the status SCIORA reported; “checked by me” cannot upgrade it; cards stay in the browser. | Cards are user-editable local notes, not an authoritative record. |
 
+### 1.2 Evidence Analyzer (Phase 2B)
+
+| Risk | Safeguard | Remaining limitation |
+|---|---|---|
+| **AI knowledge passed off as evidence** | Evidence must be a quote found in a server-retrieved source; AI background is a separate "not evidence" note that never affects verdicts. | — |
+| **Fabricated quotes / sources** | Quotes are checked against the cited source's excerpt; unknown ids and fabricated quotes are removed and disclosed. | — |
+| **Opinions judged as true/false** | Opinions, predictions, value judgments and ambiguous claims are "not checkable". | The AI's classification can be wrong. |
+| **Hidden contradictions** | Prompt requires reporting contradicting evidence; mixed evidence yields "mixed". | Depends on retrieved sources, none of which exist yet. |
+| **"Insufficient evidence" misread as "false"** | The UI states explicitly that it means neither true nor false. | Students may still misread it; teacher guidance helps. |
+
 ## 2. Unintended consequences we considered
 - **The level estimate could discourage students.** It is labelled *preliminary*, is based only on answers in SCIORA, never measures intelligence, ignores uncertain results, and the student can always choose the level.
 - **“Uncertain” could confuse students.** SCIORA explains *why* it is unsure, shows the model answer, and suggests asking a teacher.
@@ -45,4 +55,5 @@ _This document describes real risks and the safeguards that are actually impleme
 - Demo lessons and grading labels were drafted with AI assistance and are **not yet reviewed** by the project owner.
 - Phase 1 covers a small set of topics in demo mode; it does not claim curriculum coverage.
 - The level estimate is not a validated assessment instrument.
+- The Evidence Analyzer cannot reach verdicts other than *insufficient evidence* / *not checkable* without a real retriever; its demo analyses are pre-written and unreviewed.
 - The Knowledge Explorer has no real source retrieval yet; its demo answers are pre-written, unreviewed, and in Darija at one level only.

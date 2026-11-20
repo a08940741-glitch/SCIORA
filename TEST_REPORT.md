@@ -1,51 +1,51 @@
 # SCIORA — Test Report
 
-_Only tests that were actually executed are listed. Every row was produced by running the test file. Previous report (Phase 1, commit `163b128`): 154/154 passed._
+_Only executed tests are listed; every row was produced by running the test file. History: Phase 1 154/154 (`163b128`), Phase 2A 235/235 (`d8ee223`)._
 
-## Run summary (Phase 2A)
+## Run summary (Phase 2B)
 
 | Item | Value |
 |---|---|
 | Date | 2026-11-20 |
-| Code version | commit `d8ee223` + documentation changes (no code changes after this run) |
+| Code version | commit `cd2b88b` + documentation changes (no code changes after this run) |
 | Environment | Linux container, Node 22.23.5, Chromium (pre-installed Playwright) |
-| AI mode during tests | **Demo mode or FAKE AI client / FAKE retriever. No real API call and no external network call was made.** |
-| Automated tests | **235 / 235 passed**, 0 failed, 0 skipped |
-| `npm test` (unit + API) | 223 / 223 passed |
-| `npm run test:e2e` (browser) | 12 / 12 passed |
-| `npm run typecheck` | passed (0 errors) |
-| `npm audit` | 0 vulnerabilities (all and production dependencies) |
-| New dependencies in Phase 2A | none (`package.json` unchanged) |
+| AI mode during tests | **Demo mode or FAKE AI client / FAKE retriever. No real API call and no external network call.** |
+| Automated tests | **275 / 275 passed**, 0 failed, 0 skipped |
+| Unit + API | 257 / 257 passed |
+| Browser (Playwright) | 18 / 18 passed |
+| Typecheck | passed |
+| `npm audit` | 0 vulnerabilities |
+| New dependencies since Phase 1 | none |
 | Secret scan | passed |
-| Manual server smoke (`npm start`, demo) | health: demo, knowledge demo, retrieval off; Arabizi knowledge query answered (status demo, 0 sources); quiz transform (self-check, 3 questions) |
+| Manual server smoke (`npm start`, demo) | health: all three modules demo, retrieval off; evidence analysis of a compound claim → 2 sub-claims, insufficient_evidence, basis none |
 
-## Changes to existing tests in Phase 2A (disclosed)
+## Changes to existing tests in Phase 2B (disclosed)
 
 | Test | Change | Reason |
 |---|---|---|
-| `test/api/api.test.ts` — health | Now asserts `knowledge_explorer` is **not** in `plannedNotImplemented`, and `evidence_analyzer` still is | Explorer is implemented; the old assertion became false. Narrow update (same principle as D3). |
-| `test/e2e/workspace.e2e.test.ts` — chips | Locator `.chip` → `#demo-topics .chip` | The new Explorer panel also has 5 topic chips; the old locator counted both panels (10). Intent unchanged. |
-| `test/e2e/workspace.e2e.test.ts` — Phase 2 absence | Asserts only that the **Evidence Analyzer** is absent | Approved decision D3. |
-| `test/helpers/app.ts` | Optional `knowledgeProvider` / `retriever` parameters | Needed to inject fakes; no existing behaviour changed. |
+| `api.test.ts`, `knowledge-api.test.ts` — health | Assert `evidence_analyzer` is no longer planned; `real_source_retrieval` still is | Evidence Analyzer implemented; real retrieval still missing. |
+| `workspace.e2e.test.ts` — planned feature check | Now asserts no Google Sign-In control exists | Explorer and Evidence are implemented; Google Sign-In is the remaining planned UI feature. |
+| `explorer.e2e.test.ts` — keyboard tabs | Tab order now includes the Evidence tab and checks wrap-around | A 4th tab was added. |
+| `test/helpers/app.ts` | Optional `evidenceProvider` | To inject fakes. |
 
 ## NOT executed / not verified
 
 | Item | Status |
 |---|---|
-| Live lesson / grading / knowledge calls against the real API | **Not run** — no key, no approval |
-| `npm run eval:grading` | **Not run** |
-| Real source retrieval | **Not implemented** (decision D1: NoopRetriever only). `source_backed` is reachable only with the FAKE test retriever. |
-| Quality of live Darija explanations / knowledge answers | **Not evaluated** |
-| Owner review of demo lessons, knowledge demo content and grading labels | **Pending** (all marked unreviewed) |
+| Any live AI call (lessons, grading, knowledge, evidence) | **Not run** — no key, no approval |
+| `npm run eval:grading`, `npm run test:live` | **Not run** (gated) |
+| Real source retrieval | **Not implemented** — factual claims always get *insufficient evidence* outside tests |
+| Quality of live evidence analysis (claim splitting, classification) | **Not evaluated** |
+| Owner review of all demo content and grading labels | **Pending** |
 
-## What the Phase 2A tests prove — and what they do not
+## What the Phase 2B tests prove — and what they do not
 
-- **Prove:** the AI cannot introduce source titles/URLs (schema); citations to non-retrieved ids are removed and disclosed; verification status is decided by the server (demo / not_source_verified / source_backed) and live answers without retrieval are labelled not source-verified; retrieved sources are https-only, sanitized and re-identified; hostile source/question/transform text cannot break prompt delimiters; retrieval failures and timeouts degrade gracefully; provider errors map to clear HTTP errors and are never replaced by demo content; no prompt, secret or key appears in responses or logs; the shared daily limit and rate limit apply; quizzes are local self-checks (no API call, no level-estimate change); cards are re-validated on load (tampered HTML/javascript links rendered safely); the UI shows no English words in Arabic interface text; tabs work by keyboard; layout works on mobile.
-- **Do not prove:** the quality or factual accuracy of live AI answers, or that a real retriever would work — none exists yet.
+- **Prove:** evidence counts only when it quotes the excerpt of a server-retrieved source (fabricated quotes, unknown ids and duplicates are removed and disclosed); the AI cannot set verdicts or sub-claim ids; opinions, predictions, value judgments and ambiguous claims are never rated true/false; overall verdict rules (incl. mixed and insufficient); retrieval timeout degrades safely; provider errors map to HTTP errors and are never replaced by demo content; no prompts, secrets or claim text leak to responses or logs; shared daily limit and rate limit; the UI labels AI background as not evidence, shows no English words in Arabic interface text, and works on mobile.
+- **Do not prove:** that a live model splits and classifies claims well, or that real sources would be retrieved — no retriever exists.
 
 ## Detailed results
 
-### Knowledge cards store (2A)
+### Knowledge cards store
 `test/unit/cards-store.test.ts` — 11/11 passed
 
 | # | Test | Result |
@@ -62,7 +62,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 10 | invalid input (no title) is refused; storage failure reported | ✅ PASS |
 | 11 | export contains the cards and no secrets | ✅ PASS |
 
-### Configuration (demo/live switch, secrets, model routing)
+### Configuration
 `test/unit/config.test.ts` — 13/13 passed
 
 | # | Test | Result |
@@ -81,7 +81,49 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 12 | escalation and live-test switches parse on/off values | ✅ PASS |
 | 13 | unknown AI mode is rejected | ✅ PASS |
 
-### Encrypted exercise tokens (AES-256-GCM)
+### UI error messages incl. Retry-After
+`test/unit/errors-ui.test.ts` — 4/4 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | network failure → localized network message | ✅ PASS |
+| 2 | known codes → Darija message; unknown → server message → generic | ✅ PASS |
+| 3 | unreadable_answer keeps the server's localized hint | ✅ PASS |
+| 4 | Retry-After is shown in seconds/minutes for rate limit and capacity only | ✅ PASS |
+
+### Evidence — providers and service (2B)
+`test/unit/evidence-service.test.ts` — 12/12 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | demo content: 5 files, unreviewed, no evidence and no URLs anywhere (D1) | ✅ PASS |
+| 2 | demo matches Darija, French, English and Arabizi claims | ✅ PASS |
+| 3 | demo verdicts: factual → insufficient_evidence (no sources), opinion/prediction → not_checkable | ✅ PASS |
+| 4 | demo: unknown claim → not_in_demo; other language → honest caveat | ✅ PASS |
+| 5 | live, no retrieval (D1): AI-invented evidence removed → insufficient_evidence, removal disclosed | ✅ PASS |
+| 6 | live + FAKE retriever: real quote → contradicted; fabricated quote removed | ✅ PASS |
+| 7 | live + FAKE retriever: opinion stays not_checkable even with a real quote | ✅ PASS |
+| 8 | retriever failure/timeout degrades to no evidence (insufficient), not an error | ✅ PASS |
+| 9 | provider errors (refusal, malformed, 429, connection) propagate as ProviderError | ✅ PASS |
+| 10 | hostile claim and hostile source cannot break prompt delimiters | ✅ PASS |
+| 11 | factory: demo never creates a client; live uses the REASON model | ✅ PASS |
+| 12 | sub-claim ids are re-assigned by the server (duplicates from the AI cannot collide) | ✅ PASS |
+
+### Evidence — schemas and verdict engine (2B)
+`test/unit/evidence-verdicts.test.ts` — 8/8 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | request: limits, default language, strict | ✅ PASS |
+| 2 | AI output cannot carry URLs, titles or a verdict field | ✅ PASS |
+| 3 | quote must appear in the cited source's excerpt (normalized) | ✅ PASS |
+| 4 | evidence with unknown source id, fabricated quote, or duplicate is removed and counted | ✅ PASS |
+| 5 | no retrieved sources → every evidence item is removed | ✅ PASS |
+| 6 | sub-claim verdicts from verified evidence only | ✅ PASS |
+| 7 | opinions, predictions, value judgments and ambiguous claims are not checkable (even with 'evidence') | ✅ PASS |
+| 8 | overall verdict rules | ✅ PASS |
+
+### Encrypted exercise tokens
 `test/unit/exercise-token.test.ts` — 15/15 passed
 
 | # | Test | Result |
@@ -102,7 +144,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 14 | short secrets are refused | ✅ PASS |
 | 15 | error httpStatus is 400 for non-expiry failures (no detail leaked) | ✅ PASS |
 
-### Rule-based grading and Arabic normalization
+### Rule-based grading
 `test/unit/grading-deterministic.test.ts` — 15/15 passed
 
 | # | Test | Result |
@@ -123,7 +165,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 14 | expression: unparseable or disallowed input → unknown (goes to AI, not incorrect) | ✅ PASS |
 | 15 | expression: gradeExpression maps outcomes | ✅ PASS |
 
-### Grading fixtures (37 cases, offline pipeline)
+### Grading fixtures (37 cases)
 `test/unit/grading-fixtures.test.ts` — 6/6 passed
 
 | # | Test | Result |
@@ -135,7 +177,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 5 | demo keyword grader safety on fixtures: never 'incorrect', never a false 'correct' | ✅ PASS |
 | 6 | review status is reported honestly (owner review still pending) | ✅ PASS |
 
-### Knowledge Explorer — connections and learning mode (2A)
+### Knowledge — connections/learning mode
 `test/unit/knowledge-learning.test.ts` — 6/6 passed
 
 | # | Test | Result |
@@ -147,7 +189,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 5 | learning mode is independent of Phase 1 grading (no token, no exercise set in the response) | ✅ PASS |
 | 6 | demo query returns cleaned suggestions for every topic | ✅ PASS |
 
-### Knowledge Explorer — providers (demo; live with FAKE client) (2A)
+### Knowledge — providers
 `test/unit/knowledge-providers.test.ts` — 10/10 passed
 
 | # | Test | Result |
@@ -163,7 +205,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 9 | live provider error handling is the shared Phase 1 behaviour (refusal, malformed, 429, unavailable) | ✅ PASS |
 | 10 | factory: demo config never creates a client; live config uses the factory (fake) | ✅ PASS |
 
-### Knowledge Explorer — schemas (2A)
+### Knowledge — schemas
 `test/unit/knowledge-schemas.test.ts` — 8/8 passed
 
 | # | Test | Result |
@@ -177,7 +219,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 7 | quiz output: choice ids a-d only | ✅ PASS |
 | 8 | retrieved source schema requires a real URL | ✅ PASS |
 
-### Knowledge Explorer — core service and retrieval orchestration (2A)
+### Knowledge — service/retrieval
 `test/unit/knowledge-service.test.ts` — 8/8 passed
 
 | # | Test | Result |
@@ -191,7 +233,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 7 | more than 5 retrieved sources are capped at 5 | ✅ PASS |
 | 8 | provider errors propagate unchanged (route maps them to HTTP) | ✅ PASS |
 
-### Knowledge Explorer — source transparency, verification, prompt injection (2A)
+### Knowledge — sources/verification/injection
 `test/unit/knowledge-sources.test.ts` — 14/14 passed
 
 | # | Test | Result |
@@ -211,7 +253,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 13 | system prompt forbids invented sources and treats sources as data | ✅ PASS |
 | 14 | service.query with fake retriever + citing provider → source_backed with sanitized sources | ✅ PASS |
 
-### Preliminary level estimate (learner model)
+### Level estimate
 `test/unit/learner-model.test.ts` — 10/10 passed
 
 | # | Test | Result |
@@ -227,7 +269,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 9 | storage failures do not crash (e.g. storage disabled) | ✅ PASS |
 | 10 | no personal data is stored: only topic label, rating, counts, timestamp | ✅ PASS |
 
-### Live-call guards (scripts refuse without approval)
+### Live-call guards
 `test/unit/live-gate.test.ts` — 6/6 passed
 
 | # | Test | Result |
@@ -239,7 +281,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 5 | scripts/live-smoke.ts refuses with a key but no SCIORA_ALLOW_LIVE_TESTS | ✅ PASS |
 | 6 | scripts/live-smoke.ts refuses with approval switch but demo mode | ✅ PASS |
 
-### Phase 1 AI providers (demo; Anthropic with FAKE client)
+### Phase 1 providers (fake client)
 `test/unit/providers.test.ts` — 20/20 passed
 
 | # | Test | Result |
@@ -265,7 +307,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 19 | live config creates exactly one client via the factory (fake here) with configured models | ✅ PASS |
 | 20 | lesson integrity drops broken exercises with a caveat | ✅ PASS |
 
-### Replay store (atomic reservation, fail-closed capacity)
+### Replay store
 `test/unit/replay-store.test.ts` — 12/12 passed
 
 | # | Test | Result |
@@ -283,7 +325,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 11 | sweep removes only expired records | ✅ PASS |
 | 12 | answer hasher: deterministic, keyed, and does not contain the answer | ✅ PASS |
 
-### Rubric aggregation and evidence check
+### Rubric aggregation
 `test/unit/rubric-aggregate.test.ts` — 13/13 passed
 
 | # | Test | Result |
@@ -302,7 +344,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 12 | evidence check tolerates tashkeel, alef forms and punctuation differences | ✅ PASS |
 | 13 | rubric with no required criteria treats all criteria as required | ✅ PASS |
 
-### Phase 1 schemas and public (browser-safe) view
+### Phase 1 schemas / public view
 `test/unit/schemas.test.ts` — 8/8 passed
 
 | # | Test | Result |
@@ -316,7 +358,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 7 | GradeRequest: limits and strictness | ✅ PASS |
 | 8 | WrittenJudgement schema rejects unknown judgement values | ✅ PASS |
 
-### Phase 1 HTTP API (security, transparency, concurrency, capacity)
+### Phase 1 HTTP API
 `test/api/api.test.ts` — 31/31 passed
 
 | # | Test | Result |
@@ -353,7 +395,23 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 30 | static: index served; server source and demo answer files are NOT served | ✅ PASS |
 | 31 | no-secret-in-logs: tokens, answers, secrets and keys never appear in logs | ✅ PASS |
 
-### Knowledge Explorer HTTP API (2A)
+### Evidence HTTP API (2B)
+`test/api/evidence-api.test.ts` — 10/10 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | health reports the evidence module (demo, no retrieval, 5 demo claims) | ✅ PASS |
+| 2 | demo analysis: insufficient_evidence, basis none, no sources, DEMO caveat | ✅ PASS |
+| 3 | demo opinion → not_checkable; unknown claim → 404 not_in_demo | ✅ PASS |
+| 4 | live (fake), no retrieval: invented evidence removed → insufficient_evidence | ✅ PASS |
+| 5 | live (fake) + FAKE retriever: verified quote → contradicted with https source | ✅ PASS |
+| 6 | live failure → error, never demo content | ✅ PASS |
+| 7 | validation: bad bodies → 400; oversized → 413 | ✅ PASS |
+| 8 | no prompt, secret or key in responses; claim text not in logs | ✅ PASS |
+| 9 | shared daily limit covers evidence calls (live); demo calls are free | ✅ PASS |
+| 10 | rate limit and security headers apply | ✅ PASS |
+
+### Knowledge HTTP API
 `test/api/knowledge-api.test.ts` — 17/17 passed
 
 | # | Test | Result |
@@ -376,7 +434,19 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 16 | security headers present on knowledge routes; no CORS | ✅ PASS |
 | 17 | logs never contain the question text or retrieved excerpts | ✅ PASS |
 
-### Browser E2E — Knowledge Explorer and cards (2A)
+### Browser — Evidence Analyzer (2B)
+`test/e2e/evidence.e2e.test.ts` — 6/6 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | demo: factual claim → insufficient evidence, honest basis banner, background labelled not evidence | ✅ PASS |
+| 2 | demo: opinion → not checkable; compound claim → two sub-claims | ✅ PASS |
+| 3 | demo claim chips fill the claim box; unknown claim shows a localized error | ✅ PASS |
+| 4 | no English leakage in the evidence interface text | ✅ PASS |
+| 5 | FAKE live provider + FAKE retriever: verified quote shown with source link; verdict contradicted | ✅ PASS |
+| 6 | mobile: evidence panel without horizontal overflow | ✅ PASS |
+
+### Browser — Knowledge Explorer and cards
 `test/e2e/explorer.e2e.test.ts` — 7/7 passed
 
 | # | Test | Result |
@@ -389,7 +459,7 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 | 6 | mobile: explorer renders in RTL without horizontal overflow | ✅ PASS |
 | 7 | FAKE live provider + FAKE retriever: AI label, source_backed banner, safe https source links | ✅ PASS |
 
-### Browser E2E — learning assistant (Phase 1)
+### Browser — learning assistant
 `test/e2e/workspace.e2e.test.ts` — 5/5 passed
 
 | # | Test | Result |
@@ -402,5 +472,6 @@ _Only tests that were actually executed are listed. Every row was produced by ru
 
 ## Known limitations
 
-- Phase 1: in-memory replay store (restart clears it; single process); numeric parser does not evaluate roots; demo keyword grading is conservative; 37 fixtures, unreviewed.
-- Phase 2A: no real source retrieval; demo knowledge content in Darija only and at one level; knowledge cards are browser-local and user-editable; quiz answers are visible to the student by design (self-practice).
+- Phase 1: in-memory replay store (single process; restart clears it); numeric parser does not evaluate roots; conservative demo keyword grading; 37 unreviewed fixtures.
+- Phase 2A: no real retrieval; demo knowledge content Darija-only, one level; cards browser-local and user-editable.
+- Phase 2B: no real retrieval, so verdicts other than *insufficient evidence* / *not checkable* occur only with the fake test retriever; demo analyses are Darija-only and unreviewed.

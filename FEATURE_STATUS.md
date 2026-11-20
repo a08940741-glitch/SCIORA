@@ -1,6 +1,6 @@
 # SCIORA — Feature Status & Roadmap
 
-_Last updated: 2026-11-20 (after Phase 2A — Knowledge Explorer) · Deadline (reported from the WAICY 2026 Guidebook): 2026-11-29, 5:00 PM ET (to be re-verified on the official portal)._
+_Last updated: 2026-11-20 (after Phase 2B — Evidence Analyzer) · Deadline (reported from the WAICY 2026 Guidebook): 2026-11-29, 5:00 PM ET (to be re-verified on the official portal)._
 
 Status labels used in this file:
 
@@ -11,7 +11,7 @@ Status labels used in this file:
 | **Planned — Phase N** | Designed or listed, **not implemented**. Must not be presented as working. |
 | **Awaiting approval** | Blocked on a decision by the project owner. |
 
-> Current state (2026-11-20): **Phase 1 and Phase 2A (Knowledge Explorer) implemented; tested in demo mode and with a fake AI client / fake retriever.** No real source retrieval exists (decision D1). Live AI mode has **not** been run against the real API (awaiting owner approval and key). Demo lessons and grading labels are **not yet reviewed** by the owner.
+> Current state (2026-11-20): **Phase 1, Phase 2A (Knowledge Explorer) and Phase 2B (Evidence Analyzer) implemented; tested in demo mode and with a fake AI client / fake retriever.** No real source retrieval exists (decision D1). Live AI mode has **not** been run against the real API (awaiting owner approval and key). Demo lessons and grading labels are **not yet reviewed** by the owner.
 
 ---
 
@@ -62,12 +62,26 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 | UI: tabs (learning / explorer / cards), Arabic RTL, mobile, no English leakage in interface text | **Implemented & tested** (Playwright) |
 | Demo knowledge content (5 topics, no sources) | **Implemented** — **unreviewed** |
 
+## Phase 2B — Evidence Analyzer
+
+| Feature | Status |
+|---|---|
+| Claim input in Darija / MSA / French / English / Arabizi; analysis language darija, msa, fr, en | **Implemented & tested** (demo; live provider with fake client only, REASON tier) |
+| Claim split into up to 6 sub-claims, classified factual / opinion / prediction / value judgment / ambiguous | **Implemented & tested** (server re-assigns ids) |
+| Evidence items must quote a server-retrieved source excerpt (verified by the server); others removed and disclosed | **Implemented & tested** |
+| Server-side verdicts: Supported / Contradicted / Mixed / Insufficient Evidence / Not checkable | **Implemented & tested** |
+| Missing-evidence guidance per sub-claim | **Implemented & tested** |
+| AI background note, displayed separately as "not evidence", never affects verdicts | **Implemented & tested** |
+| `POST /api/evidence/analyze` (shared daily limit, rate limit, CSP) | **Implemented & tested** |
+| Evidence tab (Arabic RTL, mobile, no English leakage) | **Implemented & tested** (Playwright) |
+| Demo analyses (5 claims, no sources/evidence) | **Implemented** — **unreviewed** |
+| Real evidence retrieval | **Not implemented** (D1) — factual claims receive *Insufficient Evidence* outside tests |
+
 ## Phase 2 — Remaining planned features (NOT implemented)
 
 | Priority | Feature | Status | Notes |
 |---|---|---|---|
-| P1 | Evidence Analyzer (Supported / Contradicted / Mixed Evidence / Insufficient Evidence) | **Planned — Phase 2B** | Not built. Not shown in the interface. |
-| P1 | Real source retriever for Knowledge Explorer | **Decision pending** | Options: Wikipedia API (needs network approval), paid web-search tool (live only). |
+| P1 | Real source retriever for Knowledge Explorer **and Evidence Analyzer** | **Decision pending** | Options: Wikipedia API (needs network approval), paid web-search tool (live only). |
 | P1 | Learning Progress screen | **Planned — Phase 2** | Built only from stored, real results. |
 | P1 | Landing page, Settings, full Responsible-AI / limitations page, French interface | **Planned — Phase 2** | Phase 1 has a short responsible-use panel only. |
 | P2 | **Optional Google Sign-In + progress sync** | **Planned — Phase 2** | Full design: [`docs/planned/GOOGLE_SIGN_IN.md`](docs/planned/GOOGLE_SIGN_IN.md). Requires a database and an owner decision on hosting. |

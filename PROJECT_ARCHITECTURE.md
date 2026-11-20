@@ -1,4 +1,4 @@
-# SCIORA — Project Architecture (Phase 1 + Phase 2A)
+# SCIORA — Project Architecture (Phase 1 + 2A + 2B)
 
 _Status: describes the code as implemented on 2026-11-20 (Phase 1 and Phase 2A). Planned features are marked as such._
 
@@ -156,5 +156,26 @@ Elo-style rating per topic: start 1000, exercise difficulty by level (900–1200
 ### 5.6 Model routing
 Answers: LEARN (Sonnet 5.5, effort medium). Transforms: FAST (Haiku 5.5, effort low). REASON unused. All configurable; no live calls made so far.
 
-## 6. Planned (not implemented)
-Evidence Analyzer (Phase 2B), real source retriever, Progress screen, landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.
+## 6. Evidence Analyzer (Phase 2B)
+
+### 6.1 Modules
+| File | Responsibility |
+|---|---|
+| `src/evidence/schemas.ts` | Request, AI output (no URL/title/verdict fields), response shapes. |
+| `src/evidence/verdicts.ts` | Evidence check (quote must appear in the cited retrieved source's excerpt, ≥ 8 normalized chars, no duplicates) and verdict rules. |
+| `src/evidence/prompts.ts` | Fixed system prompt; claim and sources neutralized inside delimited data blocks. |
+| `src/evidence/provider.ts` | `EvidenceProvider`; `AnthropicEvidenceProvider` (REASON tier, shared structured call); `DemoEvidenceProvider` (no evidence ever). |
+| `src/evidence/service.ts` | Shared `runRetrieval()` → provider → evidence check → verdicts; factory with the standard demo/live rule. |
+| `public/js/evidence.js` | Evidence tab UI. |
+
+### 6.2 Verdict rules (server)
+- Sub-claim: non-factual types → **not checkable**; no verified supports/contradicts → **insufficient evidence**; only supports → **supported**; only contradicts → **contradicted**; both → **mixed**. "Context" evidence is shown but never decides.
+- Overall (over checkable sub-claims): none → not checkable; any mixed or supported+contradicted → mixed; all supported → supported; all contradicted → contradicted; otherwise insufficient evidence.
+- `basis.kind` is `retrieved_sources` only if at least one verified evidence item exists; removed items are counted and disclosed.
+- Sub-claim ids are assigned by the server.
+
+### 6.3 Shared components
+`runRetrieval()` (moved from `KnowledgeService`, behaviour-preserving), `sanitizeSources`, `callStructured`, `DailyBudget`, rate limit, CSP. With the `NoopRetriever`, factual claims always receive *insufficient evidence*.
+
+## 7. Planned (not implemented)
+Real source retriever (for Explorer and Evidence), Progress screen, landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.
