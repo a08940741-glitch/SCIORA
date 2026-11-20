@@ -7,7 +7,7 @@ SCIORA is an AI-assisted learning platform. Its first implementation, **Darija A
 > **Current status: Phase 1 (learning loop), Phase 2A (Knowledge Explorer) and Phase 2B (Evidence Analyzer) implemented and tested in demo mode.**
 > Live AI mode is built but has **not yet been run against the real API** (no live calls without the project owner's approval).
 > **No real source retrieval exists yet:** live Knowledge Explorer answers are labelled *not source-verified*, and factual claims in the Evidence Analyzer receive *Insufficient Evidence*.
-> The Progress screen and optional Google Sign-In are **planned, not implemented.**
+> A **Learning Progress** screen (browser data only) is implemented. Optional Google Sign-In is **planned, not implemented.**
 > See [`FEATURE_STATUS.md`](FEATURE_STATUS.md).
 
 ## What Phase 1 does

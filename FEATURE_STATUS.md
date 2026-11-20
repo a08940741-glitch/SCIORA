@@ -77,12 +77,20 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 | Demo analyses (5 claims, no sources/evidence) | **Implemented** — **unreviewed** |
 | Real evidence retrieval | **Not implemented** (D1) — factual claims receive *Insufficient Evidence* outside tests |
 
+## Learning Progress (adaptive learning, module 6)
+
+| Feature | Status |
+|---|---|
+| Progress tab: topics studied, graded answers, correct answers, saved cards (browser data only) | **Implemented & tested** |
+| Per-topic preliminary estimate with correct / partial / incorrect counts | **Implemented & tested** |
+| Explainable recommendations (review / practice more / next level / keep) + practice shortcut | **Implemented & tested** |
+| Server-side or synced progress | **Not implemented** (would require accounts — see optional Google Sign-In, Phase 2 planned) |
+
 ## Phase 2 — Remaining planned features (NOT implemented)
 
 | Priority | Feature | Status | Notes |
 |---|---|---|---|
 | P1 | Real source retriever for Knowledge Explorer **and Evidence Analyzer** | **Decision pending** | Options: Wikipedia API (needs network approval), paid web-search tool (live only). |
-| P1 | Learning Progress screen | **Planned — Phase 2** | Built only from stored, real results. |
 | P1 | Landing page, Settings, full Responsible-AI / limitations page, French interface | **Planned — Phase 2** | Phase 1 has a short responsible-use panel only. |
 | P2 | **Optional Google Sign-In + progress sync** | **Planned — Phase 2** | Full design: [`docs/planned/GOOGLE_SIGN_IN.md`](docs/planned/GOOGLE_SIGN_IN.md). Requires a database and an owner decision on hosting. |
 | P2 | Persistent replay store (SQLite) | **Planned — Phase 2** | Would remove the Phase 1 "server restart" replay limitation. Shares the database introduced for sign-in. |

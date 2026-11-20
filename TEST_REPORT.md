@@ -2,17 +2,17 @@
 
 _Only executed tests are listed; every row was produced by running the test file. History: Phase 1 154/154 (`163b128`), Phase 2A 235/235 (`d8ee223`)._
 
-## Run summary (Phase 2B)
+## Run summary (Phase 2B + Learning Progress)
 
 | Item | Value |
 |---|---|
 | Date | 2026-11-20 |
-| Code version | commit `cd2b88b` + documentation changes (no code changes after this run) |
+| Code version | commit `4b0f1da` + documentation changes (no code changes after this run) |
 | Environment | Linux container, Node 22.23.5, Chromium (pre-installed Playwright) |
 | AI mode during tests | **Demo mode or FAKE AI client / FAKE retriever. No real API call and no external network call.** |
-| Automated tests | **275 / 275 passed**, 0 failed, 0 skipped |
-| Unit + API | 257 / 257 passed |
-| Browser (Playwright) | 18 / 18 passed |
+| Automated tests | **284 / 284 passed**, 0 failed, 0 skipped |
+| Unit + API | 262 / 262 passed |
+| Browser (Playwright) | 22 / 22 passed |
 | Typecheck | passed |
 | `npm audit` | 0 vulnerabilities |
 | New dependencies since Phase 1 | none |
@@ -27,6 +27,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | `workspace.e2e.test.ts` — planned feature check | Now asserts no Google Sign-In control exists | Explorer and Evidence are implemented; Google Sign-In is the remaining planned UI feature. |
 | `explorer.e2e.test.ts` — keyboard tabs | Tab order now includes the Evidence tab and checks wrap-around | A 4th tab was added. |
 | `test/helpers/app.ts` | Optional `evidenceProvider` | To inject fakes. |
+| `explorer.e2e.test.ts` — keyboard tabs (Progress milestone) | Tab order read from the DOM; asserts the 5 tabs, focus follows selection, wrap-around both ways | Stronger and robust to future tabs. |
 
 ## NOT executed / not verified
 
@@ -45,8 +46,7 @@ _Only executed tests are listed; every row was produced by running the test file
 
 ## Detailed results
 
-### Knowledge cards store
-`test/unit/cards-store.test.ts` — 11/11 passed
+### `test/unit/cards-store.test.ts` — 11/11 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -62,8 +62,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 10 | invalid input (no title) is refused; storage failure reported | ✅ PASS |
 | 11 | export contains the cards and no secrets | ✅ PASS |
 
-### Configuration
-`test/unit/config.test.ts` — 13/13 passed
+### `test/unit/config.test.ts` — 13/13 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -81,8 +80,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 12 | escalation and live-test switches parse on/off values | ✅ PASS |
 | 13 | unknown AI mode is rejected | ✅ PASS |
 
-### UI error messages incl. Retry-After
-`test/unit/errors-ui.test.ts` — 4/4 passed
+### `test/unit/errors-ui.test.ts` — 4/4 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -91,8 +89,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 3 | unreadable_answer keeps the server's localized hint | ✅ PASS |
 | 4 | Retry-After is shown in seconds/minutes for rate limit and capacity only | ✅ PASS |
 
-### Evidence — providers and service (2B)
-`test/unit/evidence-service.test.ts` — 12/12 passed
+### `test/unit/evidence-service.test.ts` — 12/12 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -109,8 +106,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 11 | factory: demo never creates a client; live uses the REASON model | ✅ PASS |
 | 12 | sub-claim ids are re-assigned by the server (duplicates from the AI cannot collide) | ✅ PASS |
 
-### Evidence — schemas and verdict engine (2B)
-`test/unit/evidence-verdicts.test.ts` — 8/8 passed
+### `test/unit/evidence-verdicts.test.ts` — 8/8 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -123,8 +119,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 7 | opinions, predictions, value judgments and ambiguous claims are not checkable (even with 'evidence') | ✅ PASS |
 | 8 | overall verdict rules | ✅ PASS |
 
-### Encrypted exercise tokens
-`test/unit/exercise-token.test.ts` — 15/15 passed
+### `test/unit/exercise-token.test.ts` — 15/15 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -144,8 +139,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 14 | short secrets are refused | ✅ PASS |
 | 15 | error httpStatus is 400 for non-expiry failures (no detail leaked) | ✅ PASS |
 
-### Rule-based grading
-`test/unit/grading-deterministic.test.ts` — 15/15 passed
+### `test/unit/grading-deterministic.test.ts` — 15/15 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -165,8 +159,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 14 | expression: unparseable or disallowed input → unknown (goes to AI, not incorrect) | ✅ PASS |
 | 15 | expression: gradeExpression maps outcomes | ✅ PASS |
 
-### Grading fixtures (37 cases)
-`test/unit/grading-fixtures.test.ts` — 6/6 passed
+### `test/unit/grading-fixtures.test.ts` — 6/6 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -177,8 +170,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 5 | demo keyword grader safety on fixtures: never 'incorrect', never a false 'correct' | ✅ PASS |
 | 6 | review status is reported honestly (owner review still pending) | ✅ PASS |
 
-### Knowledge — connections/learning mode
-`test/unit/knowledge-learning.test.ts` — 6/6 passed
+### `test/unit/knowledge-learning.test.ts` — 6/6 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -189,8 +181,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 5 | learning mode is independent of Phase 1 grading (no token, no exercise set in the response) | ✅ PASS |
 | 6 | demo query returns cleaned suggestions for every topic | ✅ PASS |
 
-### Knowledge — providers
-`test/unit/knowledge-providers.test.ts` — 10/10 passed
+### `test/unit/knowledge-providers.test.ts` — 10/10 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -205,8 +196,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 9 | live provider error handling is the shared Phase 1 behaviour (refusal, malformed, 429, unavailable) | ✅ PASS |
 | 10 | factory: demo config never creates a client; live config uses the factory (fake) | ✅ PASS |
 
-### Knowledge — schemas
-`test/unit/knowledge-schemas.test.ts` — 8/8 passed
+### `test/unit/knowledge-schemas.test.ts` — 8/8 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -219,8 +209,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 7 | quiz output: choice ids a-d only | ✅ PASS |
 | 8 | retrieved source schema requires a real URL | ✅ PASS |
 
-### Knowledge — service/retrieval
-`test/unit/knowledge-service.test.ts` — 8/8 passed
+### `test/unit/knowledge-service.test.ts` — 8/8 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -233,8 +222,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 7 | more than 5 retrieved sources are capped at 5 | ✅ PASS |
 | 8 | provider errors propagate unchanged (route maps them to HTTP) | ✅ PASS |
 
-### Knowledge — sources/verification/injection
-`test/unit/knowledge-sources.test.ts` — 14/14 passed
+### `test/unit/knowledge-sources.test.ts` — 14/14 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -253,8 +241,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 13 | system prompt forbids invented sources and treats sources as data | ✅ PASS |
 | 14 | service.query with fake retriever + citing provider → source_backed with sanitized sources | ✅ PASS |
 
-### Level estimate
-`test/unit/learner-model.test.ts` — 10/10 passed
+### `test/unit/learner-model.test.ts` — 15/15 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -268,9 +255,13 @@ _Only executed tests are listed; every row was produced by running the test file
 | 8 | corrupted storage is reset safely; clear() removes data | ✅ PASS |
 | 9 | storage failures do not crash (e.g. storage disabled) | ✅ PASS |
 | 10 | no personal data is stored: only topic label, rating, counts, timestamp | ✅ PASS |
+| 11 | progress: empty input → zero totals, no topics | ✅ PASS |
+| 12 | progress: weak topic with ≥2 answers → review, listed first | ✅ PASS |
+| 13 | progress: a single wrong answer is not enough to flag review (low confidence → practice more) | ✅ PASS |
+| 14 | progress: strong topic with enough answers → next level; advanced → keep | ✅ PASS |
+| 15 | progress uses only stored data: estimates from the learner model round-trip | ✅ PASS |
 
-### Live-call guards
-`test/unit/live-gate.test.ts` — 6/6 passed
+### `test/unit/live-gate.test.ts` — 6/6 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -281,8 +272,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 5 | scripts/live-smoke.ts refuses with a key but no SCIORA_ALLOW_LIVE_TESTS | ✅ PASS |
 | 6 | scripts/live-smoke.ts refuses with approval switch but demo mode | ✅ PASS |
 
-### Phase 1 providers (fake client)
-`test/unit/providers.test.ts` — 20/20 passed
+### `test/unit/providers.test.ts` — 20/20 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -307,8 +297,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 19 | live config creates exactly one client via the factory (fake here) with configured models | ✅ PASS |
 | 20 | lesson integrity drops broken exercises with a caveat | ✅ PASS |
 
-### Replay store
-`test/unit/replay-store.test.ts` — 12/12 passed
+### `test/unit/replay-store.test.ts` — 12/12 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -325,8 +314,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 11 | sweep removes only expired records | ✅ PASS |
 | 12 | answer hasher: deterministic, keyed, and does not contain the answer | ✅ PASS |
 
-### Rubric aggregation
-`test/unit/rubric-aggregate.test.ts` — 13/13 passed
+### `test/unit/rubric-aggregate.test.ts` — 13/13 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -344,8 +332,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 12 | evidence check tolerates tashkeel, alef forms and punctuation differences | ✅ PASS |
 | 13 | rubric with no required criteria treats all criteria as required | ✅ PASS |
 
-### Phase 1 schemas / public view
-`test/unit/schemas.test.ts` — 8/8 passed
+### `test/unit/schemas.test.ts` — 8/8 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -358,8 +345,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 7 | GradeRequest: limits and strictness | ✅ PASS |
 | 8 | WrittenJudgement schema rejects unknown judgement values | ✅ PASS |
 
-### Phase 1 HTTP API
-`test/api/api.test.ts` — 31/31 passed
+### `test/api/api.test.ts` — 31/31 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -395,8 +381,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 30 | static: index served; server source and demo answer files are NOT served | ✅ PASS |
 | 31 | no-secret-in-logs: tokens, answers, secrets and keys never appear in logs | ✅ PASS |
 
-### Evidence HTTP API (2B)
-`test/api/evidence-api.test.ts` — 10/10 passed
+### `test/api/evidence-api.test.ts` — 10/10 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -411,8 +396,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 9 | shared daily limit covers evidence calls (live); demo calls are free | ✅ PASS |
 | 10 | rate limit and security headers apply | ✅ PASS |
 
-### Knowledge HTTP API
-`test/api/knowledge-api.test.ts` — 17/17 passed
+### `test/api/knowledge-api.test.ts` — 17/17 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -434,8 +418,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 16 | security headers present on knowledge routes; no CORS | ✅ PASS |
 | 17 | logs never contain the question text or retrieved excerpts | ✅ PASS |
 
-### Browser — Evidence Analyzer (2B)
-`test/e2e/evidence.e2e.test.ts` — 6/6 passed
+### `test/e2e/evidence.e2e.test.ts` — 6/6 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -446,21 +429,28 @@ _Only executed tests are listed; every row was produced by running the test file
 | 5 | FAKE live provider + FAKE retriever: verified quote shown with source link; verdict contradicted | ✅ PASS |
 | 6 | mobile: evidence panel without horizontal overflow | ✅ PASS |
 
-### Browser — Knowledge Explorer and cards
-`test/e2e/explorer.e2e.test.ts` — 7/7 passed
+### `test/e2e/explorer.e2e.test.ts` — 7/7 passed
 
 | # | Test | Result |
 |---|---|---|
 | 1 | explorer demo flow: labelled answer, no sources, suggestions, learning mode, save card | ✅ PASS |
 | 2 | explorer: unknown topic in demo shows a localized error, no invented content | ✅ PASS |
 | 3 | no English leakage in explorer and cards interface text (content excluded) | ✅ PASS |
-| 4 | tabs support keyboard navigation (RTL arrows) | ✅ PASS |
+| 4 | tabs support keyboard navigation (RTL arrows), in DOM order with wrap-around | ✅ PASS |
 | 5 | tampered cards in localStorage render safely (no javascript: links, status downgraded) | ✅ PASS |
 | 6 | mobile: explorer renders in RTL without horizontal overflow | ✅ PASS |
 | 7 | FAKE live provider + FAKE retriever: AI label, source_backed banner, safe https source links | ✅ PASS |
 
-### Browser — learning assistant
-`test/e2e/workspace.e2e.test.ts` — 5/5 passed
+### `test/e2e/progress.e2e.test.ts` — 4/4 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | empty progress: honest empty state, zero stats | ✅ PASS |
+| 2 | progress reflects real graded answers; weak topic flagged; practice button returns to learning | ✅ PASS |
+| 3 | saved cards are counted; clearing my data empties progress | ✅ PASS |
+| 4 | no English leakage in progress interface; mobile without overflow | ✅ PASS |
+
+### `test/e2e/workspace.e2e.test.ts` — 5/5 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -475,3 +465,5 @@ _Only executed tests are listed; every row was produced by running the test file
 - Phase 1: in-memory replay store (single process; restart clears it); numeric parser does not evaluate roots; conservative demo keyword grading; 37 unreviewed fixtures.
 - Phase 2A: no real retrieval; demo knowledge content Darija-only, one level; cards browser-local and user-editable.
 - Phase 2B: no real retrieval, so verdicts other than *insufficient evidence* / *not checkable* occur only with the fake test retriever; demo analyses are Darija-only and unreviewed.
+- Learning Progress: shows only browser-stored data; recommendations are simple rules, not diagnoses.
+- Cosmetic: mixed Arabic/Latin topic names with parentheses can render with misplaced brackets when wrapped in the narrow side panel (browser bidi line-wrapping).

@@ -56,6 +56,12 @@ Issues found and fixed:
 4. Quality review: AI-provided sub-claim ids could collide — ids now assigned by the server (test added).
 5. UX: evidence language label reused "answer language" — own label added; Retry-After now shown in error messages (technical debt from the roadmap).
 
+## 2026-11-20 — Learning Progress screen (autonomous milestone)
+- Implemented module 6 of the original spec from browser-only data (no new data collection, no server state).
+- Keyboard tab test rewritten to read the tab order from the DOM (stronger: 5 tabs, focus, wrap-around both ways).
+- Known cosmetic issue logged: bidi bracket placement when mixed Arabic/Latin topic names wrap in the side panel.
+- Commit `4b0f1da`.
+
 ## Next actions
 - Owner: review demo lessons and grading labels (Darija + science); decide on API key and live tests.
 - Owner: review Knowledge Explorer demo content; decide on a real source retriever (Wikipedia network approval or paid web search).

@@ -177,5 +177,8 @@ Answers: LEARN (Sonnet 5.5, effort medium). Transforms: FAST (Haiku 5.5, effort 
 ### 6.3 Shared components
 `runRetrieval()` (moved from `KnowledgeService`, behaviour-preserving), `sanitizeSources`, `callStructured`, `DailyBudget`, rate limit, CSP. With the `NoopRetriever`, factual claims always receive *insufficient evidence*.
 
-## 7. Planned (not implemented)
-Real source retriever (for Explorer and Evidence), Progress screen, landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.
+## 7. Learning Progress
+`public/js/progress.js` + `summarizeProgress()` in `learner-model.js`. Reads only the browser-stored learner estimate and card count. Recommendation rules: ≥ 2 answers and (incorrect + ½·partial > correct, or level beginner) → review; fewer than 5 answers → practice more; otherwise next level (or keep at advanced). Uncertain results were never stored, so they never count.
+
+## 8. Planned (not implemented)
+Real source retriever (for Explorer and Evidence), landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.
