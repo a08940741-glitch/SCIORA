@@ -49,10 +49,11 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   await page.goto(base + "/");
 
   // RTL Arabic page, demo banner.
-  assert.equal(await page.getAttribute("html", "dir"), "rtl");
-  assert.equal(await page.getAttribute("html", "lang"), "ar");
+  // English-first international interface (default).
+  assert.equal(await page.getAttribute("html", "dir"), "ltr");
+  assert.equal(await page.getAttribute("html", "lang"), "en");
   await page.waitForSelector("#mode-banner.mode-demo");
-  assert.match(await page.textContent("#mode-banner"), /DEMO/);
+  assert.match(await page.textContent("#mode-banner"), /Demo mode/);
 
   // Demo topic chips fill the question box (no dead buttons).
   // Scoped to the learning panel: the Knowledge Explorer panel (Phase 2A) has its own topic chips.
@@ -101,8 +102,8 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   // Preliminary estimate: 2 graded answers, low confidence, never "mastery".
   const line = page.locator(".estimate-line");
   assert.equal(await line.getAttribute("data-answers"), "2");
-  assert.match(await page.textContent("#estimate"), /تقدير أولي/);
-  assert.doesNotMatch(await page.textContent("#estimate"), /إتقان تام|mastered/i);
+  assert.match(await page.textContent("#estimate"), /preliminary estimate/);
+  assert.match(await page.textContent("#estimate"), /not proof of mastery/);
 
   // Planned-but-not-implemented features are not offered as working links or buttons.
   // (Explorer — Phase 2A — and Evidence Analyzer — Phase 2B — are now implemented, so the
@@ -126,7 +127,7 @@ test("uncertain written answer is explained and not counted in the estimate", as
   await q3.locator("textarea").fill("ما عرفتش");
   await q3.locator('button[type="submit"]').click();
   await q3.locator('[data-verdict="uncertain"]').waitFor();
-  assert.match(await q3.textContent(), /ما متأكدش/);
+  assert.match(await q3.textContent(), /not sure about this grade/);
   assert.equal(await page.locator(".estimate-line").count(), 0, "uncertain does not create an estimate");
   assert.deepEqual(problems, []);
   await ctx.close();
@@ -138,7 +139,7 @@ test("unknown topic in demo mode shows an honest message, not invented content",
   await page.fill("#question", "شكون ربح كاس العالم؟");
   await page.click("#ask-btn");
   await page.waitForSelector("#lesson .alert-error");
-  assert.match(await page.textContent("#lesson"), /وضع DEMO/);
+  assert.match(await page.textContent("#lesson"), /Demo mode/);
   assert.equal(await page.locator("#exercises .card").count(), 0);
   await ctx.close();
 });

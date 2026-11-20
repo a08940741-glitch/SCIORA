@@ -2,6 +2,7 @@ import { api } from "./api.js";
 import { T } from "./i18n.js";
 import { el, clear, paragraphs } from "./render.js";
 import { errorMessage } from "./errors.js";
+import { noticesBox } from "./notices.js";
 import { isSafeHttpsUrl } from "./cards-store.js";
 
 /**
@@ -40,7 +41,7 @@ function subClaimCard(s, r) {
           const src = sourcesById.get(ev.sourceId);
           return el(
             "li",
-            { class: `evidence evidence-${ev.stance}`, "data-stance": ev.stance },
+            { class: `evidence evidence-${ev.stance}`, "data-stance": ev.stance, dir: "auto" },
             el("span", { class: "kind-chip", text: E.stances[ev.stance] }),
             el("q", { text: ev.quote }),
             el("span", { class: "muted", dir: "ltr", text: ` [${ev.sourceId}] ` }),
@@ -93,6 +94,9 @@ export function createEvidencePanel() {
     const out = $("e-result");
     clear(out);
     out.append(basisBanner(r));
+    // evidence_removed is already shown with its count in the basis banner.
+    const nb = noticesBox(r.notices, { skip: ["evidence_removed"] });
+    if (nb) out.append(nb);
     out.append(
       el(
         "section",
@@ -105,7 +109,7 @@ export function createEvidencePanel() {
       ),
     );
     for (const s of r.subClaims) out.append(subClaimCard(s, r));
-    if (r.caveats.length) out.append(el("section", { class: "card" }, el("h3", { text: T.caveats }), el("ul", { class: "caveats" }, ...r.caveats.map((c) => el("li", { text: c })))));
+    if (r.caveats.length) out.append(el("section", { class: "card" }, el("h3", { text: T.caveats }), el("ul", { class: "caveats", dir: "auto" }, ...r.caveats.map((c) => el("li", { text: c })))));
   }
 
   async function onAnalyze(ev) {

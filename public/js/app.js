@@ -1,5 +1,6 @@
 import { api } from "./api.js";
-import { T } from "./i18n.js";
+import { T, UI_LANG, UI_DIR, UI_LANGUAGES, setUiLanguage } from "./i18n.js";
+import { noticesBox } from "./notices.js";
 import { el, clear, paragraphs } from "./render.js";
 import { createLearnerModel } from "./learner-model.js";
 import { errorMessage } from "./errors.js";
@@ -12,7 +13,7 @@ import { createProgressPanel } from "./progress.js";
 const learner = createLearnerModel(window.localStorage);
 const $ = (id) => document.getElementById(id);
 
-const state = { mode: null, lesson: null, meta: null, token: null, level: "school", topic: null };
+const state = { mode: null, lesson: null, meta: null, token: null, level: "school", topic: null, notices: [] };
 
 // ------------------------------------------------------------------ provenance labels
 
@@ -53,15 +54,21 @@ async function loadHealth() {
     const list = el("div", { class: "chips" });
     for (const t of r.data.demoTopics) {
       list.append(
-        el("button", {
-          type: "button",
-          class: "chip",
-          text: `${t.topic} · ${T.subjects[t.subject] ?? t.subject}`,
-          onclick: () => {
-            $("question").value = t.topic;
-            $("question").focus();
+        el(
+          "button",
+          {
+            type: "button",
+            class: "chip",
+            onclick: () => {
+              $("question").value = t.topic;
+              $("question").focus();
+            },
           },
-        }),
+          // Interface label (subject) and content (topic) are isolated so mixed scripts keep their order.
+          el("span", { class: "chip-label", text: T.subjects[t.subject] ?? t.subject }),
+          " · ",
+          el("bdi", { text: t.topic }),
+        ),
       );
     }
     topics.append(list);
@@ -101,6 +108,7 @@ async function onAsk(ev) {
   state.token = r.data.exerciseSet?.token ?? null;
   state.level = level;
   state.topic = r.data.lesson.understood.topic;
+  state.notices = r.data.notices ?? [];
   renderLesson(r.data.lesson);
   renderExercises(r.data.lesson.exercises);
   renderEstimate();
@@ -109,11 +117,13 @@ async function onAsk(ev) {
 function renderLesson(lesson) {
   const out = $("lesson");
   clear(out);
+  const nb = noticesBox(state.notices);
+  if (nb) out.append(nb);
   const u = lesson.understood;
   out.append(
     card(
       T.understood,
-      el("p", {}, el("strong", { text: u.topic }), ` · ${T.subjects[u.subject] ?? u.subject}`),
+      el("p", { dir: "auto" }, el("strong", { text: u.topic }), ` · ${T.subjects[u.subject] ?? u.subject}`),
       u.clarification ? el("p", { class: "alert alert-info", text: u.clarification }) : null,
       el("p", { class: "muted", text: T.confidence[lesson.confidence] ?? "" }),
     ),
@@ -121,7 +131,7 @@ function renderLesson(lesson) {
   if (!u.isEducational) return;
   out.append(card(T.explanationDarija, ...paragraphs(lesson.explanationDarija)));
   out.append(card(T.explanationFormal, ...paragraphs(lesson.explanationFormal)));
-  out.append(card(T.steps, el("ol", {}, ...lesson.steps.map((s) => el("li", { text: s })))));
+  out.append(card(T.steps, el("ol", { dir: "auto", class: "content-list" }, ...lesson.steps.map((s) => el("li", { text: s })))));
 
   const solution = el("div", { class: "solution", hidden: true }, ...paragraphs(lesson.example.solution));
   const toggle = el("button", {
@@ -138,7 +148,7 @@ function renderLesson(lesson) {
   out.append(card(T.example, ...paragraphs(lesson.example.problem), toggle, solution));
 
   if (lesson.caveats.length) {
-    out.append(card(T.caveats, el("ul", { class: "caveats" }, ...lesson.caveats.map((c) => el("li", { text: c })))));
+    out.append(card(T.caveats, el("ul", { class: "caveats", dir: "auto" }, ...lesson.caveats.map((c) => el("li", { text: c })))));
   }
 }
 
@@ -240,7 +250,7 @@ async function submitAnswer(ex, answer, ui, attempt = 1) {
     return;
   }
   ui.checkBtn.disabled = false;
-  showError(ui.result, errorMessage(r));
+  showError(ui.result, errorMessage(r, { exerciseType: ex.type }));
 }
 
 function lockForm(form) {
@@ -263,11 +273,11 @@ function renderResult(target, g) {
       el(
         "ul",
         { class: "criteria" },
-        ...g.criteria.map((c) => el("li", { class: `crit crit-${c.judgement}` }, el("span", { class: "crit-state", text: T.criterionState[c.judgement] ?? c.judgement }), ` ${c.description}`)),
+        ...g.criteria.map((c) => el("li", { class: `crit crit-${c.judgement}`, dir: "auto" }, el("span", { class: "crit-state", text: T.criterionState[c.judgement] ?? c.judgement }), " ", el("span", { text: c.description }))),
       ),
     );
   }
-  if (g.misconception) box.append(el("p", { class: "alert alert-info" }, el("strong", { text: `${T.misconception}: ` }), g.misconception));
+  if (g.misconception) box.append(el("p", { class: "alert alert-info" }, el("strong", { text: `${T.misconception}: ` }), el("span", { text: g.misconception })));
   box.append(el("p", { class: "label", text: T.correctAnswer }), el("p", { class: "correct-answer", text: g.correctAnswer }));
   box.append(el("p", { class: "label", text: T.explanation }), ...paragraphs(g.explanation));
 
@@ -304,6 +314,33 @@ function onClearData() {
 }
 
 // ------------------------------------------------------------------ init
+
+function initInterfaceLanguage() {
+  document.documentElement.lang = UI_LANG;
+  document.documentElement.dir = UI_DIR;
+  document.title = T.ui.title;
+  $("skip-link").textContent = T.ui.skip;
+  $("footer").textContent = T.ui.footer;
+  $("ui-lang-label").textContent = T.ui.interfaceLabel;
+  const sel = $("ui-lang");
+  for (const l of UI_LANGUAGES) sel.append(el("option", { value: l, text: T.ui.interfaceNames[l], selected: l === UI_LANG, lang: l }));
+  sel.addEventListener("change", () => {
+    if (setUiLanguage(sel.value)) window.location.reload();
+  });
+  $("hero-title").textContent = T.ui.heroTitle;
+  $("hero-text").textContent = T.ui.heroText;
+  for (const b of document.querySelectorAll(".pillar")) {
+    const p = T.ui.pillars[b.dataset.goto];
+    b.querySelector(".pillar-title").textContent = p.title;
+    b.querySelector(".pillar-text").textContent = p.text;
+    b.addEventListener("click", () => {
+      selectTab(b.dataset.goto, true);
+      document.querySelector(".tabs").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+  $("learn-title").textContent = T.tabs.learn;
+  $("learn-intro").textContent = T.ui.learnIntro;
+}
 
 function initStatic() {
   $("tagline").textContent = T.appTagline;
@@ -361,9 +398,11 @@ function initTabs() {
     tab.addEventListener("click", () => selectTab(t));
     tab.addEventListener("keydown", (ev) => {
       const i = TABS.indexOf(t);
-      // RTL: ArrowLeft moves to the next tab, ArrowRight to the previous one.
-      if (ev.key === "ArrowLeft") selectTab(TABS[(i + 1) % TABS.length], true);
-      else if (ev.key === "ArrowRight") selectTab(TABS[(i + TABS.length - 1) % TABS.length], true);
+      // Direction-aware: the "next" arrow is ArrowRight in LTR and ArrowLeft in RTL.
+      const nextKey = UI_DIR === "rtl" ? "ArrowLeft" : "ArrowRight";
+      const prevKey = UI_DIR === "rtl" ? "ArrowRight" : "ArrowLeft";
+      if (ev.key === nextKey) selectTab(TABS[(i + 1) % TABS.length], true);
+      else if (ev.key === prevKey) selectTab(TABS[(i + TABS.length - 1) % TABS.length], true);
       else return;
       ev.preventDefault();
     });
@@ -372,6 +411,7 @@ function initTabs() {
 }
 
 initStatic();
+initInterfaceLanguage();
 renderEstimate();
 $("ask-form").addEventListener("submit", onAsk);
 $("clear-btn").addEventListener("click", onClearData);

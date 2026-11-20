@@ -72,8 +72,8 @@ test("progress reflects real graded answers; weak topic flagged; practice button
   const topic = page.locator("[data-progress-topic]");
   assert.equal(await topic.count(), 1);
   assert.equal(await topic.getAttribute("data-recommendation"), "review");
-  assert.match(await topic.textContent(), /خاصو مراجعة/);
-  assert.match(await page.textContent("#panel-progress"), /تقدير أولي/);
+  assert.match(await topic.textContent(), /Needs review/);
+  assert.match(await page.textContent("#panel-progress"), /preliminary estimate/);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/progress.png`, fullPage: true });
 
   await topic.locator('[data-action="practice"]').click();
@@ -107,14 +107,14 @@ test("saved cards are counted; clearing my data empties progress", async () => {
   await ctx.close();
 });
 
-test("no English leakage in progress interface; mobile without overflow", async () => {
+test("English interface: no Arabic script in progress interface; mobile without overflow", async () => {
   const { page, problems, ctx } = await page0({ width: 390, height: 844 });
   await page.goto(base + "/");
   await page.click("#tab-progress");
   const texts: string[] = await page.locator("#panel-progress h2, #panel-progress .stat-label, #panel-progress .empty-state, #tab-progress").evaluateAll((els: Element[]) => els.map((e) => (e as HTMLElement).innerText));
   assert.ok(texts.length >= 6);
-  const leaks = texts.flatMap((t) => (t.match(/[A-Za-z]{3,}/g) ?? []).filter((w) => !/^(DEMO|SCIORA)$/.test(w)));
-  assert.deepEqual(leaks, []);
+  const leaks = texts.flatMap((t) => (t.match(/[\u0600-\u06FF]+/g) ?? []));
+  assert.deepEqual(leaks, [], `Arabic script in the English interface: ${leaks.join(" ")}`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   assert.ok(overflow <= 1, `overflow ${overflow}px`);
   assert.deepEqual(problems, []);

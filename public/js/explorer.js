@@ -2,6 +2,7 @@ import { api } from "./api.js";
 import { T } from "./i18n.js";
 import { el, clear, paragraphs } from "./render.js";
 import { errorMessage } from "./errors.js";
+import { noticesBox } from "./notices.js";
 import { cardFromAnswer, isSafeHttpsUrl } from "./cards-store.js";
 
 /**
@@ -69,6 +70,9 @@ export function createExplorer({ cards, onCardSaved }) {
     clear(out);
     const a = r.answer;
     out.append(verificationBanner(r.verification));
+    // citations_removed is already shown with its count in the verification banner.
+    const nb = noticesBox(r.notices, { skip: ["citations_removed"] });
+    if (nb) out.append(nb);
 
     out.append(
       kcard(
@@ -91,7 +95,7 @@ export function createExplorer({ cards, onCardSaved }) {
           ...a.segments.map((s) =>
             el(
               "li",
-              { class: `segment segment-${s.kind}`, "data-kind": s.kind },
+              { class: `segment segment-${s.kind}`, "data-kind": s.kind, dir: "auto" },
               el("span", { class: "kind-chip", text: K.kinds[s.kind] ?? s.kind }),
               el("span", { class: "segment-text", text: s.text }),
               s.sourceIds.length ? el("span", { class: "segment-refs", dir: "ltr", text: ` [${s.sourceIds.join(", ")}]` }) : null,
@@ -136,7 +140,7 @@ export function createExplorer({ cards, onCardSaved }) {
             ...r.connections.map((c) =>
               el(
                 "li",
-                { class: "connection", "data-suggested": "true" },
+                { class: "connection", "data-suggested": "true", dir: "auto" },
                 el("span", { class: "badge badge-suggestion", text: K.suggestion }),
                 el("strong", { text: ` ${c.concept}: ` }),
                 el("span", { text: c.relation }),
@@ -157,7 +161,7 @@ export function createExplorer({ cards, onCardSaved }) {
       );
     }
 
-    if (a.caveats.length) out.append(kcard(r.meta, T.caveats, el("ul", { class: "caveats" }, ...a.caveats.map((c) => el("li", { text: c })))));
+    if (a.caveats.length) out.append(kcard(r.meta, T.caveats, el("ul", { class: "caveats", dir: "auto" }, ...a.caveats.map((c) => el("li", { text: c })))));
 
     // Learning mode + save card.
     const learning = el("div", { id: "k-learning", "aria-live": "polite" });
@@ -207,13 +211,15 @@ export function createExplorer({ cards, onCardSaved }) {
   function renderTransform(t) {
     const wrap = el("div", { class: "transform", "data-transform": t.mode });
     wrap.append(el("div", { class: "card-head" }, el("h4", { text: t.result.title }), provenanceBadge(t.meta)));
+    const nb = noticesBox(t.notices, { skip: ["demo_content"] });
+    if (nb) wrap.append(nb);
     if (t.mode === "simplify") wrap.append(...paragraphs(t.result.text));
-    if (t.mode === "examples") wrap.append(el("ul", { class: "examples" }, ...t.result.examples.map((e) => el("li", {}, el("strong", { text: e.title }), ...paragraphs(e.body)))));
+    if (t.mode === "examples") wrap.append(el("ul", { class: "examples", dir: "auto" }, ...t.result.examples.map((e) => el("li", {}, el("strong", { text: e.title }), ...paragraphs(e.body)))));
     if (t.mode === "quiz") {
       wrap.append(el("p", { class: "alert alert-info", text: K.selfCheckNote }));
       t.result.questions.forEach((q, i) => wrap.append(quizQuestion(q, i)));
     }
-    if (t.result.caveats?.length) wrap.append(el("ul", { class: "caveats" }, ...t.result.caveats.map((c) => el("li", { text: c }))));
+    if (t.result.caveats?.length) wrap.append(el("ul", { class: "caveats", dir: "auto" }, ...t.result.caveats.map((c) => el("li", { text: c }))));
     return wrap;
   }
 

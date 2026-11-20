@@ -50,12 +50,12 @@ test("demo: factual claim → insufficient evidence, honest basis banner, backgr
   const { page, problems, ctx } = await analyzePage(demoBase, "الشمس كتدور على الأرض");
   await page.waitForSelector("#e-basis");
   assert.equal(await page.getAttribute("#e-basis", "data-basis"), "none");
-  assert.match(await page.textContent("#e-basis"), /ماشي دليل/);
+  assert.match(await page.textContent("#e-basis"), /not evidence/i);
   assert.equal(await page.locator("#e-overall [data-verdict]").getAttribute("data-verdict"), "insufficient_evidence");
   assert.equal(await page.locator("#e-result .e-no-evidence").count(), 1);
   const bg = page.locator("[data-not-evidence='true']");
   assert.equal(await bg.count(), 1);
-  assert.match(await bg.textContent(), /ماشي دليل/);
+  assert.match(await bg.textContent(), /not evidence/i);
   assert.equal(await page.locator('#e-result [data-provenance="ai"]').count(), 0);
   assert.equal(await page.locator("#e-result a[href^='http']").count(), 0);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/evidence-demo.png`, fullPage: true });
@@ -78,22 +78,22 @@ test("demo: opinion → not checkable; compound claim → two sub-claims", async
 test("demo claim chips fill the claim box; unknown claim shows a localized error", async () => {
   const { page, ctx } = await analyzePage(demoBase, "claim that matches nothing at all");
   await page.waitForSelector("#e-result .alert-error");
-  assert.match(await page.textContent("#e-result"), /وضع DEMO/);
+  assert.match(await page.textContent("#e-result"), /Demo mode/);
   assert.equal(await page.locator("#e-claims .chip").count(), 5);
   await page.locator("#e-claims .chip").first().click();
   assert.ok((await page.inputValue("#e-claim")).length > 5);
   await ctx.close();
 });
 
-test("no English leakage in the evidence interface text", async () => {
+test("English interface: no Arabic script in evidence interface text (content excluded)", async () => {
   const { page, ctx } = await analyzePage(demoBase, "الما كيغلي ف 100 درجة فكل بلاصة");
   await page.waitForSelector("#e-overall");
   const texts = await page
     .locator("#panel-evidence h2, #panel-evidence label, #panel-evidence .badge, #panel-evidence .verdict-chip, #panel-evidence .verification, #panel-evidence .label, #panel-evidence .empty-state, #e-analyze, #tab-evidence")
     .evaluateAll((els: Element[]) => els.map((e) => (e as HTMLElement).innerText));
   assert.ok(texts.length >= 15, `only ${texts.length} texts`);
-  const leaks = texts.flatMap((t: string) => (t.match(/[A-Za-z]{3,}/g) ?? []).filter((w: string) => !/^(DEMO|SCIORA|Claude|English|Français)$/.test(w)));
-  assert.deepEqual(leaks, []);
+  const leaks = texts.flatMap((t: string) => (t.match(/[\u0600-\u06FF]+/g) ?? []));
+  assert.deepEqual(leaks, [], `Arabic script in the English interface: ${leaks.join(" ")}`);
   await ctx.close();
 });
 

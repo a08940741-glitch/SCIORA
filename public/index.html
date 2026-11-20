@@ -1,27 +1,45 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SCIORA · Darija AI Study</title>
-  <meta name="description" content="SCIORA: Global Knowledge & Learning Intelligence. Phase 1: Darija AI Study.">
+  <title>SCIORA · Global Knowledge &amp; Learning Intelligence</title>
+  <meta name="description" content="SCIORA — an AI learning and knowledge platform: Learning Assistant, Knowledge Explorer and Evidence Analyzer, with honest, transparent AI.">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/css/style.css">
   <script type="module" src="/js/app.js"></script>
 </head>
 <body>
-  <a class="skip" href="#main">تخطى للمحتوى</a>
+  <a class="skip" id="skip-link" href="#main">Skip to content</a>
   <header class="topbar">
-    <div class="brand">
-      <span class="logo" aria-hidden="true">S</span>
-      <div>
-        <h1 class="brand-name" dir="ltr">SCIORA</h1>
-        <p class="tagline" id="tagline"></p>
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">S</span>
+        <div>
+          <h1 class="brand-name" dir="ltr">SCIORA</h1>
+          <p class="tagline" id="tagline"></p>
+        </div>
+      </div>
+      <div class="ui-lang">
+        <label id="ui-lang-label" for="ui-lang" class="ui-lang-label"></label>
+        <select id="ui-lang"></select>
       </div>
     </div>
   </header>
 
   <div id="mode-banner" class="mode-banner" role="status">…</div>
+
+  <section id="hero" class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <h2 id="hero-title" class="hero-title"></h2>
+      <p id="hero-text" class="hero-text"></p>
+      <div class="pillars">
+        <button type="button" class="pillar" data-goto="learn"><span class="pillar-title"></span><span class="pillar-text"></span></button>
+        <button type="button" class="pillar" data-goto="explore"><span class="pillar-title"></span><span class="pillar-text"></span></button>
+        <button type="button" class="pillar" data-goto="evidence"><span class="pillar-title"></span><span class="pillar-text"></span></button>
+      </div>
+    </div>
+  </section>
 
   <nav class="tabs" role="tablist" aria-label="SCIORA">
     <button type="button" role="tab" id="tab-learn" aria-controls="panel-learn" aria-selected="true"></button>
@@ -35,9 +53,11 @@
     <div class="main-col">
      <section id="panel-learn" role="tabpanel" aria-labelledby="tab-learn">
       <section class="card ask-card">
+        <h2 id="learn-title"></h2>
+        <p id="learn-intro" class="muted"></p>
         <form id="ask-form" novalidate>
           <label id="ask-label" for="question" class="label"></label>
-          <textarea id="question" rows="3" maxlength="1000" required></textarea>
+          <textarea id="question" rows="3" maxlength="1000" required dir="auto"></textarea>
           <div class="row">
             <div class="field">
               <label id="level-label" for="level" class="label"></label>
@@ -63,7 +83,7 @@
         <p id="k-intro" class="muted"></p>
         <form id="k-form" novalidate>
           <label id="k-ask-label" for="k-question" class="label"></label>
-          <textarea id="k-question" rows="3" maxlength="1000" required></textarea>
+          <textarea id="k-question" rows="3" maxlength="1000" required dir="auto"></textarea>
           <div class="row">
             <div class="field">
               <label id="k-level-label" for="k-level" class="label"></label>
@@ -87,7 +107,7 @@
         <p id="e-intro" class="muted"></p>
         <form id="e-form" novalidate>
           <label id="e-claim-label" for="e-claim" class="label"></label>
-          <textarea id="e-claim" rows="3" maxlength="1000" required></textarea>
+          <textarea id="e-claim" rows="3" maxlength="1000" required dir="auto"></textarea>
           <div class="row">
             <div class="field">
               <label id="e-language-label" for="e-language" class="label"></label>
@@ -106,7 +126,7 @@
         <h2 id="c-title"></h2>
         <p id="c-intro" class="muted"></p>
         <div class="row">
-          <div class="field"><input id="c-search" type="text" maxlength="100"></div>
+          <div class="field"><input id="c-search" type="search" maxlength="100" dir="auto"></div>
           <div class="field"><select id="c-collection"></select></div>
           <button id="c-export" type="button" class="btn btn-secondary"></button>
         </div>
@@ -140,8 +160,6 @@
     </aside>
   </main>
 
-  <footer class="footer" dir="ltr">
-    SCIORA · Global Knowledge &amp; Learning Intelligence · WAICY 2026 AI Showcase · Phase 2B
-  </footer>
+  <footer class="footer" id="footer"></footer>
 </body>
 </html>

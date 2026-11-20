@@ -77,7 +77,7 @@ test("explorer demo flow: labelled answer, no sources, suggestions, learning mod
 
   // Verification: demo, never "verified"; explicit empty sources state.
   assert.equal(await page.getAttribute("#k-verification", "data-status"), "demo");
-  assert.match(await page.textContent("#k-verification"), /ماشي موثق بمصادر/);
+  assert.match(await page.textContent("#k-verification"), /not source-verified/);
   assert.equal(await page.locator("#k-no-sources").count(), 1);
   assert.equal(await page.locator("#k-result a[href^='http']").count(), 0, "no external links in demo");
 
@@ -106,7 +106,7 @@ test("explorer demo flow: labelled answer, no sources, suggestions, learning mod
   await page.waitForSelector('[data-transform="examples"]');
   await page.click('[data-mode="quiz"]');
   await page.waitForSelector('[data-transform="quiz"]');
-  assert.match(await page.textContent('[data-transform="quiz"]'), /تمرين ذاتي/);
+  assert.match(await page.textContent('[data-transform="quiz"]'), /Self-check quiz/);
 
   // Self-check is local: no grading request is sent.
   const before = apiCalls.length;
@@ -125,7 +125,7 @@ test("explorer demo flow: labelled answer, no sources, suggestions, learning mod
   // Save as a card in a named collection.
   await page.fill("#k-collection", "بيولوجيا");
   await page.click("#k-save");
-  assert.match(await page.textContent("#k-save-msg"), /تحفظات/);
+  assert.match(await page.textContent("#k-save-msg"), /Saved to My Cards/);
   assert.equal(await page.isDisabled("#k-save"), true);
 
   // Cards tab: card present with demo status.
@@ -166,46 +166,45 @@ test("explorer: unknown topic in demo shows a localized error, no invented conte
   await page.fill("#k-question", "شكون ربح كاس العالم؟");
   await page.click("#k-ask");
   await page.waitForSelector("#k-result .alert-error");
-  assert.match(await page.textContent("#k-result"), /وضع DEMO/);
+  assert.match(await page.textContent("#k-result"), /Demo mode/);
   assert.equal(await page.locator("#k-verification").count(), 0);
   await ctx.close();
 });
 
-test("no English leakage in explorer and cards interface text (content excluded)", async () => {
+test("English interface: no Arabic script in explorer and cards interface text (content excluded)", async () => {
   const { page, ctx } = await newPage();
   await askExplorer(page, demoBase, "دورة الماء");
   await page.click('[data-mode="quiz"]');
   await page.waitForSelector('[data-transform="quiz"]');
   await page.click("#k-save");
-  const allowed = /^(DEMO|SCIORA|Claude|JSON|English|Français)$/;
   const chrome = async (sel: string) =>
     page.locator(sel).evaluateAll((els: Element[]) => els.map((e) => (e as HTMLElement).innerText));
   const texts = [
-    ...(await chrome("#panel-explore h2, #panel-explore label, #panel-explore .badge, #panel-explore .verification, #panel-explore .kind-chip, #panel-explore .empty-state, #k-result .card-head h3, #k-learning .alert, #k-result button, #k-save-msg, #tab-learn, #tab-explore, #tab-cards")),
+    ...(await chrome("#panel-explore h2, #panel-explore label:not(.choice), #panel-explore .badge, #panel-explore .verification, #panel-explore .kind-chip, #panel-explore .empty-state, #k-learning .alert, #k-result button, #k-save-msg, #tab-learn, #tab-explore, #tab-cards")),
   ];
   await page.click("#tab-cards");
   texts.push(...(await chrome("#panel-cards h2, #panel-cards .badge, #panel-cards button, #c-count, #c-intro")));
   assert.ok(texts.length >= 30, `only ${texts.length} interface texts collected`);
   assert.ok(texts.join("").length > 300, "interface text actually collected");
-  const leaks = texts.flatMap((t: string) => (t.match(/[A-Za-z]{3,}/g) ?? []).filter((w: string) => !allowed.test(w)));
-  assert.deepEqual(leaks, [], `English words in Arabic UI: ${leaks.join(", ")}`);
+  const leaks = texts.flatMap((t: string) => (t.match(/[\u0600-\u06FF]+/g) ?? []));
+  assert.deepEqual(leaks, [], `Arabic script in the English interface: ${leaks.join(" ")}`);
   await ctx.close();
 });
 
-test("tabs support keyboard navigation (RTL arrows), in DOM order with wrap-around", async () => {
+test("tabs support keyboard navigation (LTR arrows in the English interface), in DOM order with wrap-around", async () => {
   const { page, ctx } = await newPage();
   await page.goto(demoBase + "/");
   const ids: string[] = await page.locator('[role="tab"]').evaluateAll((els: Element[]) => els.map((e) => e.id));
   assert.deepEqual(ids, ["tab-learn", "tab-explore", "tab-evidence", "tab-cards", "tab-progress"]);
   await page.focus("#tab-learn");
   for (let i = 1; i <= ids.length; i++) {
-    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("ArrowRight");
     const expected = ids[i % ids.length]!;
-    assert.equal(await page.getAttribute(`#${expected}`, "aria-selected"), "true", `ArrowLeft #${i} → ${expected}`);
+    assert.equal(await page.getAttribute(`#${expected}`, "aria-selected"), "true", `ArrowRight #${i} → ${expected}`);
     assert.equal(await page.evaluate(() => document.activeElement?.id), expected, "focus follows selection");
   }
-  await page.keyboard.press("ArrowRight");
-  assert.equal(await page.getAttribute(`#${ids[ids.length - 1]}`, "aria-selected"), "true", "ArrowRight wraps backwards");
+  await page.keyboard.press("ArrowLeft");
+  assert.equal(await page.getAttribute(`#${ids[ids.length - 1]}`, "aria-selected"), "true", "ArrowLeft wraps backwards");
   await ctx.close();
 });
 
@@ -259,7 +258,7 @@ test("FAKE live provider + FAKE retriever: AI label, source_backed banner, safe 
   const { page, problems, ctx } = await newPage();
   await askExplorer(page, base, "What is photosynthesis?");
   assert.equal(await page.getAttribute("#k-verification", "data-status"), "source_backed");
-  assert.match(await page.textContent("#k-verification"), /ما كيعنيش بالضرورة/);
+  assert.match(await page.textContent("#k-verification"), /does not guarantee/);
   assert.ok((await page.locator('#k-result [data-provenance="ai"]').count()) >= 1);
   assert.equal(await page.locator('#k-result [data-provenance="demo"]').count(), 0);
   const link = page.locator("#k-src-S1 a");

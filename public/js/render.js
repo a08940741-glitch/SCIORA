@@ -1,9 +1,14 @@
 /**
  * DOM helpers. SECURITY: all text is inserted with textContent — never innerHTML —
  * so AI-generated or user-supplied text can never inject HTML or scripts.
+ *
+ * Text direction: elements created with `text` get dir="auto" unless a dir is given, so
+ * Arabic/Darija content renders right-to-left inside the English (LTR) interface and
+ * Latin content renders left-to-right inside the Arabic (RTL) interface.
  */
 export function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
+  if (attrs.text !== undefined && attrs.dir === undefined && tag !== "option") attrs = { ...attrs, dir: "auto" };
   for (const [k, v] of Object.entries(attrs)) {
     if (v === undefined || v === null || v === false) continue;
     if (k === "class") node.className = v;
