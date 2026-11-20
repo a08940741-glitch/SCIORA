@@ -4,6 +4,8 @@ import { loadConfig } from "../../src/config.ts";
 import { DemoProvider } from "../../src/ai/demo-provider.ts";
 import type { AIProvider, JudgeInput, JudgeOutput, LessonOutput, ModelTier } from "../../src/ai/provider.ts";
 import type { LessonRequest, WrittenJudgement } from "../../src/domain/schemas.ts";
+import type { KnowledgeProvider } from "../../src/knowledge/provider.ts";
+import type { SourceRetriever } from "../../src/knowledge/retriever.ts";
 import { sampleLesson } from "./sample-lesson.ts";
 
 export const TEST_SECRET_B64 = Buffer.alloc(32, 9).toString("base64");
@@ -17,7 +19,9 @@ export function testConfig(env: Record<string, string> = {}) {
   });
 }
 
-export async function makeApp(opts: { provider?: AIProvider; env?: Record<string, string>; now?: () => number; logLevel?: string } = {}) {
+export async function makeApp(
+  opts: { provider?: AIProvider; knowledgeProvider?: KnowledgeProvider; retriever?: SourceRetriever; env?: Record<string, string>; now?: () => number; logLevel?: string } = {},
+) {
   const logs: string[] = [];
   const logStream = new Writable({
     write(chunk, _enc, cb) {
@@ -28,6 +32,8 @@ export async function makeApp(opts: { provider?: AIProvider; env?: Record<string
   const { app, replay } = await buildApp({
     config: testConfig(opts.env),
     provider: opts.provider ?? new DemoProvider(),
+    knowledgeProvider: opts.knowledgeProvider,
+    retriever: opts.retriever,
     now: opts.now,
     logStream,
     logLevel: opts.logLevel,

@@ -25,7 +25,8 @@ test("health (demo): mode demo, simulated, no models, demo topics listed, nothin
   assert.equal(b.simulated, true);
   assert.equal(b.models, null);
   assert.equal(b.demoTopics.length, 5);
-  assert.ok(b.plannedNotImplemented.includes("knowledge_explorer"));
+  // Phase 2A: Knowledge Explorer is implemented, so it must no longer be listed as planned.
+  assert.equal(b.plannedNotImplemented.includes("knowledge_explorer"), false);
   assert.ok(b.plannedNotImplemented.includes("evidence_analyzer"));
   assert.equal(res.body.includes("test-key-not-real"), false);
   assert.equal(res.body.includes(TEST_SECRET_B64), false);

@@ -1,5 +1,6 @@
 import { loadConfig, ConfigError } from "./config.ts";
 import { createProvider } from "./ai/index.ts";
+import { createKnowledgeProvider } from "./knowledge/index.ts";
 import { buildApp } from "./app.ts";
 
 async function main() {
@@ -15,7 +16,8 @@ async function main() {
   }
 
   const provider = createProvider(config);
-  const { app, replay } = await buildApp({ config, provider });
+  const knowledgeProvider = createKnowledgeProvider(config);
+  const { app, replay } = await buildApp({ config, provider, knowledgeProvider });
   replay.startSweeper();
 
   if (provider.simulated) {

@@ -1,4 +1,4 @@
-import Fastify, { type FastifyInstance, type FastifyReply } from "fastify";
+import Fastify, { type FastifyInstance } from "fastify";
 import helmet from "@fastify/helmet";
 import rateLimit from "@fastify/rate-limit";
 import fastifyStatic from "@fastify/static";
@@ -18,6 +18,12 @@ import { gradeExpression, gradeMcq, gradeNumeric, isValidChoice, type Determinis
 import { normalizeAnswer } from "./domain/normalize.ts";
 import { aggregate } from "./domain/rubric-aggregate.ts";
 import { correctAnswerText, ruleFeedback, uncertaintyText, UNREADABLE_HINT } from "./domain/feedback.ts";
+import { DailyBudget, sendError } from "./http.ts";
+import type { KnowledgeProvider } from "./knowledge/provider.ts";
+import type { SourceRetriever } from "./knowledge/retriever.ts";
+import { DemoKnowledgeProvider } from "./knowledge/demo-provider.ts";
+import { KnowledgeService } from "./knowledge/service.ts";
+import { registerKnowledgeRoutes } from "./knowledge/routes.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(HERE, "..", "public");
@@ -27,32 +33,16 @@ export interface AppDeps {
   provider: AIProvider;
   /** Injectable clock (ms) for tests. */
   now?: () => number;
+  /**
+   * Knowledge Explorer provider. Production (server.ts) always passes one created with the
+   * same demo/live rule as Phase 1. Defaults to the demo provider (used by tests).
+   */
+  knowledgeProvider?: KnowledgeProvider;
+  /** Source retriever. Defaults to NoopRetriever (decision D1: no real retrieval). */
+  retriever?: SourceRetriever;
   /** Capture logs in tests. */
   logStream?: Writable;
   logLevel?: string;
-}
-
-/** Counts AI calls per UTC day (live mode only) to cap cost. 0 = unlimited. */
-class DailyBudget {
-  private day = "";
-  private count = 0;
-  constructor(private readonly limit: number, private readonly now: () => number) {}
-  take(): boolean {
-    if (this.limit <= 0) return true;
-    const d = new Date(this.now()).toISOString().slice(0, 10);
-    if (d !== this.day) {
-      this.day = d;
-      this.count = 0;
-    }
-    if (this.count >= this.limit) return false;
-    this.count++;
-    return true;
-  }
-}
-
-function sendError(reply: FastifyReply, status: number, error: string, message: string, retryAfterSec?: number, extra: Record<string, unknown> = {}) {
-  if (retryAfterSec !== undefined) reply.header("Retry-After", String(Math.max(1, Math.ceil(retryAfterSec))));
-  return reply.code(status).send({ error, message, ...extra });
 }
 
 export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; replay: ReplayStore }> {
@@ -79,6 +69,10 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
   const budget = new DailyBudget(config.dailyLimit, now);
   const isLive = !provider.simulated;
   const takeBudget = () => !isLive || budget.take();
+  const knowledgeProvider = deps.knowledgeProvider ?? new DemoKnowledgeProvider();
+  const knowledge = new KnowledgeService({ provider: knowledgeProvider, retriever: deps.retriever, now });
+  // Same shared daily budget; demo knowledge calls cost nothing and are not counted.
+  const takeKnowledgeBudget = () => knowledgeProvider.simulated || budget.take();
 
   await app.register(helmet, {
     contentSecurityPolicy: {
@@ -143,8 +137,18 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
     models: provider.models,
     demoTopics: provider instanceof DemoProvider ? provider.topics() : null,
     tokenSecretEphemeral: config.tokenSecretEphemeral,
-    plannedNotImplemented: ["knowledge_explorer", "evidence_analyzer", "progress_screen", "google_sign_in"],
+    knowledge: {
+      mode: knowledgeProvider.simulated ? "demo" : "live",
+      simulated: knowledgeProvider.simulated,
+      models: knowledgeProvider.models,
+      demoTopics: knowledgeProvider instanceof DemoKnowledgeProvider ? knowledgeProvider.topics() : null,
+      sourceRetrieval: knowledge.retriever.enabled,
+      retriever: knowledge.retriever.enabled ? knowledge.retriever.name : null,
+    },
+    plannedNotImplemented: ["evidence_analyzer", "progress_screen", "google_sign_in"],
   }));
+
+  registerKnowledgeRoutes(app, { service: knowledge, takeBudget: takeKnowledgeBudget });
 
   // ------------------------------------------------------------------ learn
   app.post("/api/learn", async (req, reply) => {
