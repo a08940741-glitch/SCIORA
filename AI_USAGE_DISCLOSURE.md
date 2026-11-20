@@ -7,7 +7,7 @@ _Honest account of how AI tools were used to **build** SCIORA and how AI is used
 | Contributor | Role |
 |---|---|
 | **Project owner (student, Grade 7, Morocco)** | Project idea and vision, decisions and approvals (architecture, security requirements, scope, models), requirements for Darija/Arabic grading quality, testing the application, reviewing Darija content (pending), presenting to judges. |
-| **Claude (Anthropic), via Claude Code** | Wrote the source code, tests and documentation under the owner's direction; proposed the architecture and security design, which the owner reviewed and revised (e.g. requiring AES-256-GCM encryption instead of HMAC-only tokens, fail-closed capacity, atomic grading reservation, Darija grading tests). Drafted the 5 demo lessons and the 37 grading fixtures (marked unreviewed). |
+| **Claude (Anthropic), via Claude Code** | Wrote the source code, tests and documentation under the owner's direction; proposed the architecture and security design, which the owner reviewed and revised (e.g. requiring AES-256-GCM encryption instead of HMAC-only tokens, fail-closed capacity, atomic grading reservation, Darija grading tests). Drafted the 5 demo lessons, the 37 grading fixtures and the 5 Knowledge Explorer demo answers (all marked unreviewed). Implemented Phase 2A after the owner approved the plan and decisions D1–D3 (no real retrieval yet; behaviour-preserving refactor; narrow test updates). |
 | **ChatGPT (OpenAI)** | According to the project plan: independent research, architecture and rubric review, critical review. (Recorded as reported by the project owner.) |
 
 **Important:** most of the code was written by an AI assistant (Claude). The student did not hand-write the code. The student directed the project, made the decisions, and must be able to explain every major component — this disclosure must be reflected accurately in all competition materials.
@@ -21,9 +21,13 @@ _Honest account of how AI tools were used to **build** SCIORA and how AI is used
 | Grading MCQ, numbers, expressions | Both | **No AI** — rules | Deterministic. |
 | Lessons and grading in demo mode | Demo | **No AI at runtime** | Pre-written content, clearly labelled DEMO. |
 | Level estimate | Both | **No AI model** — Elo-style formula | Runs in the browser. |
+| Knowledge Explorer answers | Live | `claude-sonnet-5-5` (configurable) | Structured output; may only cite server-retrieved sources (none exist yet). |
+| Knowledge Explorer simplify / examples / quiz | Live | `claude-haiku-5-5` (configurable) | Self-check quiz, not graded. |
+| Knowledge Explorer in demo mode | Demo | **No AI at runtime** | Pre-written, no sources, labelled DEMO. |
+| Source verification status | Both | **No AI** — server rules | AI cannot decide it. |
 
 - SCIORA **does not train or fine-tune** any AI model. The language models are pre-trained by Anthropic.
-- As of 2026-11-20, **live mode has not been run against the real API**; all tests use demo mode or a fake client.
+- As of 2026-11-20, **live mode has not been run against the real API**; all tests use demo mode or a fake client / fake retriever. No real source retrieval exists.
 
 ## 3. Short AI usage statement (draft for the submission form — ≤ 200 words, to be finalised by the owner)
 

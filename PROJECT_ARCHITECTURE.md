@@ -1,6 +1,6 @@
-# SCIORA — Project Architecture (Phase 1)
+# SCIORA — Project Architecture (Phase 1 + Phase 2A)
 
-_Status: describes the code as implemented on 2026-11-20. Planned features are marked as such._
+_Status: describes the code as implemented on 2026-11-20 (Phase 1 and Phase 2A). Planned features are marked as such._
 
 ## 1. Overview
 
@@ -111,10 +111,50 @@ Elo-style rating per topic: start 1000, exercise difficulty by level (900–1200
 | Big idea | In SCIORA Phase 1 |
 |---|---|
 | Perception | **Not implemented.** (Photo input of homework is a stretch goal.) |
-| Representation & Reasoning | Structured lesson/rubric schemas; rule-based maths reasoning (equivalence checking); server-side rubric aggregation. |
+| Representation & Reasoning | Structured lesson/rubric schemas; rule-based maths reasoning; server-side rubric aggregation; Knowledge Explorer answers represented as typed segments (fact / explanation / assumption / uncertainty) with server-checked source links and concept connections. |
 | Learning | SCIORA does **not** train a model. The language models are pre-trained by Anthropic. SCIORA's own adaptive component is the Elo-style learner estimate that updates from the student's graded answers. |
-| Natural Interaction | Questions and answers in Moroccan Darija, Arabic, French; explanations generated in natural language (live mode). |
+| Natural Interaction | Questions and answers in Moroccan Darija, Arabic, French (and English/Arabizi in the Knowledge Explorer); explanations generated in natural language (live mode). |
 | Societal Impact | Transparency labels, uncertainty handling, privacy-by-design, ethics documentation (`AI_ETHICS.md`). |
 
-## 5. Planned (not implemented)
-Knowledge Explorer, Evidence Analyzer, Progress screen, landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. Phase 1 has **no database and no accounts**.
+## 5. Knowledge Explorer (Phase 2A)
+
+### 5.1 Modules
+| File | Responsibility |
+|---|---|
+| `src/knowledge/schemas.ts` | Requests, AI output (no title/URL fields), sources, response shapes. Independent of Phase 1 schemas. |
+| `src/knowledge/retriever.ts` | `SourceRetriever` interface; `NoopRetriever` (the only production retriever — decision D1). |
+| `src/knowledge/service.ts` | Retrieval (abort + 8 s timeout) → provider → `finalizeAnswer`; `transform()`. |
+| `src/knowledge/sources.ts` | Source sanitizing; citation validation; server-side verification status. |
+| `src/knowledge/learning.ts` | Connection cleaning; quiz integrity checks. |
+| `src/knowledge/provider.ts`, `demo-provider.ts`, `anthropic-provider.ts`, `prompts.ts`, `index.ts` | Provider abstraction (separate from Phase 1's), demo content (no sources), live provider via the shared `src/ai/structured-call.ts`, fixed prompts, factory with the same live rule as Phase 1. |
+| `src/knowledge/routes.ts` | `POST /api/knowledge/query`, `POST /api/knowledge/transform`. |
+| `src/http.ts` | Shared `DailyBudget` and `sendError` (moved from `app.ts`). |
+| `public/js/explorer.js`, `cards.js`, `cards-store.js`, `errors.js` | Explorer UI, cards panel, browser-only card store, shared error messages. |
+
+### 5.2 Query flow
+1. Validate `{question, level, language}`.
+2. Shared daily limit (live only).
+3. **Retrieval** only if the provider is live **and** a retriever is enabled. Phase 2A: never (NoopRetriever) → `retrievalNote: "disabled"`.
+4. Provider answer. Sources (if any) are passed only as neutralized `<source id="S1">` blocks; the system prompt says sources and question are data.
+5. **`finalizeAnswer` (server):** drops source ids that were not retrieved (counted, disclosed), computes `uncitedFacts`, decides status:
+   - demo provider → `demo`;
+   - ≥ 1 segment cites a retrieved source → `source_backed` (“backed by retrieved sources”, not “true”);
+   - otherwise → `not_source_verified`.
+6. Connections cleaned and marked `suggested: true`.
+
+### 5.3 Source rules
+- The AI output schema has no fields for titles, URLs or publishers; source metadata only comes from a retriever.
+- Retrieved items: schema-validated, **https only**, no URL credentials, control/bidi characters removed, title ≤ 300 / excerpt ≤ 1500 chars, duplicates dropped, max 5, ids re-assigned `S1..S5` by the server.
+- Demo content contains no sources and no URLs (enforced by a test and stripped in code).
+
+### 5.4 Learning mode
+`simplify` / `examples` / `quiz` via the FAST model (live) or pre-written content (demo). Quiz questions with a missing correct choice or duplicate ids are dropped; none left → `bad_output`. **Independent of Phase 1 grading**: no token, no replay store, no level estimate; the quiz is checked locally in the browser and labelled self-check.
+
+### 5.5 Knowledge cards (browser only)
+`sciora.cards.v1` in localStorage, max 200. Status copied from the server at save time (`demo` / `not_source_verified` / `sources_attached`); `checkedByMe` is a separate flag and cannot upgrade the status. Every card is re-validated on load (invalid cards dropped, non-https links removed, impossible statuses downgraded). Limitations: per browser, user-editable, visible on shared computers.
+
+### 5.6 Model routing
+Answers: LEARN (Sonnet 5.5, effort medium). Transforms: FAST (Haiku 5.5, effort low). REASON unused. All configurable; no live calls made so far.
+
+## 6. Planned (not implemented)
+Evidence Analyzer (Phase 2B), real source retriever, Progress screen, landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.

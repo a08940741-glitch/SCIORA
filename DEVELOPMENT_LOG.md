@@ -29,6 +29,21 @@ Deliberate simplifications (documented):
 - Unreadable numeric/expression answers return **422** with a format hint and do not consume the attempt, instead of being sent to the AI.
 - At the 90% capacity mark `/api/learn` returns 503 before any AI call; there is no “explanation-only” fallback.
 
+## 2026-11-20 — Phase 2A: Knowledge Explorer
+- Step 1 inspection: Wikipedia API unreachable from the dev container; no real source path without paid/live calls.
+- Owner decisions: **D1** interface + fake retriever only (no fabricated sources; live answers labelled not source-verified); **D2** move `callStructured()` to a shared helper only if behaviour-preserving; **D3** narrow the outdated browser assertion to Evidence Analyzer only.
+- Steps 3–13 implemented with a test gate and local commit each (`b367d56` … `d8ee223`).
+- D2 verification: moved code diffed against the original — identical apart from `this.client` → parameter; Phase 1 provider tests 20/20 before and after.
+- `DailyBudget`/`sendError` and the browser `errorMessage` moved verbatim to shared modules.
+
+Issues found and fixed:
+1. Circular runtime import between `sources.ts` and `service.ts` (`MAX_SOURCES`) — constant moved to `sources.ts`.
+2. TypeScript inferred strict types from the plain-JS cards store in tests — test imports typed loosely; runtime validation unchanged.
+3. Phase 1 E2E chip count became 10 (new panel has its own chips) — locator scoped to `#demo-topics`; intent unchanged.
+4. Phase 1 health test asserted Explorer was "planned" — updated narrowly (Explorer not planned, Evidence still planned).
+5. Footer still said "Phase 1" — updated.
+
 ## Next actions
 - Owner: review demo lessons and grading labels (Darija + science); decide on API key and live tests.
-- Then: Phase 2 (Knowledge Explorer, Evidence Analyzer) per priority, deployment, submission package.
+- Owner: review Knowledge Explorer demo content; decide on a real source retriever (Wikipedia network approval or paid web search).
+- Then: Phase 2B (Evidence Analyzer) after approval, deployment, submission package.

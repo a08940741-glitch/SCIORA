@@ -1,40 +1,66 @@
 # SCIORA — Test Report
 
-_Only tests that were actually executed are listed. Every row below was produced by running the test file; nothing is copied from expectations._
+_Only tests that were actually executed are listed. Every row was produced by running the test file. Previous report (Phase 1, commit `163b128`): 154/154 passed._
 
-## Run summary
+## Run summary (Phase 2A)
 
 | Item | Value |
 |---|---|
 | Date | 2026-11-20 |
-| Code version | commit `11e0f62` + documentation changes (no code changes after this run) |
+| Code version | commit `d8ee223` + documentation changes (no code changes after this run) |
 | Environment | Linux container, Node 22.23.5, Chromium (pre-installed Playwright) |
-| AI mode during tests | **Demo mode or a fake AI client. No real API call was made.** |
-| Automated tests | **154 / 154 passed**, 0 failed, 0 skipped |
-| `npm test` (unit + API) | 149 / 149 passed |
-| `npm run test:e2e` (browser) | 5 / 5 passed |
+| AI mode during tests | **Demo mode or FAKE AI client / FAKE retriever. No real API call and no external network call was made.** |
+| Automated tests | **235 / 235 passed**, 0 failed, 0 skipped |
+| `npm test` (unit + API) | 223 / 223 passed |
+| `npm run test:e2e` (browser) | 12 / 12 passed |
 | `npm run typecheck` | passed (0 errors) |
 | `npm audit` | 0 vulnerabilities (all and production dependencies) |
-| Secret scan | passed (no key patterns, no `.env` files) |
-| Manual server smoke (`npm start`, demo) | health → demo mode; lesson generated (water cycle); MCQ graded; index served |
-| Production start without `SCIORA_TOKEN_SECRET` | refused to start (exit 1), as designed |
+| New dependencies in Phase 2A | none (`package.json` unchanged) |
+| Secret scan | passed |
+| Manual server smoke (`npm start`, demo) | health: demo, knowledge demo, retrieval off; Arabizi knowledge query answered (status demo, 0 sources); quiz transform (self-check, 3 questions) |
 
-## NOT executed (and why)
+## Changes to existing tests in Phase 2A (disclosed)
 
-| Test | Expected | Actual | Status |
-|---|---|---|---|
-| `npm run test:live` (real lesson + grading call) | Live API works end to end | — | **Not run** — requires owner approval and an API key |
-| `npm run eval:grading` (Haiku on 28 written fixtures) | 0 correct answers graded incorrect; ≥ 90% agreement | — | **Not run** — requires owner approval; costs money |
-| Structured outputs + server-side fallback combined, live | Accepted by the API | — | **Unverified** |
-| Darija quality of live explanations | Natural, correct Darija | — | **Not evaluated** (needs live mode + native-speaker review) |
-| Owner review of demo lessons and fixture labels | Reviewed | All marked unreviewed | **Pending** |
+| Test | Change | Reason |
+|---|---|---|
+| `test/api/api.test.ts` — health | Now asserts `knowledge_explorer` is **not** in `plannedNotImplemented`, and `evidence_analyzer` still is | Explorer is implemented; the old assertion became false. Narrow update (same principle as D3). |
+| `test/e2e/workspace.e2e.test.ts` — chips | Locator `.chip` → `#demo-topics .chip` | The new Explorer panel also has 5 topic chips; the old locator counted both panels (10). Intent unchanged. |
+| `test/e2e/workspace.e2e.test.ts` — Phase 2 absence | Asserts only that the **Evidence Analyzer** is absent | Approved decision D3. |
+| `test/helpers/app.ts` | Optional `knowledgeProvider` / `retriever` parameters | Needed to inject fakes; no existing behaviour changed. |
 
-## What the tests prove — and what they do not
+## NOT executed / not verified
 
-- **Prove:** the server never sends answer keys to the browser; tokens cannot be read, forged, tampered with or used after expiry; each exercise is graded once even under 20 simultaneous requests; the store fails closed when full without evicting records; rule-based grading accepts equivalent answers (`1/2`, `0.5`, `٠٫٥`, `2(x+1)`); the server-side verdict rule turns doubtful or unsupported AI judgements into *uncertain*; demo content is always labelled and never replaces a failed live call; secrets and answers never appear in logs; the UI works in RTL on desktop and mobile without console/CSP errors.
-- **Do not prove:** that Claude Haiku judges Darija answers correctly, or that Claude Sonnet writes good Darija explanations. The grading fixture tests use *recorded* judgements to test SCIORA's code; model quality needs the live evaluation.
+| Item | Status |
+|---|---|
+| Live lesson / grading / knowledge calls against the real API | **Not run** — no key, no approval |
+| `npm run eval:grading` | **Not run** |
+| Real source retrieval | **Not implemented** (decision D1: NoopRetriever only). `source_backed` is reachable only with the FAKE test retriever. |
+| Quality of live Darija explanations / knowledge answers | **Not evaluated** |
+| Owner review of demo lessons, knowledge demo content and grading labels | **Pending** (all marked unreviewed) |
+
+## What the Phase 2A tests prove — and what they do not
+
+- **Prove:** the AI cannot introduce source titles/URLs (schema); citations to non-retrieved ids are removed and disclosed; verification status is decided by the server (demo / not_source_verified / source_backed) and live answers without retrieval are labelled not source-verified; retrieved sources are https-only, sanitized and re-identified; hostile source/question/transform text cannot break prompt delimiters; retrieval failures and timeouts degrade gracefully; provider errors map to clear HTTP errors and are never replaced by demo content; no prompt, secret or key appears in responses or logs; the shared daily limit and rate limit apply; quizzes are local self-checks (no API call, no level-estimate change); cards are re-validated on load (tampered HTML/javascript links rendered safely); the UI shows no English words in Arabic interface text; tabs work by keyboard; layout works on mobile.
+- **Do not prove:** the quality or factual accuracy of live AI answers, or that a real retriever would work — none exists yet.
 
 ## Detailed results
+
+### Knowledge cards store (2A)
+`test/unit/cards-store.test.ts` — 11/11 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | card from a demo answer: status demo, no sources, origin demo | ✅ PASS |
+| 2 | card from a live un-sourced answer: not_source_verified | ✅ PASS |
+| 3 | card from a source-backed answer keeps ONLY cited sources | ✅ PASS |
+| 4 | add / list / search / collections / update / remove | ✅ PASS |
+| 5 | checkedByMe never upgrades the source status | ✅ PASS |
+| 6 | tampered storage: invalid cards dropped, javascript: links removed, impossible statuses downgraded | ✅ PASS |
+| 7 | corrupted JSON and wrong version reset safely | ✅ PASS |
+| 8 | limit of 200 cards is enforced | ✅ PASS |
+| 9 | field lengths are capped and control/bidi characters removed | ✅ PASS |
+| 10 | invalid input (no title) is refused; storage failure reported | ✅ PASS |
+| 11 | export contains the cards and no secrets | ✅ PASS |
 
 ### Configuration (demo/live switch, secrets, model routing)
 `test/unit/config.test.ts` — 13/13 passed
@@ -109,6 +135,82 @@ _Only tests that were actually executed are listed. Every row below was produced
 | 5 | demo keyword grader safety on fixtures: never 'incorrect', never a false 'correct' | ✅ PASS |
 | 6 | review status is reported honestly (owner review still pending) | ✅ PASS |
 
+### Knowledge Explorer — connections and learning mode (2A)
+`test/unit/knowledge-learning.test.ts` — 6/6 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | connections: duplicates, the topic itself and overflow are removed | ✅ PASS |
+| 2 | quiz cleaning: questions with a missing correct choice or duplicate ids are dropped | ✅ PASS |
+| 3 | quiz with no valid question → bad_output from the service | ✅ PASS |
+| 4 | learning mode via service (demo): simplify, examples, quiz; quiz flagged self-check only | ✅ PASS |
+| 5 | learning mode is independent of Phase 1 grading (no token, no exercise set in the response) | ✅ PASS |
+| 6 | demo query returns cleaned suggestions for every topic | ✅ PASS |
+
+### Knowledge Explorer — providers (demo; live with FAKE client) (2A)
+`test/unit/knowledge-providers.test.ts` — 10/10 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | demo knowledge content: 5 valid files, unreviewed, ZERO sources/citations anywhere (D1) | ✅ PASS |
+| 2 | demo matches Darija, MSA, French, English and Arabizi questions | ✅ PASS |
+| 3 | demo answer: labelled demo, DEMO caveat first, no sources even if a citation sneaks into content | ✅ PASS |
+| 4 | demo answer: other language / level → honest caveats in Darija | ✅ PASS |
+| 5 | demo: unknown topic → not_in_demo (404), never invented content | ✅ PASS |
+| 6 | demo transforms: simplify / examples / quiz for a known topic | ✅ PASS |
+| 7 | live answer: LEARN model, medium effort, fallback, fixed system prompt, question + empty-sources notice | ✅ PASS |
+| 8 | live transform: FAST model (Haiku), low effort, mode-specific schema | ✅ PASS |
+| 9 | live provider error handling is the shared Phase 1 behaviour (refusal, malformed, 429, unavailable) | ✅ PASS |
+| 10 | factory: demo config never creates a client; live config uses the factory (fake) | ✅ PASS |
+
+### Knowledge Explorer — schemas (2A)
+`test/unit/knowledge-schemas.test.ts` — 8/8 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | knowledge query: defaults, trimming, limits, strictness | ✅ PASS |
+| 2 | knowledge query accepts all supported answer languages incl. English | ✅ PASS |
+| 3 | AI answer schema: valid sample passes | ✅ PASS |
+| 4 | AI answer schema has NO way to carry source titles or URLs | ✅ PASS |
+| 5 | segment kinds are restricted to fact / explanation / assumption / uncertainty | ✅ PASS |
+| 6 | transform request: modes, strict content, limits | ✅ PASS |
+| 7 | quiz output: choice ids a-d only | ✅ PASS |
+| 8 | retrieved source schema requires a real URL | ✅ PASS |
+
+### Knowledge Explorer — core service and retrieval orchestration (2A)
+`test/unit/knowledge-service.test.ts` — 8/8 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | demo provider: retriever is never called; note = demo | ✅ PASS |
+| 2 | live provider + default NoopRetriever (D1): no retrieval, note = disabled, provider gets no sources | ✅ PASS |
+| 3 | live provider + enabled fake retriever: sources get server ids S1..Sn and reach the provider | ✅ PASS |
+| 4 | retriever failure: answer continues without sources, note = failed | ✅ PASS |
+| 5 | retriever timeout: aborted, answer continues without sources, note = timeout | ✅ PASS |
+| 6 | retriever returning malformed items: invalid ones dropped; none left → no_results | ✅ PASS |
+| 7 | more than 5 retrieved sources are capped at 5 | ✅ PASS |
+| 8 | provider errors propagate unchanged (route maps them to HTTP) | ✅ PASS |
+
+### Knowledge Explorer — source transparency, verification, prompt injection (2A)
+`test/unit/knowledge-sources.test.ts` — 14/14 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | https-only: http, javascript:, data:, ftp, credentials and garbage URLs are rejected | ✅ PASS |
+| 2 | server assigns ids S1..Sn; retriever cannot inject its own ids or extra fields | ✅ PASS |
+| 3 | control and bidi-override characters stripped; long excerpts capped; duplicates dropped | ✅ PASS |
+| 4 | empty title or excerpt after cleaning → dropped | ✅ PASS |
+| 5 | demo → status demo, no sources, no citations, uncitedFacts 0 | ✅ PASS |
+| 6 | live without retrieval (D1 default) → not_source_verified; AI-invented ids removed and disclosed | ✅ PASS |
+| 7 | live with retrieved sources and a valid citation → source_backed; fabricated id removed | ✅ PASS |
+| 8 | sources retrieved but nothing cited → still not_source_verified (no false claim) | ✅ PASS |
+| 9 | connections are always marked as suggestions | ✅ PASS |
+| 10 | hostile retrieved text cannot close the source block or add tags | ✅ PASS |
+| 11 | hostile question cannot break out of the question block | ✅ PASS |
+| 12 | neutralizeForPrompt strips control/bidi chars and caps length | ✅ PASS |
+| 13 | system prompt forbids invented sources and treats sources as data | ✅ PASS |
+| 14 | service.query with fake retriever + citing provider → source_backed with sanitized sources | ✅ PASS |
+
 ### Preliminary level estimate (learner model)
 `test/unit/learner-model.test.ts` — 10/10 passed
 
@@ -137,7 +239,7 @@ _Only tests that were actually executed are listed. Every row below was produced
 | 5 | scripts/live-smoke.ts refuses with a key but no SCIORA_ALLOW_LIVE_TESTS | ✅ PASS |
 | 6 | scripts/live-smoke.ts refuses with approval switch but demo mode | ✅ PASS |
 
-### AI providers (demo; Anthropic with FAKE client)
+### Phase 1 AI providers (demo; Anthropic with FAKE client)
 `test/unit/providers.test.ts` — 20/20 passed
 
 | # | Test | Result |
@@ -200,7 +302,7 @@ _Only tests that were actually executed are listed. Every row below was produced
 | 12 | evidence check tolerates tashkeel, alef forms and punctuation differences | ✅ PASS |
 | 13 | rubric with no required criteria treats all criteria as required | ✅ PASS |
 
-### Schemas and public (browser-safe) view
+### Phase 1 schemas and public (browser-safe) view
 `test/unit/schemas.test.ts` — 8/8 passed
 
 | # | Test | Result |
@@ -214,7 +316,7 @@ _Only tests that were actually executed are listed. Every row below was produced
 | 7 | GradeRequest: limits and strictness | ✅ PASS |
 | 8 | WrittenJudgement schema rejects unknown judgement values | ✅ PASS |
 
-### HTTP API (security, transparency, concurrency, capacity)
+### Phase 1 HTTP API (security, transparency, concurrency, capacity)
 `test/api/api.test.ts` — 31/31 passed
 
 | # | Test | Result |
@@ -251,7 +353,43 @@ _Only tests that were actually executed are listed. Every row below was produced
 | 30 | static: index served; server source and demo answer files are NOT served | ✅ PASS |
 | 31 | no-secret-in-logs: tokens, answers, secrets and keys never appear in logs | ✅ PASS |
 
-### Browser end-to-end (Playwright, demo mode)
+### Knowledge Explorer HTTP API (2A)
+`test/api/knowledge-api.test.ts` — 17/17 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | health reports the knowledge module: demo, no retrieval, demo topics; Explorer not 'planned' | ✅ PASS |
+| 2 | demo query: 200, status demo, no sources, DEMO caveat, suggestions labelled | ✅ PASS |
+| 3 | demo query in Arabizi and English is understood | ✅ PASS |
+| 4 | demo unknown topic → 404 not_in_demo | ✅ PASS |
+| 5 | live (fake client), no retrieval (D1): not_source_verified, invented citation removed and disclosed | ✅ PASS |
+| 6 | live (fake client) + FAKE retriever: source_backed with sanitized https sources only | ✅ PASS |
+| 7 | live failure is an error, never replaced by demo content | ✅ PASS |
+| 8 | malformed provider output twice → 502 bad_output | ✅ PASS |
+| 9 | transform (demo): simplify / examples / quiz; quiz flagged self-check, no token | ✅ PASS |
+| 10 | transform validation: bad mode, extra fields, oversized content → 400 | ✅ PASS |
+| 11 | transform content is treated as data: hostile content neutralized in the prompt | ✅ PASS |
+| 12 | query validation: bad bodies → 400; too large → 413 | ✅ PASS |
+| 13 | no internal prompt, secret or key ever appears in knowledge responses | ✅ PASS |
+| 14 | shared daily budget: live knowledge calls count against SCIORA_DAILY_LIMIT; demo calls do not | ✅ PASS |
+| 15 | rate limit applies to knowledge routes | ✅ PASS |
+| 16 | security headers present on knowledge routes; no CORS | ✅ PASS |
+| 17 | logs never contain the question text or retrieved excerpts | ✅ PASS |
+
+### Browser E2E — Knowledge Explorer and cards (2A)
+`test/e2e/explorer.e2e.test.ts` — 7/7 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | explorer demo flow: labelled answer, no sources, suggestions, learning mode, save card | ✅ PASS |
+| 2 | explorer: unknown topic in demo shows a localized error, no invented content | ✅ PASS |
+| 3 | no English leakage in explorer and cards interface text (content excluded) | ✅ PASS |
+| 4 | tabs support keyboard navigation (RTL arrows) | ✅ PASS |
+| 5 | tampered cards in localStorage render safely (no javascript: links, status downgraded) | ✅ PASS |
+| 6 | mobile: explorer renders in RTL without horizontal overflow | ✅ PASS |
+| 7 | FAKE live provider + FAKE retriever: AI label, source_backed banner, safe https source links | ✅ PASS |
+
+### Browser E2E — learning assistant (Phase 1)
 `test/e2e/workspace.e2e.test.ts` — 5/5 passed
 
 | # | Test | Result |
@@ -262,13 +400,7 @@ _Only tests that were actually executed are listed. Every row below was produced
 | 4 | mobile layout renders the workspace in RTL without horizontal overflow | ✅ PASS |
 | 5 | clear my data removes the stored estimate | ✅ PASS |
 
-## Failures found during development (and fixed)
-
-See `DEVELOPMENT_LOG.md` → Phase 1 implementation: expression whitelist bug, superscript normalization order, a 1-character demo keyword, a missing Darija keyword, a key-shaped test value blocked by the secret scan, and English text in the Arabic UI. Each gate was re-run after the fix.
-
 ## Known limitations
 
-- Replay store is in memory: a restart clears it (tokens issued before the restart could be re-graded until they expire, max 2 h); atomic within one Node process only.
-- Numeric parser does not evaluate roots/expressions (e.g. `√169`); such answers get a 422 "rewrite your answer" message without consuming the attempt (fixture `py-num-6`).
-- Demo keyword grading is deliberately conservative: it often returns *uncertain* for correct paraphrases (never *incorrect*).
-- 37 fixtures is a small sample; labels are not yet reviewed by a native speaker.
+- Phase 1: in-memory replay store (restart clears it; single process); numeric parser does not evaluate roots; demo keyword grading is conservative; 37 fixtures, unreviewed.
+- Phase 2A: no real source retrieval; demo knowledge content in Darija only and at one level; knowledge cards are browser-local and user-editable; quiz answers are visible to the student by design (self-practice).

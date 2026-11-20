@@ -1,6 +1,6 @@
 # SCIORA — Feature Status & Roadmap
 
-_Last updated: 2026-11-20 (after Phase 1 implementation) · Deadline (reported from the WAICY 2026 Guidebook): 2026-11-29, 5:00 PM ET (to be re-verified on the official portal)._
+_Last updated: 2026-11-20 (after Phase 2A — Knowledge Explorer) · Deadline (reported from the WAICY 2026 Guidebook): 2026-11-29, 5:00 PM ET (to be re-verified on the official portal)._
 
 Status labels used in this file:
 
@@ -11,7 +11,7 @@ Status labels used in this file:
 | **Planned — Phase N** | Designed or listed, **not implemented**. Must not be presented as working. |
 | **Awaiting approval** | Blocked on a decision by the project owner. |
 
-> Current state (2026-11-20): **Phase 1 implemented; tested in demo mode and with a fake AI client.** Live AI mode has **not** been run against the real API (awaiting owner approval and key). Demo lessons and grading labels are **not yet reviewed** by the owner.
+> Current state (2026-11-20): **Phase 1 and Phase 2A (Knowledge Explorer) implemented; tested in demo mode and with a fake AI client / fake retriever.** No real source retrieval exists (decision D1). Live AI mode has **not** been run against the real API (awaiting owner approval and key). Demo lessons and grading labels are **not yet reviewed** by the owner.
 
 ---
 
@@ -43,12 +43,31 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 
 ---
 
-## Phase 2 — Planned features (NOT implemented)
+## Phase 2A — Knowledge Explorer
+
+| Feature | Status |
+|---|---|
+| Knowledge query (Darija / MSA / French / English / Arabizi questions; answer in darija, msa, fr or en; 3 levels) | **Implemented & tested** (demo; live provider with fake client only) |
+| Answer segments labelled fact / explanation / assumption / uncertainty | **Implemented & tested** |
+| Source transparency: AI cannot output titles/URLs; only server-retrieved source ids; invented citations removed and disclosed | **Implemented & tested** |
+| Verification status decided by the server: demo / not_source_verified / source_backed | **Implemented & tested** |
+| `SourceRetriever` interface + `NoopRetriever` | **Implemented & tested** |
+| **Real source retrieval** (Wikipedia, web search, …) | **Not implemented** (decision D1). Live answers are always labelled *not source-verified*. |
+| Source sanitizing (https only, no credentials, control/bidi chars removed, caps, server ids) | **Implemented & tested** |
+| Retrieval timeout / failure handling | **Implemented & tested** (fake retriever) |
+| Topic connections (deduped, max 5, always labelled suggestions) | **Implemented & tested** |
+| Learning mode: simplify / examples / self-check quiz (independent of Phase 1 grading) | **Implemented & tested** |
+| Knowledge cards: save, collections, search, "checked by me", move, delete, export (browser-only) | **Implemented & tested** |
+| API: `POST /api/knowledge/query`, `POST /api/knowledge/transform` (shared daily limit, rate limit, CSP) | **Implemented & tested** |
+| UI: tabs (learning / explorer / cards), Arabic RTL, mobile, no English leakage in interface text | **Implemented & tested** (Playwright) |
+| Demo knowledge content (5 topics, no sources) | **Implemented** — **unreviewed** |
+
+## Phase 2 — Remaining planned features (NOT implemented)
 
 | Priority | Feature | Status | Notes |
 |---|---|---|---|
-| P1 | Knowledge Explorer (Wikipedia retrieval, dated and linked sources, sourced facts separated from AI explanation) | **Planned — Phase 2** | Not built. Not shown in the Phase 1 interface. |
-| P1 | Evidence Analyzer (Supported / Contradicted / Mixed Evidence / Insufficient Evidence) | **Planned — Phase 2** | Not built. Not shown in the Phase 1 interface. |
+| P1 | Evidence Analyzer (Supported / Contradicted / Mixed Evidence / Insufficient Evidence) | **Planned — Phase 2B** | Not built. Not shown in the interface. |
+| P1 | Real source retriever for Knowledge Explorer | **Decision pending** | Options: Wikipedia API (needs network approval), paid web-search tool (live only). |
 | P1 | Learning Progress screen | **Planned — Phase 2** | Built only from stored, real results. |
 | P1 | Landing page, Settings, full Responsible-AI / limitations page, French interface | **Planned — Phase 2** | Phase 1 has a short responsible-use panel only. |
 | P2 | **Optional Google Sign-In + progress sync** | **Planned — Phase 2** | Full design: [`docs/planned/GOOGLE_SIGN_IN.md`](docs/planned/GOOGLE_SIGN_IN.md). Requires a database and an owner decision on hosting. |

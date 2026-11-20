@@ -18,6 +18,17 @@ _This document describes real risks and the safeguards that are actually impleme
 | **Credential leaks** | API key exposed. | Key server-side only; secret scan before every commit; tests check responses and logs. | — |
 | **Cost / availability** | Abuse runs up costs or blocks service. | Rate limit per IP; daily AI limit; capacity limit fails closed. | Fail-closed means SCIORA can become temporarily unavailable under abuse. |
 
+### 1.1 Knowledge Explorer (Phase 2A)
+
+| Risk | Safeguard | Remaining limitation |
+|---|---|---|
+| **Fabricated references** | The AI output schema has no title/URL fields; only ids of server-retrieved sources are accepted; other ids are removed and the removal is disclosed; demo content has no sources. | — |
+| **Unverified answers presented as verified** | The server decides the status. With no retrieval (current state) every live answer is labelled *not source-verified*; demo is labelled demo; even *source-backed* is worded “backed by retrieved sources — not necessarily correct”. | No real retriever exists yet, so no answer can currently be source-backed outside tests. |
+| **Poisoned sources / prompt injection** | Retrieved text is untrusted: https only, sanitized, neutralized (no tag characters), placed in delimited data blocks; tested with hostile sources, questions and transform content. | Prompt injection cannot be fully ruled out for any LLM. |
+| **AI suggestions mistaken for facts** | Related concepts are always labelled “suggestion”; answer parts are labelled fact / explanation / assumption / uncertainty. | The AI's own labelling can be wrong. |
+| **Quiz mistaken for assessment** | Quiz is labelled self-check, checked locally, never sent or recorded, never affects the level estimate. | — |
+| **Card misuse** | Cards keep the status SCIORA reported; “checked by me” cannot upgrade it; cards stay in the browser. | Cards are user-editable local notes, not an authoritative record. |
+
 ## 2. Unintended consequences we considered
 - **The level estimate could discourage students.** It is labelled *preliminary*, is based only on answers in SCIORA, never measures intelligence, ignores uncertain results, and the student can always choose the level.
 - **“Uncertain” could confuse students.** SCIORA explains *why* it is unsure, shows the model answer, and suggests asking a teacher.
@@ -29,8 +40,9 @@ _This document describes real risks and the safeguards that are actually impleme
 3. When grading is uncertain, SCIORA says so clearly.
 4. SCIORA does not ask for your name or email; progress stays in your browser.
 
-## 4. Honest limits of Phase 1
+## 4. Honest limits (Phase 1 + 2A)
 - Live AI mode has not been tested against the real API yet.
 - Demo lessons and grading labels were drafted with AI assistance and are **not yet reviewed** by the project owner.
 - Phase 1 covers a small set of topics in demo mode; it does not claim curriculum coverage.
 - The level estimate is not a validated assessment instrument.
+- The Knowledge Explorer has no real source retrieval yet; its demo answers are pre-written, unreviewed, and in Darija at one level only.

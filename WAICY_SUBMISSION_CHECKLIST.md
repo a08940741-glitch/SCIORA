@@ -24,6 +24,7 @@ _Items marked **(reported)** come from the project owner's reading of the offici
 - [ ] AI usage disclosure matches `AI_USAGE_DISCLOSURE.md` (code written with Claude under the student's direction).
 - [ ] No invented statistics in the problem statement; any number has a verified source.
 - [ ] Five Big Ideas described honestly (Perception not implemented; SCIORA does not train models).
+- [ ] Knowledge Explorer presented honestly: no real source retrieval yet; demo answers have no sources.
 - [ ] Ethics section reflects `AI_ETHICS.md`.
 - [ ] The student can explain: provider abstraction, encrypted exercise tokens, replay protection, rule-based grading, rubric aggregation and “uncertain”, the Elo estimate and its limits.
 
@@ -38,7 +39,8 @@ _Items marked **(reported)** come from the project owner's reading of the offici
 | Date | Plan |
 |---|---|
 | Nov 20 | Phase 1 implemented and tested (demo mode) ✔ |
-| Nov 21–24 | Owner review; live mode decision; Phase 2 (Explorer, Evidence) if approved |
+| Nov 20 | Phase 2A Knowledge Explorer implemented and tested (demo mode) ✔ |
+| Nov 21–24 | Owner review; live mode and retriever decisions; Phase 2B (Evidence Analyzer) if approved |
 | Nov 25 | UI polish, deploy |
 | Nov 26 | Full testing, AI quality evaluation (if approved) |
 | Nov 27 | Description, AI usage text, slides |

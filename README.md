@@ -4,9 +4,10 @@
 
 SCIORA is an AI-assisted learning platform. Its first implementation, **Darija AI Study**, helps Moroccan students understand school topics in Moroccan Darija and Arabic, practise with exercises, and get honest, explained feedback.
 
-> **Current status: Phase 1 (learning loop) implemented and tested in demo mode.**
+> **Current status: Phase 1 (learning loop) and Phase 2A (Knowledge Explorer) implemented and tested in demo mode.**
 > Live AI mode is built but has **not yet been run against the real API** (no live calls without the project owner's approval).
-> Knowledge Explorer, Evidence Analyzer, the Progress screen and optional Google Sign-In are **planned (Phase 2), not implemented.**
+> **No real source retrieval exists yet:** live Knowledge Explorer answers are labelled *not source-verified*.
+> Evidence Analyzer (Phase 2B), the Progress screen and optional Google Sign-In are **planned, not implemented.**
 > See [`FEATURE_STATUS.md`](FEATURE_STATUS.md).
 
 ## What Phase 1 does
@@ -24,6 +25,15 @@ Question → Understanding → Explanation (Darija + formal) → Example → Exe
 - **Transparency:** every card is labelled **"AI-generated (model)"** or **"DEMO — pre-written, not live AI"**.
 - **Preliminary level estimate** per topic (Elo-style), stored only in the student's browser. It is an estimate, not proof of mastery.
 
+## What Phase 2A (Knowledge Explorer) adds
+
+- Ask educational or research questions in Darija, Arabic, French, English or Arabizi; answers at 3 levels.
+- Each part of an answer is labelled **fact / explanation / assumption / uncertainty**.
+- **Source transparency:** the AI cannot write source titles or URLs; it may only cite sources the server retrieved. With no retriever configured (current state), answers say clearly that they are **not source-verified**.
+- **Related concepts**, always labelled as AI suggestions.
+- **Learning mode:** simplify, examples, or a short self-check quiz (not graded, not recorded).
+- **Knowledge cards** saved in the browser, organised in collections, with their verification status.
+
 ## Run it
 
 Requirements: Node.js 22+.
@@ -36,7 +46,7 @@ npm install
 npm start
 ```
 
-Open http://127.0.0.1:8787. Without configuration SCIORA runs in **demo mode**: 5 pre-written lessons (photosynthesis, Pythagoras, distributivity, the principle of inertia, the water cycle), no AI calls.
+Open http://127.0.0.1:8787. Without configuration SCIORA runs in **demo mode**: 5 pre-written lessons and 5 pre-written knowledge answers (photosynthesis, Pythagoras, distributivity, the principle of inertia, the water cycle), no AI calls, no sources.
 
 Configuration lives in environment variables; see [`.env.example`](.env.example). **Never commit `.env`.**
 
