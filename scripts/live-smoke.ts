@@ -1,6 +1,7 @@
 /**
- * LIVE smoke test (costs money — owner approval required). Makes 2 real calls:
- * one lesson (LEARN model) and one written-answer grading (FAST model).
+ * LIVE smoke test (costs money — owner approval required). Makes up to 4 real calls:
+ * one lesson (LEARN), one written-answer grading (FAST), one knowledge answer (LEARN)
+ * and one evidence analysis (REASON). No real source retrieval is configured.
  *
  *   SCIORA_ALLOW_LIVE_TESTS=1 SCIORA_AI_MODE=live ANTHROPIC_API_KEY=... npm run test:live
  */
@@ -8,6 +9,9 @@ import { requireLiveApproval } from "./live-gate.ts";
 import { createProvider } from "../src/ai/index.ts";
 import { enforceLessonIntegrity } from "../src/domain/lesson-integrity.ts";
 import { aggregate } from "../src/domain/rubric-aggregate.ts";
+import { createKnowledgeProvider } from "../src/knowledge/index.ts";
+import { KnowledgeService } from "../src/knowledge/service.ts";
+import { createEvidenceProvider, EvidenceService } from "../src/evidence/service.ts";
 
 const config = requireLiveApproval("test:live");
 const provider = createProvider(config);
@@ -25,3 +29,9 @@ if (st && st.type === "short_text") {
 } else {
   console.log("No short_text exercise generated; grading call skipped.");
 }
+
+const k = await new KnowledgeService({ provider: createKnowledgeProvider(config) }).query({ question: "What is photosynthesis?", level: "intermediate", language: "en" });
+console.log("knowledge:", k.meta.model, "| status:", k.verification.status, "| removed citations:", k.verification.removedCitations);
+
+const e = await new EvidenceService({ provider: createEvidenceProvider(config) }).analyze({ claim: "Water boils at 100 degrees everywhere", language: "en" });
+console.log("evidence:", e.meta.model, "| overall:", e.overall.verdict, "| sub-claims:", e.subClaims.map((s) => `${s.type}:${s.verdict}`).join(", "));
