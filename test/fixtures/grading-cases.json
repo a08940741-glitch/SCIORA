@@ -1,0 +1,221 @@
+{
+  "description": "SCIORA grading fixtures. Drafted with AI assistance; EVERY expected label must be reviewed by the project owner (native Darija speaker) before results are reported as validated. recordedJudgement = what a well-behaved grader should return; offline tests use it to verify SCIORA's pipeline (evidence check + verdict rule), NOT the quality of any AI model.",
+  "cases": [
+    { "id": "ps-darija-1", "category": "darija_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "النبتة كتاخد الضو ديال الشمس والما وثاني أكسيد الكربون وكتصاوب منهم السكر",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "الضو ديال الشمس" },
+        { "criterionId": "water", "judgement": "met", "evidence": "والما" },
+        { "criterionId": "co2", "judgement": "met", "evidence": "ثاني أكسيد الكربون" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-msa-1", "category": "msa_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "تستعمل النبتة الطاقة الضوئية لتحويل الماء وثنائي أكسيد الكربون إلى سكر",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "الطاقة الضوئية" },
+        { "criterionId": "water", "judgement": "met", "evidence": "الماء" },
+        { "criterionId": "co2", "judgement": "met", "evidence": "ثنائي أكسيد الكربون" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-paraphrase-1", "category": "paraphrase_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "كتجمع الطاقة من الشمس باش تحول الما والغاز اللي كنخرجو حنا فالتنفس لسكر",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "الطاقة من الشمس" },
+        { "criterionId": "water", "judgement": "met", "evidence": "الما" },
+        { "criterionId": "co2", "judgement": "met", "evidence": "الغاز اللي كنخرجو حنا فالتنفس" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-arabizi-1", "category": "arabizi_or_french_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "kat9ad lmakla dyalha b daw dyal chams, lma w CO2",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "daw dyal chams" },
+        { "criterionId": "water", "judgement": "met", "evidence": "lma" },
+        { "criterionId": "co2", "judgement": "met", "evidence": "CO2" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-french-1", "category": "arabizi_or_french_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "La plante utilise la lumière du soleil, l'eau et le dioxyde de carbone pour fabriquer du sucre",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "la lumière du soleil" },
+        { "criterionId": "water", "judgement": "met", "evidence": "l'eau" },
+        { "criterionId": "co2", "judgement": "met", "evidence": "le dioxyde de carbone" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-misspelled-1", "category": "misspelled_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "النبته كتاخد الضوو ديال الشمس و الماء و تاني اوكسيد الكاربون",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "الضوو ديال الشمس" },
+        { "criterionId": "water", "judgement": "met", "evidence": "الماء" },
+        { "criterionId": "co2", "judgement": "met", "evidence": "تاني اوكسيد الكاربون" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-partial-1", "category": "partial", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "كتستعمل الضو ديال الشمس",
+      "expected": "partially_correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "الضو ديال الشمس" },
+        { "criterionId": "water", "judgement": "not_met", "evidence": null },
+        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-partial-2", "category": "partial", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "كتاخد الما والضو",
+      "expected": "partially_correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "met", "evidence": "الضو" },
+        { "criterionId": "water", "judgement": "met", "evidence": "الما" },
+        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-incorrect-1", "category": "incorrect", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "النبات كياكل من التراب",
+      "expected": "incorrect",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "not_met", "evidence": null },
+        { "criterionId": "water", "judgement": "not_met", "evidence": null },
+        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": "soil_food", "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-incorrect-2", "category": "incorrect", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "تتغذى النبتة على الأسمدة الموجودة في التربة",
+      "expected": "incorrect",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "not_met", "evidence": null },
+        { "criterionId": "water", "judgement": "not_met", "evidence": null },
+        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": "soil_food", "feedback": "f", "confidence": "high" } },
+
+    { "id": "ps-unclear-1", "category": "unclear", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
+      "answer": "بالطاقة",
+      "expected": "uncertain",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "light", "judgement": "unclear", "evidence": null },
+        { "criterionId": "water", "judgement": "not_met", "evidence": null },
+        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "low" } },
+
+    { "id": "in-darija-1", "category": "darija_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "إلا كانت القوى كتعوض بعضياتها، الجسم كيبقى واقف ولا كيكمل يتحرك فخط مستقيم بنفس السرعة",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "met", "evidence": "القوى كتعوض بعضياتها" },
+        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "كيبقى واقف ولا كيكمل يتحرك فخط مستقيم بنفس السرعة" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "in-msa-1", "category": "msa_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "إذا انعدم مجموع القوى المطبقة على جسم فإنه يظل ساكنا أو يتحرك حركة مستقيمية منتظمة",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "met", "evidence": "انعدم مجموع القوى المطبقة" },
+        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "يظل ساكنا أو يتحرك حركة مستقيمية منتظمة" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "in-paraphrase-1", "category": "paraphrase_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "ملي ما كاينش شي حاجة كتدفع الجسم كثر من لاخرا، كيبقى على الحالة ديالو: إلا كان واقف كيبقى واقف وإلا كان غادي كيبقى غادي نيشان بنفس السرعة",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "met", "evidence": "ما كاينش شي حاجة كتدفع الجسم كثر من لاخرا" },
+        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "إلا كان واقف كيبقى واقف وإلا كان غادي كيبقى غادي نيشان بنفس السرعة" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "in-french-1", "category": "arabizi_or_french_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "Si les forces qui s'exercent sur un corps se compensent, il reste immobile ou garde un mouvement rectiligne uniforme",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "met", "evidence": "les forces qui s'exercent sur un corps se compensent" },
+        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "il reste immobile ou garde un mouvement rectiligne uniforme" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "in-arabizi-1", "category": "arabizi_or_french_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "ila kanet l9owat kat3awed b3diyatha, ljism kayb9a wa9ef wla kaytharrek f khat mosta9im b nafs sor3a",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "met", "evidence": "l9owat kat3awed b3diyatha" },
+        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "kayb9a wa9ef wla kaytharrek f khat mosta9im b nafs sor3a" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "in-partial-1", "category": "partial", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "الجسم كيبقى واقف",
+      "expected": "partially_correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "not_met", "evidence": null },
+        { "criterionId": "rest_or_uniform", "judgement": "partial", "evidence": "كيبقى واقف" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "in-incorrect-1", "category": "incorrect", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "باش الجسم يبقى يتحرك خاصو ديما قوة كتدفعو",
+      "expected": "incorrect",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "not_met", "evidence": null },
+        { "criterionId": "rest_or_uniform", "judgement": "not_met", "evidence": null } ], "misconceptionId": "motion_needs_force", "feedback": "f", "confidence": "high" } },
+
+    { "id": "in-unclear-1", "category": "unclear", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
+      "answer": "القوى",
+      "expected": "uncertain",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "forces_balance", "judgement": "unclear", "evidence": null },
+        { "criterionId": "rest_or_uniform", "judgement": "unclear", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "low" } },
+
+    { "id": "py-darija-1", "category": "darija_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
+      "answer": "فالمثلث القائم، المربع ديال الوتر كيساوي المجموع ديال المربعات ديال الضلعين لخرين",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "relation", "judgement": "met", "evidence": "المربع ديال الوتر كيساوي المجموع ديال المربعات ديال الضلعين لخرين" },
+        { "criterionId": "right_triangle", "judgement": "met", "evidence": "فالمثلث القائم" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "py-msa-1", "category": "msa_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
+      "answer": "في كل مثلث قائم الزاوية، مربع الوتر يساوي مجموع مربعي الضلعين الآخرين",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "relation", "judgement": "met", "evidence": "مربع الوتر يساوي مجموع مربعي الضلعين الآخرين" },
+        { "criterionId": "right_triangle", "judgement": "met", "evidence": "مثلث قائم الزاوية" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "py-formula-1", "category": "paraphrase_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
+      "answer": "BC² = AB² + AC² ملي يكون المثلث قائم فـ A",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "relation", "judgement": "met", "evidence": "BC² = AB² + AC²" },
+        { "criterionId": "right_triangle", "judgement": "met", "evidence": "المثلث قائم" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "py-french-1", "category": "arabizi_or_french_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
+      "answer": "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "relation", "judgement": "met", "evidence": "le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés" },
+        { "criterionId": "right_triangle", "judgement": "met", "evidence": "triangle rectangle" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "py-partial-1", "category": "partial", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
+      "answer": "مربع الوتر = مجموع مربعات الضلعين",
+      "expected": "partially_correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "relation", "judgement": "met", "evidence": "مربع الوتر = مجموع مربعات الضلعين" },
+        { "criterionId": "right_triangle", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "py-incorrect-1", "category": "incorrect", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
+      "answer": "الوتر كيساوي المجموع ديال الضلعين لخرين فأي مثلث",
+      "expected": "incorrect",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "relation", "judgement": "not_met", "evidence": null },
+        { "criterionId": "right_triangle", "judgement": "not_met", "evidence": null } ], "misconceptionId": "no_squares", "feedback": "f", "confidence": "high" } },
+
+    { "id": "di-darija-1", "category": "darija_correct", "exerciseRef": "distributivity/q3", "reviewedByStudent": false,
+      "answer": "كنضربو العدد اللي برا فكل واحد من اللي داخل القوس",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "multiply_each", "judgement": "met", "evidence": "كنضربو العدد اللي برا فكل واحد من اللي داخل القوس" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "di-msa-paraphrase-1", "category": "paraphrase_correct", "exerciseRef": "distributivity/q3", "reviewedByStudent": false,
+      "answer": "نضرب العدد الموجود خارج القوس في جميع حدود القوس",
+      "expected": "correct",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "multiply_each", "judgement": "met", "evidence": "نضرب العدد الموجود خارج القوس في جميع حدود القوس" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
+
+    { "id": "di-incorrect-1", "category": "incorrect", "exerciseRef": "distributivity/q3", "reviewedByStudent": false,
+      "answer": "كنضربو غير فالأول",
+      "expected": "incorrect",
+      "recordedJudgement": { "criteria": [
+        { "criterionId": "multiply_each", "judgement": "not_met", "evidence": null } ], "misconceptionId": "first_term_only", "feedback": "f", "confidence": "high" } },
+
+    { "id": "py-num-1", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "13", "expected": "correct" },
+    { "id": "py-num-2", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "13 cm", "expected": "correct" },
+    { "id": "py-num-3", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "١٣", "expected": "correct" },
+    { "id": "py-num-4", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "BC = 13", "expected": "correct" },
+    { "id": "py-num-5", "category": "incorrect", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "17", "expected": "incorrect" },
+    { "id": "py-num-6", "category": "known_limitation", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "√169", "expected": "unreadable",
+      "note": "Correct, but the Phase 1 numeric parser does not evaluate roots; the student is asked to rewrite the answer (no attempt consumed)." },
+
+    { "id": "di-expr-1", "category": "math_equivalent", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "x+6", "expected": "correct" },
+    { "id": "di-expr-2", "category": "math_equivalent", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "6 + x", "expected": "correct" },
+    { "id": "di-expr-3", "category": "math_equivalent", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "2x+6-x", "expected": "correct" },
+    { "id": "di-expr-4", "category": "incorrect", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "2x+6", "expected": "incorrect" }
+  ]
+}
