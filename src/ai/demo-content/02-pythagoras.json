@@ -1,0 +1,84 @@
+{
+  "id": "pythagoras",
+  "reviewed": false,
+  "matchKeywords": ["فيثاغورس", "فيتاغورس", "pythagore", "pythagoras", "المثلث القائم", "triangle rectangle", "right triangle", "الوتر", "hypoténuse", "hypotenuse"],
+  "lesson": {
+    "understood": {
+      "subject": "math",
+      "topic": "مبرهنة فيثاغورس (Théorème de Pythagore)",
+      "isEducational": true,
+      "clarification": null
+    },
+    "explanationDarija": "مبرهنة فيثاغورس كتخدم غير فالمثلث القائم الزاوية، يعني المثلث اللي فيه زاوية قائمة (90°). الضلع الطويل اللي مقابل للزاوية القائمة سميتو الوتر (l'hypoténuse). المبرهنة كتقول: المربع ديال الوتر كيساوي المجموع ديال المربعات ديال الضلعين لخرين. يعني إلا كان المثلث ABC قائم فـ A، عندنا: BC² = AB² + AC². مثلا إلا كان AB = 3 و AC = 4، إذن BC² = 9 + 16 = 25، و BC = 5.",
+    "explanationFormal": "مبرهنة فيثاغورس: إذا كان مثلث ABC قائم الزاوية في A، فإن مربع طول الوتر يساوي مجموع مربعي طولي الضلعين الآخرين، أي BC² = AB² + AC². تُستعمل هذه المبرهنة لحساب طول ضلع مجهول في مثلث قائم الزاوية إذا عُلم طولا الضلعين الآخرين. ملاحظة: المبرهنة العكسية تُستعمل لإثبات أن مثلثا ما قائم الزاوية.",
+    "steps": [
+      "تأكد بلي المثلث قائم الزاوية، وحدد فين كاينة الزاوية القائمة.",
+      "حدد الوتر: هو الضلع المقابل للزاوية القائمة وهو أطول ضلع.",
+      "كتب العلاقة: الوتر² = الضلع الأول² + الضلع الثاني².",
+      "عوض بالقيم وحسب.",
+      "خود الجذر المربع باش تلقى الطول."
+    ],
+    "example": {
+      "problem": "مثلث ABC قائم فـ A، فيه AB = 6 cm و AC = 8 cm. حسب BC.",
+      "solution": "BC² = AB² + AC² = 6² + 8² = 36 + 64 = 100، إذن BC = √100 = 10 cm."
+    },
+    "exercises": [
+      {
+        "id": "q1",
+        "type": "mcq",
+        "prompt": "فمثلث قائم الزاوية، شنو هو الوتر؟",
+        "hint": "قلب على الضلع اللي ما كيقيسش الزاوية القائمة.",
+        "explanation": "الوتر هو الضلع المقابل للزاوية القائمة، وهو أطول ضلع فالمثلث القائم.",
+        "choices": [
+          { "id": "a", "text": "أقصر ضلع فالمثلث" },
+          { "id": "b", "text": "الضلع المقابل للزاوية القائمة" },
+          { "id": "c", "text": "أي ضلع من الأضلاع" }
+        ],
+        "correctChoiceId": "b"
+      },
+      {
+        "id": "q2",
+        "type": "numeric",
+        "prompt": "مثلث ABC قائم فـ A، فيه AB = 5 cm و AC = 12 cm. شحال هو الطول ديال BC بالسنتيمتر؟",
+        "hint": "حسب 5² + 12² ومن بعد خود الجذر المربع.",
+        "explanation": "BC² = 5² + 12² = 25 + 144 = 169، إذن BC = √169 = 13 cm.",
+        "answer": 13,
+        "tolerance": 0.01,
+        "unit": "cm",
+        "allowPercent": false
+      },
+      {
+        "id": "q3",
+        "type": "short_text",
+        "prompt": "شنو كتقول مبرهنة فيثاغورس؟ وفوقاش نقدرو نستعملوها؟",
+        "hint": "تكلم على الوتر، والمربعات، ونوع المثلث.",
+        "explanation": "فمثلث قائم الزاوية، مربع الوتر كيساوي مجموع مربعي الضلعين الآخرين. كتستعمل غير فالمثلث القائم الزاوية.",
+        "rubric": {
+          "criteria": [
+            { "id": "relation", "description": "States that the square of the hypotenuse equals the sum of the squares of the other two sides (in words or as a formula)", "weight": 2, "required": true },
+            { "id": "right_triangle", "description": "States that it applies only to right triangles", "weight": 1, "required": true }
+          ],
+          "acceptedExamples": [
+            "فالمثلث القائم، مربع الوتر = مجموع مربعات الضلعين لخرين",
+            "في المثلث القائم الزاوية يكون مربع الوتر مساويا لمجموع مربعي الضلعين الآخرين",
+            "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés"
+          ],
+          "misconceptions": [
+            { "id": "any_triangle", "description": "Believes the theorem applies to any triangle" },
+            { "id": "no_squares", "description": "Adds the side lengths without squaring them" }
+          ],
+          "languageSensitive": false
+        },
+        "modelAnswer": "فمثلث قائم الزاوية، المربع ديال الوتر كيساوي المجموع ديال المربعات ديال الضلعين لخرين: BC² = AB² + AC². ما كتخدمش غير فالمثلث القائم."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "demoKeywords": {
+    "q3": {
+      "relation": ["مربع الوتر", "مربع", "مربعات", "carré", "carre", "square", "^2", "mourabba3"],
+      "right_triangle": ["قائم", "قائمة", "rectangle", "right triangle", "right angle", "90", "9a2im"]
+    }
+  }
+}

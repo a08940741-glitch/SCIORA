@@ -1,0 +1,88 @@
+{
+  "id": "water-cycle",
+  "reviewed": false,
+  "matchKeywords": ["دورة الماء", "دورة الما", "الدورة المائية", "cycle de l'eau", "water cycle", "التبخر", "évaporation", "evaporation", "التكاثف", "condensation", "الشتا كتجي", "علاش كتطيح الشتا", "الأمطار"],
+  "lesson": {
+    "understood": {
+      "subject": "general_science",
+      "topic": "دورة الماء في الطبيعة (Le cycle de l'eau)",
+      "isEducational": true,
+      "clarification": null
+    },
+    "explanationDarija": "الما فالطبيعة ديما كيدور وما كيتسالاش. الشمس كتسخن الما ديال البحور والوديان، والما كيتبخر (évaporation) وكيطلع للسما بحال بخار. فوق، الجو بارد، البخار كيبرد وكيولي قطرات صغار وكيتكون السحاب (condensation). فاش القطرات كيكبرو وكيتقالو، كيطيحو بحال شتا ولا ثلج (précipitations). الما اللي طاح جزء منو كيجري فوق الأرض حتى للوديان والبحر (ruissellement)، وجزء كيدخل للأرض ويعطي الفرشة المائية (infiltration). ومن بعد كتعاود الدورة من الأول.",
+    "explanationFormal": "دورة الماء هي الانتقال المستمر للماء بين المحيطات والغلاف الجوي واليابسة. تتكون من المراحل الأساسية التالية: التبخر بفعل حرارة الشمس، ثم التكاثف في طبقات الجو الباردة مكونا السحب، ثم التساقطات (أمطار، ثلوج، برد)، ثم الجريان السطحي نحو الأودية والبحار والتسرب إلى باطن الأرض لتغذية الفرشات المائية. وتتم هذه الدورة بفضل الطاقة الشمسية.",
+    "steps": [
+      "التبخر: الشمس كتسخن الما وكيتحول لبخار.",
+      "التكاثف: البخار كيبرد فالسما وكيتكون السحاب.",
+      "التساقطات: الما كيطيح بحال شتا أولا ثلج.",
+      "الجريان والتسرب: الما كيرجع للوديان والبحور أولا كيدخل للأرض."
+    ],
+    "example": {
+      "problem": "علاش كتبان قطرات الما على الجيهة البرانية ديال كاس فيه ما بارد؟",
+      "solution": "البخار اللي فالهوا كيقيس الكاس البارد، كيبرد وكيتحول لقطرات ديال الما. هادا هو التكاثف، نفس المرحلة اللي كتكون بيها السحاب فدورة الماء."
+    },
+    "exercises": [
+      {
+        "id": "q1",
+        "type": "mcq",
+        "prompt": "شنو هي المرحلة اللي كيتحول فيها الما لبخار بسبب الحرارة ديال الشمس؟",
+        "hint": "هي أول مرحلة فالدورة.",
+        "explanation": "التبخر (évaporation) هو تحول الما من الحالة السائلة للحالة الغازية بفعل الحرارة.",
+        "choices": [
+          { "id": "a", "text": "التكاثف" },
+          { "id": "b", "text": "التبخر" },
+          { "id": "c", "text": "التسرب" }
+        ],
+        "correctChoiceId": "b"
+      },
+      {
+        "id": "q2",
+        "type": "mcq",
+        "prompt": "كيفاش كيتكون السحاب؟",
+        "hint": "شنو كيوقع للبخار فاش كيبرد؟",
+        "explanation": "السحاب كيتكون بالتكاثف: بخار الما كيبرد فطبقات الجو العليا وكيتحول لقطرات صغيرة جدا.",
+        "choices": [
+          { "id": "a", "text": "البخار كيبرد وكيتحول لقطرات صغار (التكاثف)" },
+          { "id": "b", "text": "الريح كيجيب الما من البحر نيشان" },
+          { "id": "c", "text": "الما كيسخن بزاف فالسما" }
+        ],
+        "correctChoiceId": "a"
+      },
+      {
+        "id": "q3",
+        "type": "short_text",
+        "prompt": "عطي المراحل ديال دورة الماء بالترتيب.",
+        "hint": "بدا من البحر والشمس، وسالي بالما اللي كيرجع للبحر.",
+        "explanation": "التبخر ← التكاثف (تكون السحب) ← التساقطات ← الجريان السطحي والتسرب، ومن بعد كتعاود الدورة.",
+        "rubric": {
+          "criteria": [
+            { "id": "evaporation", "description": "Mentions evaporation", "weight": 1, "required": true },
+            { "id": "condensation", "description": "Mentions condensation / cloud formation", "weight": 1, "required": true },
+            { "id": "precipitation", "description": "Mentions precipitation (rain, snow)", "weight": 1, "required": true },
+            { "id": "return", "description": "Mentions runoff or infiltration (water returns to rivers, sea or ground)", "weight": 1, "required": false }
+          ],
+          "acceptedExamples": [
+            "الما كيتبخر، من بعد كيولي سحاب، ومن بعد كتطيح الشتا وكيرجع للبحر",
+            "التبخر ثم التكاثف ثم التساقطات ثم الجريان السطحي والتسرب",
+            "Évaporation, condensation, précipitations, puis ruissellement et infiltration"
+          ],
+          "misconceptions": [
+            { "id": "clouds_are_smoke", "description": "Believes clouds are made of smoke or gas rather than water droplets" }
+          ],
+          "languageSensitive": false
+        },
+        "modelAnswer": "1) التبخر بسبب حرارة الشمس، 2) التكاثف وتكون السحاب، 3) التساقطات (شتا، ثلج)، 4) الجريان فوق الأرض والتسرب للفرشة المائية، ومن بعد كتعاود الدورة."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "demoKeywords": {
+    "q3": {
+      "evaporation": ["تبخر", "كيتبخر", "يتبخر", "بخار", "evaporation", "évaporation", "evaporate", "tbkhar"],
+      "condensation": ["تكاثف", "سحاب", "سحب", "غيوم", "condensation", "nuage", "cloud", "s7ab"],
+      "precipitation": ["شتا", "الشتاء", "مطر", "امطار", "تساقط", "ثلج", "pluie", "précipitation", "precipitation", "neige", "rain", "snow", "chta"],
+      "return": ["جريان", "تسرب", "يرجع", "كيرجع", "للبحر", "ruissellement", "infiltration", "runoff", "river"]
+    }
+  }
+}
