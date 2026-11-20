@@ -369,6 +369,16 @@ textarea:focus, input:focus, select:focus { outline: none; border-color: var(--t
 .progress-topic.needs-review { border-inline-start: 4px solid #eab308; }
 .recommendation { font-weight: 600; color: var(--teal-700); }
 
+/* ---------------------------------------------------------------- session summary */
+.session-summary { border-top: 3px solid var(--teal-600); }
+.session-summary .stats { margin: 6px 0 4px; }
+.stat-correct .stat-value { color: var(--ok); }
+.stat-partially_correct .stat-value { color: var(--warn); }
+.stat-incorrect .stat-value { color: var(--bad); }
+.stat-uncertain .stat-value { color: var(--info); }
+.gaps { padding-inline-start: 18px; margin: 0; color: var(--ink-2); }
+.check-claim { padding: 0 4px; font-size: 0.82rem; margin-inline-start: auto; }
+
 /* ---------------------------------------------------------------- footer */
 .footer { text-align: center; color: var(--subtle); font-size: 0.8rem; padding: 20px 16px 32px; margin-top: auto; }
 

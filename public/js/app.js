@@ -1,6 +1,7 @@
 import { api } from "./api.js";
 import { T, UI_LANG, UI_DIR, UI_LANGUAGES, setUiLanguage } from "./i18n.js";
 import { noticesBox } from "./notices.js";
+import { summarizeSession, nextLevel } from "./session.js";
 import { el, clear, paragraphs } from "./render.js";
 import { createLearnerModel } from "./learner-model.js";
 import { errorMessage } from "./errors.js";
@@ -13,7 +14,7 @@ import { createProgressPanel } from "./progress.js";
 const learner = createLearnerModel(window.localStorage);
 const $ = (id) => document.getElementById(id);
 
-const state = { mode: null, lesson: null, meta: null, token: null, level: "school", topic: null, notices: [] };
+const state = { mode: null, lesson: null, meta: null, token: null, level: "school", topic: null, notices: [], results: {} };
 
 // ------------------------------------------------------------------ provenance labels
 
@@ -109,6 +110,7 @@ async function onAsk(ev) {
   state.level = level;
   state.topic = r.data.lesson.understood.topic;
   state.notices = r.data.notices ?? [];
+  state.results = {};
   renderLesson(r.data.lesson);
   renderExercises(r.data.lesson.exercises);
   renderEstimate();
@@ -160,6 +162,61 @@ function renderExercises(exercises) {
   if (!exercises.length || !state.token) return;
   box.append(el("h2", { text: T.exercises }), el("p", { class: "muted", text: T.oneAttempt }));
   exercises.forEach((ex, i) => box.append(exerciseCard(ex, i + 1)));
+}
+
+// ------------------------------------------------------------------ session summary (evaluate → improve)
+
+function renderSessionSummary() {
+  const total = state.lesson?.exercises?.length ?? 0;
+  const s = summarizeSession(Object.values(state.results), total);
+  $("session-summary")?.remove();
+  if (!s.done) return;
+  const S = T.session;
+  const askAgain = (level) => {
+    if (level) $("level").value = level;
+    $("question").value = state.topic;
+    $("ask-form").requestSubmit();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const buttons = [];
+  if (s.recommendation === "next_level" && state.level !== "advanced") {
+    buttons.push(el("button", { type: "button", class: "btn btn-primary", "data-action": "next-level", text: S.nextLevelBtn(T.levels[nextLevel(state.level)]), onclick: () => askAgain(nextLevel(state.level)) }));
+  }
+  buttons.push(el("button", { type: "button", class: s.recommendation === "next_level" ? "btn btn-secondary" : "btn btn-primary", "data-action": "retry", text: S.retryBtn, onclick: () => askAgain(null) }));
+  buttons.push(
+    el("button", {
+      type: "button",
+      class: "btn btn-secondary",
+      "data-action": "explore",
+      text: S.exploreBtn,
+      onclick: () => {
+        selectTab("explore", true);
+        $("k-question").value = state.topic;
+        $("k-question").focus();
+      },
+    }),
+  );
+  const c = s.counts;
+  $("exercises").append(
+    el(
+      "section",
+      { class: "card session-summary", id: "session-summary", "data-recommendation": s.recommendation },
+      el("header", { class: "card-head" }, el("h3", { text: S.title })),
+      el(
+        "div",
+        { class: "stats" },
+        ...[["correct", c.correct], ["partially_correct", c.partially_correct], ["incorrect", c.incorrect], ["uncertain", c.uncertain]].map(([k, v]) =>
+          el("div", { class: `stat stat-${k}` }, el("span", { class: "stat-value", text: String(v) }), el("span", { class: "stat-label", text: T.verdicts[k] })),
+        ),
+      ),
+      el("p", { class: "label", text: S.gapsTitle }),
+      s.gaps.length ? el("ul", { class: "gaps", dir: "auto" }, ...s.gaps.map((g) => el("li", { text: g }))) : el("p", { class: "muted", text: S.noGaps }),
+      c.uncertain ? el("p", { class: "muted", text: S.uncertainNote }) : null,
+      el("p", { class: "label", text: S.nextTitle }),
+      el("p", { class: "recommendation", text: S.next[s.recommendation] }),
+      el("div", { class: "actions wrap" }, ...buttons),
+    ),
+  );
 }
 
 function exerciseCard(ex, index) {
@@ -247,6 +304,8 @@ async function submitAnswer(ex, answer, ui, attempt = 1) {
       learner.record(state.topic, state.level, graded);
       renderEstimate();
     }
+    state.results[ex.id] = graded;
+    renderSessionSummary();
     return;
   }
   ui.checkBtn.disabled = false;
@@ -363,7 +422,17 @@ function initStatic() {
 
 const cardStore = createCardStore(window.localStorage);
 const cardsPanel = createCardsPanel(cardStore);
-const explorer = createExplorer({ cards: cardStore, onCardSaved: () => cardsPanel.render() });
+const explorer = createExplorer({
+  cards: cardStore,
+  onCardSaved: () => cardsPanel.render(),
+  // Knowledge → Evidence: check an individual fact from an answer in the Evidence Analyzer.
+  onCheckClaim: (text, language) => {
+    selectTab("evidence", true);
+    $("e-claim").value = text.slice(0, 1000);
+    if ([...$("e-language").options].some((o) => o.value === language)) $("e-language").value = language;
+    $("e-form").requestSubmit();
+  },
+});
 const evidencePanel = createEvidencePanel();
 const progressPanel = createProgressPanel({
   learner,

@@ -46,7 +46,7 @@ function sourceLink(s) {
   return el("a", { href: s.url, target: "_blank", rel: "noopener noreferrer nofollow", text: s.title });
 }
 
-export function createExplorer({ cards, onCardSaved }) {
+export function createExplorer({ cards, onCardSaved, onCheckClaim }) {
   const state = { response: null, request: null };
 
   function renderTopics(topics) {
@@ -107,6 +107,9 @@ export function createExplorer({ cards, onCardSaved }) {
               el("span", { class: "kind-chip", text: K.kinds[s.kind] ?? s.kind }),
               el("span", { class: "segment-text", text: s.text }),
               s.sourceIds.length ? el("span", { class: "segment-refs", dir: "ltr", text: ` [${s.sourceIds.join(", ")}]` }) : null,
+              s.kind === "fact" && onCheckClaim
+                ? el("button", { type: "button", class: "btn btn-link check-claim", "data-action": "check-claim", text: K.checkClaim, onclick: () => onCheckClaim(s.text, state.request.language) })
+                : null,
             ),
           ),
         ),
