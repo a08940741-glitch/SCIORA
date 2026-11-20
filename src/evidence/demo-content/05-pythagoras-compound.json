@@ -1,0 +1,40 @@
+{
+  "id": "pythagoras-compound",
+  "reviewed": false,
+  "matchKeywords": [
+    "فيثاغورس كتخدم فكل مثلث",
+    "فيثاغورس فكل مثلث",
+    "pythagore dans tous les triangles",
+    "pythagoras works for every triangle",
+    "fitagors f kol mthalath"
+  ],
+  "analysis": {
+    "understood": {
+      "claimRestated": "مبرهنة فيثاغورس كتخدم فكل مثلث، والوتر هو أطول ضلع فالمثلث القائم.",
+      "detectedLanguage": "darija",
+      "isAnalyzable": true,
+      "clarification": null
+    },
+    "subClaims": [
+      {
+        "id": "c1",
+        "text": "مبرهنة فيثاغورس كتخدم فكل مثلث.",
+        "type": "factual",
+        "evidence": [],
+        "missingEvidence": "كتاب الرياضيات المدرسي ولا مرجع رياضي كيعطي نص المبرهنة والشروط ديالها.",
+        "backgroundNote": "حسب المنهاج الدراسي، المبرهنة خاصة بالمثلث القائم الزاوية. معلومة عامة، ماشي دليل."
+      },
+      {
+        "id": "c2",
+        "text": "الوتر هو أطول ضلع فالمثلث القائم.",
+        "type": "factual",
+        "evidence": [],
+        "missingEvidence": "نفس المرجع الرياضي: تعريف الوتر وخصائصه.",
+        "backgroundNote": "المعروف أن الوتر مقابل للزاوية القائمة وهو أطول ضلع. معلومة عامة، ماشي دليل."
+      }
+    ],
+    "caveats": [
+      "الادعاء فيه جوج أجزاء مستقلين؛ كل جزء كيتحلل بوحدو."
+    ]
+  }
+}
