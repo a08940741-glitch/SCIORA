@@ -160,7 +160,7 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
       demoClaims: evidenceProvider instanceof DemoEvidenceProvider ? evidenceProvider.claims() : null,
       sourceRetrieval: evidence.retriever.enabled,
     },
-    plannedNotImplemented: ["real_source_retrieval", "google_sign_in"],
+    plannedNotImplemented: [...(knowledge.retriever.enabled ? [] : ["real_source_retrieval"]), "google_sign_in"],
   }));
 
   // ------------------------------------------------------------------ evidence (Phase 2B)

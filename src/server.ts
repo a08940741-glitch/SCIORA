@@ -2,6 +2,7 @@ import { loadConfig, ConfigError } from "./config.ts";
 import { createProvider } from "./ai/index.ts";
 import { createKnowledgeProvider } from "./knowledge/index.ts";
 import { createEvidenceProvider } from "./evidence/service.ts";
+import { createRetriever } from "./knowledge/wikipedia-retriever.ts";
 import { buildApp } from "./app.ts";
 
 async function main() {
@@ -19,7 +20,8 @@ async function main() {
   const provider = createProvider(config);
   const knowledgeProvider = createKnowledgeProvider(config);
   const evidenceProvider = createEvidenceProvider(config);
-  const { app, replay } = await buildApp({ config, provider, knowledgeProvider, evidenceProvider });
+  const retriever = createRetriever(config);
+  const { app, replay } = await buildApp({ config, provider, knowledgeProvider, evidenceProvider, retriever });
   replay.startSweeper();
 
   if (provider.simulated) {

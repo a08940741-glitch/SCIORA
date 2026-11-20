@@ -40,14 +40,23 @@ function fakeRetriever(impl: SourceRetriever["search"]) {
 
 const REQ = { question: "شنو هو التركيب الضوئي؟", level: "intermediate" as const, language: "darija" as const };
 
-test("demo provider: retriever is never called; note = demo", async () => {
+test("demo provider + no retriever: nothing retrieved; note = demo", async () => {
   const { p } = stubProvider(true);
-  const { r, calls } = fakeRetriever(async () => [fakeSource()]);
-  const d = await new KnowledgeService({ provider: p, retriever: r }).draft(REQ);
-  assert.equal(calls.length, 0);
+  const d = await new KnowledgeService({ provider: p }).draft(REQ);
   assert.equal(d.retrieval.note, "demo");
   assert.equal(d.retrieval.performed, false);
   assert.deepEqual(d.retrieval.sources, []);
+});
+
+test("demo provider + enabled retriever: real retrieval runs, but sources are related reading only", async () => {
+  const { p } = stubProvider(true);
+  const { r, calls } = fakeRetriever(async () => [fakeSource()]);
+  const res = await new KnowledgeService({ provider: p, retriever: r }).query(REQ);
+  assert.equal(calls.length, 1);
+  assert.equal(res.verification.status, "demo", "never upgraded to source_backed");
+  assert.equal(res.sources.length, 1);
+  assert.ok(res.answer.segments.every((s) => s.sourceIds.length === 0), "pre-written content never cites retrieved sources");
+  assert.ok(res.notices.includes("related_reading_only"));
 });
 
 test("live provider + default NoopRetriever (D1): no retrieval, note = disabled, provider gets no sources", async () => {

@@ -52,7 +52,9 @@ export interface KnowledgeServiceOptions {
 /**
  * Shared retrieval step (used by Knowledge Explorer and Evidence Analyzer).
  * Moved verbatim from KnowledgeService.retrieve (behaviour-preserving).
- * Never runs for a simulated (demo) provider or a disabled retriever; aborts on timeout;
+ * Runs whenever an enabled retriever is configured. With a simulated (demo) provider the
+ * results are shown only as "related reading" (never as support for pre-written content).
+ * Never runs for a disabled retriever; aborts on timeout;
  * failures degrade to "no sources" instead of failing the request.
  */
 export async function runRetrieval(opts: {
@@ -64,8 +66,7 @@ export async function runRetrieval(opts: {
   now: () => number;
   prepare: NonNullable<KnowledgeServiceOptions["prepareSources"]>;
 }): Promise<RetrievalOutcome> {
-  if (opts.simulated) return { sources: [], performed: false, note: "demo", retriever: null };
-  if (!opts.retriever.enabled) return { sources: [], performed: false, note: "disabled", retriever: null };
+  if (!opts.retriever.enabled) return { sources: [], performed: false, note: opts.simulated ? "demo" : "disabled", retriever: null };
 
   const controller = new AbortController();
   let timer: NodeJS.Timeout | undefined;

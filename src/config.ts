@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
+import { DEFAULT_WIKI_USER_AGENT } from "./knowledge/wikipedia-agent.ts";
 
 /**
  * SCIORA configuration.
@@ -46,6 +47,10 @@ export interface Config {
   /** 0 = no daily limit. */
   dailyLimit: number;
   allowLiveTests: boolean;
+  /** Source retriever: "wikipedia" (free public MediaWiki API) or "none". */
+  retriever: "wikipedia" | "none";
+  /** User-Agent sent to Wikipedia (Wikimedia asks for contact information). */
+  wikiUserAgent: string;
 }
 
 const MIN_SECRET_BYTES = 32;
@@ -82,6 +87,12 @@ const EnvSchema = z.object({
   SCIORA_RATE_LIMIT_PER_MINUTE: intFrom(30, 1, 10000),
   SCIORA_DAILY_LIMIT: intFrom(0, 0, 10_000_000),
   SCIORA_ALLOW_LIVE_TESTS: z.string().optional(),
+  SCIORA_RETRIEVER: z
+    .string()
+    .optional()
+    .transform((v) => (v ?? "wikipedia").trim().toLowerCase() || "wikipedia")
+    .pipe(z.enum(["wikipedia", "none"])),
+  SCIORA_WIKI_USER_AGENT: z.string().max(300).optional(),
 });
 
 const MODEL_ID = /^[a-z0-9][a-z0-9.\-]{2,63}$/;
@@ -151,5 +162,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     rateLimitPerMinute: e.SCIORA_RATE_LIMIT_PER_MINUTE,
     dailyLimit: e.SCIORA_DAILY_LIMIT,
     allowLiveTests: isOn(e.SCIORA_ALLOW_LIVE_TESTS),
+    retriever: e.SCIORA_RETRIEVER,
+    wikiUserAgent: e.SCIORA_WIKI_USER_AGENT?.trim() || DEFAULT_WIKI_USER_AGENT,
   };
 }

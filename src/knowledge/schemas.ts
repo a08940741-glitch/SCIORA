@@ -116,6 +116,8 @@ export const RetrievedSource = z.object({
   url: z.string().url().max(2000),
   publisher: z.string().trim().max(200).nullable(),
   publishedAt: z.string().max(40).nullable(),
+  /** Real "last edited" timestamp when the source provides one (e.g. Wikipedia revisions). */
+  lastModified: z.string().max(40).nullable().optional(),
   excerpt: z.string().max(20000),
   language: z.string().max(10).nullable(),
 });
@@ -128,6 +130,7 @@ export interface PublicSource {
   url: string;
   publisher: string | null;
   publishedAt: string | null;
+  lastModified: string | null;
   retrievedAt: string;
   excerpt: string;
   language: string | null;

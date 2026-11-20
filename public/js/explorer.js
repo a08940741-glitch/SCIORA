@@ -33,6 +33,14 @@ function verificationBanner(v) {
   return box;
 }
 
+/** Real metadata only: publisher, publication date if known, last-edited date if known, retrieval time. */
+export function sourceMeta(s) {
+  const fmt = (iso) => (iso ? String(iso).slice(0, 10) : null);
+  return [s.publisher, fmt(s.publishedAt), s.lastModified ? `${K.lastModified} ${fmt(s.lastModified)}` : null, `${K.retrievedAt} ${fmt(s.retrievedAt)}`]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 function sourceLink(s) {
   if (!isSafeHttpsUrl(s.url)) return el("span", { text: s.title });
   return el("a", { href: s.url, target: "_blank", rel: "noopener noreferrer nofollow", text: s.title });
@@ -70,8 +78,8 @@ export function createExplorer({ cards, onCardSaved }) {
     clear(out);
     const a = r.answer;
     out.append(verificationBanner(r.verification));
-    // citations_removed is already shown with its count in the verification banner.
-    const nb = noticesBox(r.notices, { skip: ["citations_removed"] });
+    // Already shown in the verification banner: demo status and the removed-citation count.
+    const nb = noticesBox(r.notices, { skip: ["citations_removed", "demo_content"] });
     if (nb) out.append(nb);
 
     out.append(
@@ -120,13 +128,23 @@ export function createExplorer({ cards, onCardSaved }) {
               { id: `k-src-${s.id}`, "data-source-id": s.id },
               el("strong", { dir: "ltr", text: `${s.id} · ` }),
               sourceLink(s),
-              el("p", { class: "muted", text: [s.publisher, s.publishedAt, `${K.retrievedAt} ${s.retrievedAt}`].filter(Boolean).join(" · ") }),
+              el("p", { class: "muted source-meta", text: sourceMeta(s) }),
               el("p", { class: "source-excerpt", text: s.excerpt }),
             ),
           ),
         )
       : el("p", { id: "k-no-sources", class: "empty-state", text: r.meta.simulated ? K.noSourcesDemo : K.noSourcesLive });
-    out.append(kcard(r.meta, K.sourcesTitle, srcBody));
+    const related = r.meta.simulated && r.sources.length > 0;
+    const hasWiki = r.sources.some((s) => s.retriever === "wikipedia");
+    out.append(
+      kcard(
+        r.meta,
+        related ? K.relatedReadingTitle : K.sourcesTitle,
+        related ? el("p", { class: "muted", id: "k-related-help", text: K.relatedReadingHelp }) : null,
+        srcBody,
+        hasWiki ? el("p", { class: "source-caution", text: K.wikipediaCaution }) : null,
+      ),
+    );
 
     if (r.connections.length) {
       out.append(

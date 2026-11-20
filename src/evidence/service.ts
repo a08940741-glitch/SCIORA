@@ -55,6 +55,10 @@ export class EvidenceService {
     const evidenceItems = subClaims.reduce((n, s) => n + s.evidence.length, 0);
     const notices: string[] = [...(providerNotices ?? [])];
     if (removedEvidence > 0) notices.push("evidence_removed");
+    if (this.provider.simulated && retrieval.sources.length > 0) notices.push("related_reading_only");
+    const evidenceSourceIds = new Set(subClaims.flatMap((s) => s.evidence.map((e) => e.sourceId)));
+    const evidenceSources = retrieval.sources.filter((s) => evidenceSourceIds.has(s.id));
+    if (evidenceSources.length > 0 && evidenceSources.every((s) => s.retriever === "wikipedia")) notices.push("wikipedia_only");
 
     return {
       understood: analysis.understood,

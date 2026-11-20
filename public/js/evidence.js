@@ -4,6 +4,7 @@ import { el, clear, paragraphs } from "./render.js";
 import { errorMessage } from "./errors.js";
 import { noticesBox } from "./notices.js";
 import { isSafeHttpsUrl } from "./cards-store.js";
+import { sourceMeta } from "./explorer.js";
 
 /**
  * Evidence Analyzer UI. Verdicts come from the SERVER (evidence quoted from retrieved
@@ -95,7 +96,7 @@ export function createEvidencePanel() {
     clear(out);
     out.append(basisBanner(r));
     // evidence_removed is already shown with its count in the basis banner.
-    const nb = noticesBox(r.notices, { skip: ["evidence_removed"] });
+    const nb = noticesBox(r.notices, { skip: ["evidence_removed", "demo_content"] });
     if (nb) out.append(nb);
     out.append(
       el(
@@ -109,6 +110,24 @@ export function createEvidencePanel() {
       ),
     );
     for (const s of r.subClaims) out.append(subClaimCard(s, r));
+    if (r.basis.kind !== "retrieved_sources" && r.sources.length > 0) {
+      out.append(
+        el(
+          "section",
+          { class: "card", id: "e-related" },
+          el("h3", { text: E.relatedTitle }),
+          el("p", { class: "muted", text: E.relatedHelp }),
+          el(
+            "ul",
+            { class: "sources" },
+            ...r.sources.map((s) =>
+              el("li", { "data-source-id": s.id }, isSafeHttpsUrl(s.url) ? el("a", { href: s.url, target: "_blank", rel: "noopener noreferrer nofollow", text: s.title }) : el("span", { text: s.title }), el("p", { class: "muted", text: sourceMeta(s) })),
+            ),
+          ),
+          r.sources.some((s) => s.retriever === "wikipedia") ? el("p", { class: "source-caution", text: T.k.wikipediaCaution }) : null,
+        ),
+      );
+    }
     if (r.caveats.length) out.append(el("section", { class: "card" }, el("h3", { text: T.caveats }), el("ul", { class: "caveats", dir: "auto" }, ...r.caveats.map((c) => el("li", { text: c })))));
   }
 

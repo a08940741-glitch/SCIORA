@@ -158,6 +158,8 @@ textarea:focus, input:focus, select:focus, button:focus-visible {
 .pillar-title { font-weight: 700; color: #7fd6cf; }
 .pillar-text { color: #c7d3e6; font-size: 0.92rem; }
 
+.source-caution { font-size: 0.88rem; color: #5a3d00; background: var(--part-bg); border-radius: 8px; padding: 6px 10px; }
+
 /* ---------------------------------------------------------------- notices */
 .notices { background: var(--white); border: 1px solid var(--line); border-inline-start: 4px solid #c48a00; border-radius: var(--radius); padding: 8px 14px; margin-bottom: 16px; }
 .notices ul { margin: 0; padding-inline-start: 18px; }

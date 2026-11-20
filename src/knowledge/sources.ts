@@ -50,6 +50,7 @@ export function sanitizeSources(raw: unknown[], retrievedAt: string, retriever: 
       url,
       publisher: p.data.publisher ? clean(p.data.publisher, 200) || null : null,
       publishedAt: p.data.publishedAt ? clean(p.data.publishedAt, 40) || null : null,
+      lastModified: p.data.lastModified ? clean(p.data.lastModified, 40) || null : null,
       retrievedAt,
       excerpt,
       language: p.data.language ? clean(p.data.language, 10) || null : null,
@@ -77,6 +78,9 @@ export function finalizeAnswer(draft: KnowledgeDraft, simulated: boolean): Knowl
 
   const notices = [...(draft.notices ?? [])];
   if (removedCitations > 0) notices.push("citations_removed");
+  if (simulated && retrieval.sources.length > 0) notices.push("related_reading_only");
+  const citedSources = retrieval.sources.filter((s) => cited.has(s.id));
+  if (status === "source_backed" && citedSources.every((s) => s.retriever === "wikipedia")) notices.push("wikipedia_only");
 
   return {
     answer: {
@@ -88,7 +92,8 @@ export function finalizeAnswer(draft: KnowledgeDraft, simulated: boolean): Knowl
       confidence: generated.confidence,
       caveats: generated.caveats.slice(0, 5),
     },
-    sources: simulated ? [] : retrieval.sources,
+    // Demo: retrieved sources are returned as related reading only (no segment cites them).
+    sources: retrieval.sources,
     verification: {
       status,
       retrievalPerformed: retrieval.performed,
