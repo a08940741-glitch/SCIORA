@@ -2,21 +2,24 @@ import type { KnowledgeProvider } from "./provider.ts";
 import type { SourceRetriever } from "./retriever.ts";
 import { NoopRetriever } from "./retriever.ts";
 import {
-  RetrievedSource,
   type GeneratedKnowledgeAnswer,
   type KnowledgeMeta,
   type KnowledgeQueryRequest,
+  type KnowledgeQueryResponse,
   type PublicSource,
+  type RetrievedSource,
   type Verification,
 } from "./schemas.ts";
+import { finalizeAnswer, MAX_SOURCES, sanitizeSources } from "./sources.ts";
+
+export { MAX_SOURCES };
 
 /**
  * Knowledge Explorer core service.
  *   question → (optional) retrieval with timeout → provider answer → validated draft
- * Source sanitizing and verification are applied by sources.ts (Step 6).
+ * Sources are sanitized and the verification status is decided by sources.ts.
  */
 
-export const MAX_SOURCES = 5;
 export const DEFAULT_RETRIEVAL_TIMEOUT_MS = 8000;
 
 export interface RetrievalOutcome {
@@ -37,20 +40,8 @@ export interface KnowledgeServiceOptions {
   retriever?: SourceRetriever;
   retrievalTimeoutMs?: number;
   now?: () => number;
-  /** Converts raw retrieved items into public sources (sanitizing). Injected in Step 6. */
+  /** Converts raw retrieved items into public sources. Defaults to sanitizeSources. */
   prepareSources?: (raw: RetrievedSource[], retrievedAt: string, retriever: string) => PublicSource[];
-}
-
-/** Minimal default: schema-validate, assign server ids. Replaced by sanitizeSources in Step 6. */
-function basicPrepare(raw: RetrievedSource[], retrievedAt: string, retriever: string): PublicSource[] {
-  const out: PublicSource[] = [];
-  for (const item of raw) {
-    const p = RetrievedSource.safeParse(item);
-    if (!p.success) continue;
-    out.push({ ...p.data, id: `S${out.length + 1}`, retrievedAt, retriever });
-    if (out.length >= MAX_SOURCES) break;
-  }
-  return out;
 }
 
 export class KnowledgeService {
@@ -65,7 +56,7 @@ export class KnowledgeService {
     this.retriever = opts.retriever ?? new NoopRetriever();
     this.timeoutMs = opts.retrievalTimeoutMs ?? DEFAULT_RETRIEVAL_TIMEOUT_MS;
     this.now = opts.now ?? Date.now;
-    this.prepare = opts.prepareSources ?? basicPrepare;
+    this.prepare = opts.prepareSources ?? sanitizeSources;
   }
 
   /** Runs retrieval if (and only if) a real provider and an enabled retriever are configured. */
@@ -104,5 +95,10 @@ export class KnowledgeService {
     const retrieval = await this.retrieve(req);
     const { answer, meta } = await this.provider.answer({ request: req, sources: retrieval.sources });
     return { generated: answer, meta, retrieval };
+  }
+
+  /** Full pipeline: retrieval → provider → server-side source validation + verification status. */
+  async query(req: KnowledgeQueryRequest): Promise<KnowledgeQueryResponse> {
+    return finalizeAnswer(await this.draft(req), this.provider.simulated);
   }
 }
