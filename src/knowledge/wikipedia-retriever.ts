@@ -143,10 +143,17 @@ export class WikipediaRetriever implements SourceRetriever {
   async search(query: string, opts: { language: string; limit: number; signal: AbortSignal }): Promise<RetrievedSource[]> {
     const q = cleanSearchQuery(query);
     const limit = Math.max(1, Math.min(5, opts.limit));
+    let lastError: unknown = null;
     for (const wiki of chooseWikis(query, opts.language)) {
-      const results = await this.searchWiki(wiki, q, limit, opts.signal);
-      if (results.length) return results;
+      try {
+        const results = await this.searchWiki(wiki, q, limit, opts.signal);
+        if (results.length) return results;
+      } catch (err) {
+        if ((err as Error)?.name === "AbortError" || opts.signal.aborted) throw err; // timeout: stop immediately
+        lastError = err; // e.g. this wiki is rate-limiting us → try the next wiki
+      }
     }
+    if (lastError) throw lastError; // every wiki failed → caller reports retrieval "failed"
     return [];
   }
 

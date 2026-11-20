@@ -148,10 +148,13 @@ test("429 / 503 / network errors are retried with backoff (max 2 retries), then 
   assert.equal(out.length, 1);
 });
 
-test("retries are bounded: persistent 429 fails after 1 + maxRetries attempts", async () => {
+test("retries are bounded: persistent 429 → 1 + maxRetries attempts per wiki, at most 2 wikis (6 requests)", async () => {
   const { fn, calls } = fakeFetch([response(429, "too many")]);
   await assert.rejects(make(fn).search("q", opts()), (e: unknown) => e instanceof WikipediaHttpError && e.status === 429);
-  assert.equal(calls.length, 3);
+  assert.equal(calls.length, 6);
+  const hosts = calls.map((c) => new URL(c.url).hostname);
+  assert.equal(hosts.filter((h) => h === "en.wikipedia.org").length, 3);
+  assert.equal(hosts.filter((h) => h === "fr.wikipedia.org").length, 3);
 });
 
 test("maxlag API response is retried", async () => {
@@ -243,4 +246,20 @@ test("factory: wikipedia by default, none when disabled; custom User-Agent from 
   assert.match(loadConfig({}).wikiUserAgent, /SCIORA/);
   assert.equal(loadConfig({ SCIORA_WIKI_USER_AGENT: "MyApp/1 (https://example.org/contact)" }).wikiUserAgent, "MyApp/1 (https://example.org/contact)");
   assert.throws(() => loadConfig({ SCIORA_RETRIEVER: "google" }));
+});
+
+test("a failing first wiki (e.g. 429 on ar) falls back to the next wiki", async () => {
+  const { fn, calls } = fakeFetch([
+    response(429, "too many"), response(429, "too many"), response(429, "too many"), // ar: 1 + 2 retries
+    response(200, apiBody([page()])), // en
+  ]);
+  const out = await make(fn).search("شنو هو التركيب الضوئي؟", { ...opts(), language: "darija" });
+  assert.equal(new URL(calls[0]!.url).hostname, "ar.wikipedia.org");
+  assert.equal(new URL(calls[3]!.url).hostname, "en.wikipedia.org");
+  assert.equal(out.length, 1);
+});
+
+test("all wikis failing → error is raised (service reports retrieval 'failed')", async () => {
+  const { fn } = fakeFetch([response(503, "down")]);
+  await assert.rejects(make(fn).search("q", opts()), (e: unknown) => e instanceof WikipediaHttpError && e.status === 503);
 });
