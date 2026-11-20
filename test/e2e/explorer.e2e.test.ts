@@ -192,20 +192,20 @@ test("no English leakage in explorer and cards interface text (content excluded)
   await ctx.close();
 });
 
-test("tabs support keyboard navigation (RTL arrows)", async () => {
+test("tabs support keyboard navigation (RTL arrows), in DOM order with wrap-around", async () => {
   const { page, ctx } = await newPage();
   await page.goto(demoBase + "/");
+  const ids: string[] = await page.locator('[role="tab"]').evaluateAll((els: Element[]) => els.map((e) => e.id));
+  assert.deepEqual(ids, ["tab-learn", "tab-explore", "tab-evidence", "tab-cards", "tab-progress"]);
   await page.focus("#tab-learn");
-  await page.keyboard.press("ArrowLeft");
-  assert.equal(await page.getAttribute("#tab-explore", "aria-selected"), "true");
-  await page.keyboard.press("ArrowLeft");
-  assert.equal(await page.getAttribute("#tab-evidence", "aria-selected"), "true", "Phase 2B tab is next in order");
-  await page.keyboard.press("ArrowLeft");
-  assert.equal(await page.getAttribute("#tab-cards", "aria-selected"), "true");
-  await page.keyboard.press("ArrowLeft");
-  assert.equal(await page.getAttribute("#tab-learn", "aria-selected"), "true", "wraps around");
+  for (let i = 1; i <= ids.length; i++) {
+    await page.keyboard.press("ArrowLeft");
+    const expected = ids[i % ids.length]!;
+    assert.equal(await page.getAttribute(`#${expected}`, "aria-selected"), "true", `ArrowLeft #${i} → ${expected}`);
+    assert.equal(await page.evaluate(() => document.activeElement?.id), expected, "focus follows selection");
+  }
   await page.keyboard.press("ArrowRight");
-  assert.equal(await page.getAttribute("#tab-cards", "aria-selected"), "true");
+  assert.equal(await page.getAttribute(`#${ids[ids.length - 1]}`, "aria-selected"), "true", "ArrowRight wraps backwards");
   await ctx.close();
 });
 

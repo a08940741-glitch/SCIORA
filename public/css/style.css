@@ -183,6 +183,16 @@ textarea:focus, input:focus, select:focus, button:focus-visible {
 .btn-danger { color: var(--bad); }
 #k-collection { max-width: 240px; }
 
+/* ---------------------------------------------------------------- learning progress */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stat { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: flex; flex-direction: column; align-items: center; }
+.stat-value { font-size: 1.6rem; font-weight: 700; color: var(--navy-800); }
+.stat-label { color: var(--muted); font-size: 0.9rem; }
+.progress-topic.needs-review { border-inline-start: 5px solid var(--part); }
+.badge-review { background: var(--part-bg); color: var(--part); border: 1px solid #ecd39a; }
+.recommendation { font-weight: 600; color: var(--teal-700); }
+.section-title { color: var(--navy-800); margin: 8px 0 4px; }
+
 /* ---------------------------------------------------------------- Phase 2B: evidence analyzer */
 .verdict-chip { display: inline-block; font-weight: 700; font-size: 0.85rem; padding: 3px 12px; border-radius: 999px; border: 1px solid; }
 .verdict-chip-supported { background: var(--ok-bg); color: var(--ok); border-color: #b5dcc1; }

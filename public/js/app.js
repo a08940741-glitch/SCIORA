@@ -7,6 +7,7 @@ import { createCardStore } from "./cards-store.js";
 import { createExplorer } from "./explorer.js";
 import { createCardsPanel } from "./cards.js";
 import { createEvidencePanel } from "./evidence.js";
+import { createProgressPanel } from "./progress.js";
 
 const learner = createLearnerModel(window.localStorage);
 const $ = (id) => document.getElementById(id);
@@ -327,7 +328,17 @@ const cardStore = createCardStore(window.localStorage);
 const cardsPanel = createCardsPanel(cardStore);
 const explorer = createExplorer({ cards: cardStore, onCardSaved: () => cardsPanel.render() });
 const evidencePanel = createEvidencePanel();
-const TABS = ["learn", "explore", "evidence", "cards"];
+const progressPanel = createProgressPanel({
+  learner,
+  cards: cardStore,
+  onReview: (topic, level) => {
+    selectTab("learn");
+    $("question").value = topic;
+    if ([...$("level").options].some((o) => o.value === level)) $("level").value = level;
+    $("question").focus();
+  },
+});
+const TABS = ["learn", "explore", "evidence", "cards", "progress"];
 
 function selectTab(name, focus = false) {
   for (const t of TABS) {
@@ -340,6 +351,7 @@ function selectTab(name, focus = false) {
     if (on && focus) tab.focus();
   }
   if (name === "cards") cardsPanel.render();
+  if (name === "progress") progressPanel.render();
 }
 
 function initTabs() {
@@ -367,6 +379,7 @@ initTabs();
 explorer.initStatic();
 evidencePanel.initStatic();
 cardsPanel.initStatic();
+progressPanel.initStatic();
 loadHealth().then((h) => {
   explorer.renderTopics(h?.knowledge?.demoTopics ?? []);
   evidencePanel.renderClaims(h?.evidence?.demoClaims ?? []);

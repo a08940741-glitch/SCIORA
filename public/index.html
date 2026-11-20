@@ -28,6 +28,7 @@
     <button type="button" role="tab" id="tab-explore" aria-controls="panel-explore" aria-selected="false" tabindex="-1"></button>
     <button type="button" role="tab" id="tab-evidence" aria-controls="panel-evidence" aria-selected="false" tabindex="-1"></button>
     <button type="button" role="tab" id="tab-cards" aria-controls="panel-cards" aria-selected="false" tabindex="-1"></button>
+    <button type="button" role="tab" id="tab-progress" aria-controls="panel-progress" aria-selected="false" tabindex="-1"></button>
   </nav>
 
   <main id="main" class="layout">
@@ -112,6 +113,15 @@
         <p id="c-count" class="muted"></p>
       </section>
       <div id="c-list"></div>
+     </section>
+
+     <section id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden>
+      <section class="card">
+        <h2 id="p-title"></h2>
+        <p id="p-intro" class="muted"></p>
+        <p id="p-note" class="estimate-note"></p>
+      </section>
+      <div id="p-body"></div>
      </section>
     </div>
 

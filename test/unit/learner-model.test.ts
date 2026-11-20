@@ -105,3 +105,52 @@ test("no personal data is stored: only topic label, rating, counts, timestamp", 
   const stored = JSON.parse(s.raw.get(LM.STORAGE_KEY)!);
   assert.deepEqual(Object.keys(stored.topics.topic).sort(), ["counts", "label", "n", "rating", "updatedAt"]);
 });
+
+// ---------------------------------------------------------------- progress summary
+const est = (topic: string, level: string, n: number, counts: any, updatedAt = "2026-11-20T00:00:00Z") =>
+  ({ topic, estimatedLevel: level, basedOnAnswers: n, confidence: LM.confidenceFor(n), counts, updatedAt, isPreliminary: true });
+
+test("progress: empty input → zero totals, no topics", () => {
+  const p = LM.summarizeProgress([]);
+  assert.deepEqual(p.totals, { topics: 0, graded: 0, correct: 0, partially_correct: 0, incorrect: 0 });
+  assert.deepEqual(p.topics, []);
+  assert.deepEqual(LM.summarizeProgress(null).topics, []);
+});
+
+test("progress: weak topic with ≥2 answers → review, listed first", () => {
+  const p = LM.summarizeProgress([
+    est("A", "school", 6, { correct: 5, partially_correct: 1, incorrect: 0 }, "2026-11-20T10:00:00Z"),
+    est("B", "school", 3, { correct: 0, partially_correct: 1, incorrect: 2 }, "2026-11-19T10:00:00Z"),
+  ]);
+  assert.equal(p.topics[0]!.topic, "B");
+  assert.equal(p.topics[0]!.recommendation.kind, "review");
+  assert.deepEqual(p.needsReview.map((t: any) => t.topic), ["B"]);
+  assert.equal(p.totals.graded, 9);
+  assert.equal(p.totals.incorrect, 2);
+});
+
+test("progress: a single wrong answer is not enough to flag review (low confidence → practice more)", () => {
+  const p = LM.summarizeProgress([est("A", "school", 1, { correct: 0, partially_correct: 0, incorrect: 1 })]);
+  assert.equal(p.topics[0]!.recommendation.kind, "practice_more");
+});
+
+test("progress: strong topic with enough answers → next level; advanced → keep", () => {
+  const p = LM.summarizeProgress([
+    est("A", "school", 6, { correct: 6, partially_correct: 0, incorrect: 0 }),
+    est("B", "advanced", 8, { correct: 8, partially_correct: 0, incorrect: 0 }),
+  ]);
+  const a = p.topics.find((t: any) => t.topic === "A")!;
+  assert.deepEqual(a.recommendation, { kind: "level_up", level: "intermediate" });
+  assert.equal(p.topics.find((t: any) => t.topic === "B")!.recommendation.kind, "keep");
+});
+
+test("progress uses only stored data: estimates from the learner model round-trip", () => {
+  const s = memoryStorage();
+  const lm = LM.createLearnerModel(s);
+  lm.record("Topic", "school", r("incorrect", 0));
+  lm.record("Topic", "school", r("incorrect", 0));
+  lm.record("Topic", "school", r("uncertain", null, false)); // ignored
+  const p = LM.summarizeProgress(lm.allTopics());
+  assert.equal(p.totals.graded, 2);
+  assert.equal(p.topics[0]!.recommendation.kind, "review");
+});

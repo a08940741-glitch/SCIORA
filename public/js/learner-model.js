@@ -111,6 +111,7 @@ export function createLearnerModel(storage, now = () => Date.now()) {
         basedOnAnswers: t.n,
         confidence: confidenceFor(t.n),
         counts: { ...t.counts },
+        updatedAt: t.updatedAt ?? null,
         isPreliminary: true,
       };
     },
@@ -127,4 +128,44 @@ export function createLearnerModel(storage, now = () => Date.now()) {
       }
     },
   };
+}
+
+// ---------------------------------------------------------------- progress summary (Learning Progress screen)
+
+const NEXT_LEVEL = { beginner: "school", school: "intermediate", intermediate: "advanced", advanced: "advanced" };
+export const REVIEW_MIN_ANSWERS = 2;
+
+/**
+ * Summarizes ONLY stored, real graded results (uncertain results were never stored).
+ * Recommendations are simple, explainable rules — suggestions, not diagnoses:
+ *  - review:        ≥ 2 answers and (wrong/partial outweigh correct, or estimated level is beginner)
+ *  - practice_more: fewer than 5 answers (low confidence) — the estimate is still unreliable
+ *  - level_up:      enough answers, not weak, below "advanced" → try the next level
+ *  - keep:          advanced with enough answers
+ */
+export function summarizeProgress(estimates) {
+  const topics = (Array.isArray(estimates) ? estimates : [])
+    .filter((e) => e && e.basedOnAnswers > 0)
+    .map((e) => {
+      const c = { correct: 0, partially_correct: 0, incorrect: 0, ...(e.counts || {}) };
+      const weak = c.incorrect + 0.5 * c.partially_correct > c.correct || e.estimatedLevel === "beginner";
+      let recommendation;
+      if (e.basedOnAnswers >= REVIEW_MIN_ANSWERS && weak) recommendation = { kind: "review", level: e.estimatedLevel };
+      else if (e.confidence === "low") recommendation = { kind: "practice_more", level: e.estimatedLevel };
+      else if (e.estimatedLevel !== "advanced") recommendation = { kind: "level_up", level: NEXT_LEVEL[e.estimatedLevel] };
+      else recommendation = { kind: "keep", level: "advanced" };
+      return { ...e, counts: c, needsReview: recommendation.kind === "review", recommendation };
+    })
+    .sort((a, b) => (Number(b.needsReview) - Number(a.needsReview)) || String(b.updatedAt ?? "").localeCompare(String(a.updatedAt ?? "")));
+  const totals = topics.reduce(
+    (t, e) => ({
+      topics: t.topics + 1,
+      graded: t.graded + e.basedOnAnswers,
+      correct: t.correct + e.counts.correct,
+      partially_correct: t.partially_correct + e.counts.partially_correct,
+      incorrect: t.incorrect + e.counts.incorrect,
+    }),
+    { topics: 0, graded: 0, correct: 0, partially_correct: 0, incorrect: 0 },
+  );
+  return { totals, topics, needsReview: topics.filter((t) => t.needsReview) };
 }
