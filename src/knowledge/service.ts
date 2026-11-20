@@ -48,6 +48,50 @@ export interface KnowledgeServiceOptions {
   prepareSources?: (raw: RetrievedSource[], retrievedAt: string, retriever: string) => PublicSource[];
 }
 
+/**
+ * Shared retrieval step (used by Knowledge Explorer and Evidence Analyzer).
+ * Moved verbatim from KnowledgeService.retrieve (behaviour-preserving).
+ * Never runs for a simulated (demo) provider or a disabled retriever; aborts on timeout;
+ * failures degrade to "no sources" instead of failing the request.
+ */
+export async function runRetrieval(opts: {
+  simulated: boolean;
+  retriever: SourceRetriever;
+  query: string;
+  language: string;
+  timeoutMs: number;
+  now: () => number;
+  prepare: NonNullable<KnowledgeServiceOptions["prepareSources"]>;
+}): Promise<RetrievalOutcome> {
+  if (opts.simulated) return { sources: [], performed: false, note: "demo", retriever: null };
+  if (!opts.retriever.enabled) return { sources: [], performed: false, note: "disabled", retriever: null };
+
+  const controller = new AbortController();
+  let timer: NodeJS.Timeout | undefined;
+  const timeout = new Promise<"timeout">((resolve) => {
+    timer = setTimeout(() => {
+      controller.abort();
+      resolve("timeout");
+    }, opts.timeoutMs);
+  });
+  try {
+    const raced = await Promise.race([
+      opts.retriever.search(opts.query, { language: opts.language, limit: MAX_SOURCES, signal: controller.signal }),
+      timeout,
+    ]);
+    if (raced === "timeout") return { sources: [], performed: false, note: "timeout", retriever: opts.retriever.name };
+    const retrievedAt = new Date(opts.now()).toISOString();
+    const sources = opts.prepare(Array.isArray(raced) ? raced : [], retrievedAt, opts.retriever.name);
+    return sources.length
+      ? { sources, performed: true, note: null, retriever: opts.retriever.name }
+      : { sources: [], performed: true, note: "no_results", retriever: opts.retriever.name };
+  } catch {
+    return { sources: [], performed: false, note: "failed", retriever: opts.retriever.name };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export class KnowledgeService {
   readonly provider: KnowledgeProvider;
   readonly retriever: SourceRetriever;
@@ -65,33 +109,15 @@ export class KnowledgeService {
 
   /** Runs retrieval if (and only if) a real provider and an enabled retriever are configured. */
   async retrieve(req: KnowledgeQueryRequest): Promise<RetrievalOutcome> {
-    if (this.provider.simulated) return { sources: [], performed: false, note: "demo", retriever: null };
-    if (!this.retriever.enabled) return { sources: [], performed: false, note: "disabled", retriever: null };
-
-    const controller = new AbortController();
-    let timer: NodeJS.Timeout | undefined;
-    const timeout = new Promise<"timeout">((resolve) => {
-      timer = setTimeout(() => {
-        controller.abort();
-        resolve("timeout");
-      }, this.timeoutMs);
+    return runRetrieval({
+      simulated: this.provider.simulated,
+      retriever: this.retriever,
+      query: req.question,
+      language: req.language,
+      timeoutMs: this.timeoutMs,
+      now: this.now,
+      prepare: this.prepare,
     });
-    try {
-      const raced = await Promise.race([
-        this.retriever.search(req.question, { language: req.language, limit: MAX_SOURCES, signal: controller.signal }),
-        timeout,
-      ]);
-      if (raced === "timeout") return { sources: [], performed: false, note: "timeout", retriever: this.retriever.name };
-      const retrievedAt = new Date(this.now()).toISOString();
-      const sources = this.prepare(Array.isArray(raced) ? raced : [], retrievedAt, this.retriever.name);
-      return sources.length
-        ? { sources, performed: true, note: null, retriever: this.retriever.name }
-        : { sources: [], performed: true, note: "no_results", retriever: this.retriever.name };
-    } catch {
-      return { sources: [], performed: false, note: "failed", retriever: this.retriever.name };
-    } finally {
-      clearTimeout(timer);
-    }
   }
 
   /** Retrieval → provider. Provider errors propagate (mapped to HTTP by the route). */
