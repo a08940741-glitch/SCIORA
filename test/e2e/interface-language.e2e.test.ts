@@ -142,3 +142,35 @@ test("mobile: English landing and tabs without horizontal overflow", async () =>
   assert.deepEqual(problems, []);
   await ctx.close();
 });
+
+test("sidebar navigation: ArrowDown/ArrowUp/Home/End move between tabs (vertical tablist)", async () => {
+  const { page, ctx } = await open();
+  assert.equal(await page.getAttribute(".tabs", "aria-orientation"), "vertical");
+  await page.focus("#tab-learn");
+  await page.keyboard.press("ArrowDown");
+  assert.equal(await page.getAttribute("#tab-explore", "aria-selected"), "true");
+  await page.keyboard.press("End");
+  assert.equal(await page.getAttribute("#tab-progress", "aria-selected"), "true");
+  await page.keyboard.press("ArrowUp");
+  assert.equal(await page.getAttribute("#tab-cards", "aria-selected"), "true");
+  await page.keyboard.press("Home");
+  assert.equal(await page.getAttribute("#tab-learn", "aria-selected"), "true");
+  // Tab labels are text next to decorative icons (icons are aria-hidden).
+  assert.equal(await page.locator("#tab-learn svg[aria-hidden='true']").count(), 1);
+  await ctx.close();
+});
+
+test("Arabic interface on mobile: RTL layout without horizontal overflow", async () => {
+  const { page, problems, ctx } = await open({ width: 390, height: 844 });
+  await page.evaluate(() => localStorage.setItem("sciora.ui.lang", "ar"));
+  await page.reload();
+  assert.equal(await page.getAttribute("html", "dir"), "rtl");
+  await page.click("#tab-evidence");
+  await page.fill("#e-claim", "الشمس كتدور على الأرض");
+  await page.click("#e-analyze");
+  await page.waitForSelector("#e-overall");
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  assert.ok(overflow <= 1, `overflow ${overflow}px`);
+  assert.deepEqual(problems, []);
+  await ctx.close();
+});

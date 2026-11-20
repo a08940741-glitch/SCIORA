@@ -335,7 +335,7 @@ function initInterfaceLanguage() {
     b.querySelector(".pillar-text").textContent = p.text;
     b.addEventListener("click", () => {
       selectTab(b.dataset.goto, true);
-      document.querySelector(".tabs").scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("main").scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
   $("learn-title").textContent = T.tabs.learn;
@@ -394,15 +394,18 @@ function selectTab(name, focus = false) {
 function initTabs() {
   for (const t of TABS) {
     const tab = $(`tab-${t}`);
-    tab.textContent = T.tabs[t];
+    tab.querySelector(".tab-label").textContent = T.tabs[t];
     tab.addEventListener("click", () => selectTab(t));
     tab.addEventListener("keydown", (ev) => {
       const i = TABS.indexOf(t);
       // Direction-aware: the "next" arrow is ArrowRight in LTR and ArrowLeft in RTL.
       const nextKey = UI_DIR === "rtl" ? "ArrowLeft" : "ArrowRight";
       const prevKey = UI_DIR === "rtl" ? "ArrowRight" : "ArrowLeft";
-      if (ev.key === nextKey) selectTab(TABS[(i + 1) % TABS.length], true);
-      else if (ev.key === prevKey) selectTab(TABS[(i + TABS.length - 1) % TABS.length], true);
+      // Vertical sidebar: ArrowDown / ArrowUp also move between tabs.
+      if (ev.key === nextKey || ev.key === "ArrowDown") selectTab(TABS[(i + 1) % TABS.length], true);
+      else if (ev.key === prevKey || ev.key === "ArrowUp") selectTab(TABS[(i + TABS.length - 1) % TABS.length], true);
+      else if (ev.key === "Home") selectTab(TABS[0], true);
+      else if (ev.key === "End") selectTab(TABS[TABS.length - 1], true);
       else return;
       ev.preventDefault();
     });
