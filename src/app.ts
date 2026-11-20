@@ -139,7 +139,7 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
   // ------------------------------------------------------------------ health
   app.get("/api/health", async () => ({
     status: "ok",
-    phase: 1,
+    phase: "2B",
     mode: isLive ? "live" : "demo",
     simulated: provider.simulated,
     models: provider.models,

@@ -68,6 +68,13 @@ Issues found and fixed:
 - Issues found and fixed: a mixed interface/content paragraph test was too broad (made precise); demo topic chips mixed scripts (isolated with `<bdi>`); step lists had markers on the wrong side (`dir="auto"` on content lists); Node `fetch` ignores the proxy (`NODE_USE_ENV_PROXY=1`, documented); ar.wikipedia 429 stopped the search instead of falling back (per-wiki fallback added).
 - Commits `cf3005e` … `eb35df4`.
 
+## 2026-11-20 — Development sprint
+- Phase 0: verified remote/branch; performed the owner-approved normal push of 31 commits to `origin/main` (no force, no history changes).
+- Owner request mid-sprint: professional redesign → sidebar app shell and complete design system; visual review found and fixed a mobile grid overflow (`minmax(0,1fr)`).
+- Evidence: `partially_supported`; keyword-matched passages. Learning: session summary. Workflow: Knowledge → Evidence.
+- Health endpoint reported a stale `phase: 1` → `"2B"`.
+- WAICY documentation package created (`docs/waicy/`).
+
 ## Next actions
 - Owner: review demo lessons and grading labels (Darija + science); decide on API key and live tests.
 - Owner: review Knowledge Explorer demo content; decide on a real source retriever (Wikipedia network approval or paid web search).

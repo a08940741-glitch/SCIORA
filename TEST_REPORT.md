@@ -1,22 +1,28 @@
 # SCIORA — Test Report
 
-_Only executed tests are listed; every row was produced by running the test file. History: Phase 1 154/154, Phase 2A 235/235, Phase 2B + Progress 284/284._
+_Only executed tests are listed; every row was produced by running the test file. History: Phase 1 154/154, Phase 2A 235/235, Phase 2B + Progress 284/284, English UI + Wikipedia 321/321._
 
-## Run summary (English-first interface + Wikipedia retrieval)
+## Run summary (development sprint: redesign, evidence and learning workflows)
 
 | Item | Value |
 |---|---|
 | Date | 2026-11-20 |
-| Code version | commit `eb35df4` + documentation changes |
+| Code version | commit `4465e0a` + health `phase` fix + documentation |
 | Environment | Linux container, Node 22.23.5, Chromium (pre-installed Playwright) |
-| AI mode during tests | **Demo mode or FAKE AI client. Retrieval tests use a FAKE fetch. No AI API call; no network in automated tests.** |
-| Automated tests | **321 / 321 passed**, 0 failed, 0 skipped |
-| Unit + API | 290 / 290 passed |
-| Browser (Playwright) | 31 / 31 passed |
+| AI mode during tests | **Demo mode or FAKE AI client; retrieval tests use a FAKE fetch. No AI API call; no network in automated tests.** |
+| Automated tests | **337 / 337 passed**, 0 failed, 0 skipped |
+| Unit + API | 301 / 301 passed |
+| Browser (Playwright) | 36 / 36 passed |
 | Typecheck | passed |
+| Build | no build step (TypeScript runs via tsx); `npm start` serves the app (index 200, health OK, demo mode) |
 | `npm audit` | 0 vulnerabilities |
 | New dependencies | none |
 | Secret scan | passed |
+
+### Sprint additions covered by tests
+- Professional redesign (sidebar app shell): all existing browser journeys re-run; vertical keyboard navigation; Arabic interface on mobile without overflow.
+- Evidence: `partially_supported` overall verdict; keyword-matched passages (verbatim, never affect verdicts).
+- Learning: session summary (counts, real gaps, next step) and its actions; Knowledge → Evidence "Check this claim".
 
 ## Manual checks against the REAL Wikipedia API (free, no key)
 
@@ -27,7 +33,14 @@ _Only executed tests are listed; every row was produced by running the test file
 | `npm start` (demo) + `/api/knowledge/query` “What is the water cycle?” | 5 real Wikipedia articles returned as related reading; status `demo`; `publishedAt` null; real `lastModified`; no live AI |
 | Node `fetch` behind this container's proxy | requires `NODE_USE_ENV_PROXY=1` (documented); not needed without a proxy |
 
-## Changes to existing tests in this milestone (disclosed)
+## Changes to existing tests (disclosed)
+
+| Area | Change | Reason |
+|---|---|---|
+| `evidence-verdicts.test.ts` | `supported + insufficient` now expects `partially_supported` (was `insufficient_evidence`); new cases added | Requested status refinement. |
+| `workflows.e2e.test.ts` (new) | Ignores only Chrome's "Failed to load resource: 404" log for the expected demo 404 | Network status log, not a script error. |
+
+_Earlier milestone:_
 
 | Area | Change | Reason |
 |---|---|---|
@@ -91,6 +104,16 @@ _Only executed tests are listed; every row was produced by running the test file
 | 3 | Retry-After is shown in seconds/minutes for rate limit and capacity only (English default) | ✅ PASS |
 | 4 | Arabic interface dictionary formats wait times in Darija | ✅ PASS |
 | 5 | unreadable answer → interface-language hint chosen by exercise type | ✅ PASS |
+
+### `test/unit/evidence-passages.test.ts` — 5/5 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | key terms: normalized, stopwords and short words removed, Arabic article stripped | ✅ PASS |
+| 2 | sentence splitting keeps meaningful sentences | ✅ PASS |
+| 3 | best matching sentence per source, ≥2 shared terms, matched terms reported | ✅ PASS |
+| 4 | no overlap (or other language) → no passages; never invents text | ✅ PASS |
+| 5 | service: passages are attached but never change the verdict (demo stays insufficient) | ✅ PASS |
 
 ### `test/unit/evidence-service.test.ts` — 12/12 passed
 
@@ -359,6 +382,17 @@ _Only executed tests are listed; every row was produced by running the test file
 | 7 | GradeRequest: limits and strictness | ✅ PASS |
 | 8 | WrittenJudgement schema rejects unknown judgement values | ✅ PASS |
 
+### `test/unit/session.test.ts` — 6/6 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | not done until every exercise has a result | ✅ PASS |
+| 2 | all graded answers correct → next_level | ✅ PASS |
+| 3 | half or more incorrect → review_first; otherwise retry_same | ✅ PASS |
+| 4 | uncertain results are counted but never drive the recommendation | ✅ PASS |
+| 5 | gaps come only from real results: missing/partial criteria and misconceptions, de-duplicated | ✅ PASS |
+| 6 | next level progression | ✅ PASS |
+
 ### `test/unit/wikipedia-retriever.test.ts` — 20/20 passed
 
 | # | Test | Result |
@@ -481,7 +515,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 6 | mobile: explorer renders in RTL without horizontal overflow | ✅ PASS |
 | 7 | FAKE live provider + FAKE retriever: AI label, source_backed banner, safe https source links | ✅ PASS |
 
-### `test/e2e/interface-language.e2e.test.ts` — 6/6 passed
+### `test/e2e/interface-language.e2e.test.ts` — 8/8 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -491,6 +525,8 @@ _Only executed tests are listed; every row was produced by running the test file
 | 4 | switching the interface to Arabic: RTL, Darija labels, no English leakage, RTL arrow keys | ✅ PASS |
 | 5 | tampered interface-language value falls back to English | ✅ PASS |
 | 6 | mobile: English landing and tabs without horizontal overflow | ✅ PASS |
+| 7 | sidebar navigation: ArrowDown/ArrowUp/Home/End move between tabs (vertical tablist) | ✅ PASS |
+| 8 | Arabic interface on mobile: RTL layout without horizontal overflow | ✅ PASS |
 
 ### `test/e2e/progress.e2e.test.ts` — 4/4 passed
 
@@ -509,6 +545,14 @@ _Only executed tests are listed; every row was produced by running the test file
 | 2 | Explorer demo: Wikipedia article shown as related reading with real metadata; status stays demo | ✅ PASS |
 | 3 | Evidence demo: related sources listed separately; verdict remains insufficient evidence | ✅ PASS |
 
+### `test/e2e/workflows.e2e.test.ts` — 3/3 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | LEARN → PRACTICE → EVALUATE → IMPROVE: session summary appears only after all exercises, with real gaps | ✅ PASS |
+| 2 | all correct → 'try the next level' raises the level and requests a new lesson | ✅ PASS |
+| 3 | KNOWLEDGE → EVIDENCE: 'Check this claim' on a fact opens the Evidence Analyzer and analyzes it | ✅ PASS |
+
 ### `test/e2e/workspace.e2e.test.ts` — 5/5 passed
 
 | # | Test | Result |
@@ -525,3 +569,5 @@ _Only executed tests are listed; every row was produced by running the test file
 - Wikipedia: rate limits for anonymous/shared addresses; intro extracts only (evidence quotes must come from the intro); Wikipedia alone is never presented as sufficient proof.
 - Demo content (lessons, knowledge answers, evidence analyses) is Darija-only and unreviewed. Live AI quality unverified.
 - Arabic interface is optional; French interface not implemented.
+- Demo mode: "Check this claim" only works for the five demo claims (others get an honest 'not available in demo' message).
+- Keyword-matched passages are literal (same language/script); no cross-language matching.

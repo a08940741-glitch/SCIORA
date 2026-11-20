@@ -96,6 +96,9 @@ npm run typecheck
 | [`DEVELOPMENT_LOG.md`](DEVELOPMENT_LOG.md) | Decisions, errors and fixes |
 | [`WAICY_SUBMISSION_CHECKLIST.md`](WAICY_SUBMISSION_CHECKLIST.md) | Competition deliverables and checks |
 | [`docs/planned/GOOGLE_SIGN_IN.md`](docs/planned/GOOGLE_SIGN_IN.md) | Planned (not implemented) optional sign-in design |
+| [`docs/waicy/PROJECT_DOSSIER.md`](docs/waicy/PROJECT_DOSSIER.md) | WAICY dossier: problem, solution, AI, architecture, innovation, ethics, limitations, testing, journey |
+| [`docs/waicy/DEMO_SCRIPT.md`](docs/waicy/DEMO_SCRIPT.md) | Demo video script (≤ 3 min) |
+| [`docs/waicy/JUDGE_QA.md`](docs/waicy/JUDGE_QA.md) | Judge Q&A preparation |
 
 ## Licence
 

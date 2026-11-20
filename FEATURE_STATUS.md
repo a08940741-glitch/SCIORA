@@ -100,6 +100,17 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 | Wikipedia-only notice; demo related reading never used as citations/evidence | **Implemented & tested** |
 | French interface | **Not implemented** |
 
+## Development sprint (redesign, evidence and learning workflows)
+
+| Feature | Status |
+|---|---|
+| Professional redesign: sidebar app shell, new design system, mobile top bar | **Implemented & tested** |
+| Evidence: "Partially supported" overall verdict | **Implemented & tested** |
+| Evidence: keyword-matched passages to inspect (not evidence) | **Implemented & tested** |
+| Learning: session summary with gaps and next step (learn → practise → evaluate → improve) | **Implemented & tested** |
+| Knowledge → Evidence: "Check this claim" on facts | **Implemented & tested** (demo: works only for the five demo claims) |
+| WAICY documentation package (`docs/waicy/`) | **Written** |
+
 ## Phase 2 — Remaining planned features (NOT implemented)
 
 | Priority | Feature | Status | Notes |
