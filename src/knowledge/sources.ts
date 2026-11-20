@@ -1,5 +1,6 @@
 import { RetrievedSource, type KnowledgeQueryResponse, type PublicSource } from "./schemas.ts";
 import type { KnowledgeDraft } from "./service.ts";
+import { cleanConnections } from "./learning.ts";
 
 export const MAX_SOURCES = 5;
 
@@ -99,7 +100,7 @@ export function finalizeAnswer(draft: KnowledgeDraft, simulated: boolean): Knowl
       uncitedFacts: simulated ? 0 : uncitedFacts,
       removedCitations,
     },
-    connections: generated.connections.map((c) => ({ concept: c.concept, relation: c.relation, suggested: true as const })),
+    connections: cleanConnections(generated).map((c) => ({ concept: c.concept, relation: c.relation, suggested: true as const })),
     meta,
   };
 }

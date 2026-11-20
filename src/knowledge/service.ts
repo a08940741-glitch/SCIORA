@@ -6,11 +6,15 @@ import {
   type KnowledgeMeta,
   type KnowledgeQueryRequest,
   type KnowledgeQueryResponse,
+  type TransformRequest,
+  type TransformResponse,
   type PublicSource,
   type RetrievedSource,
   type Verification,
 } from "./schemas.ts";
 import { finalizeAnswer, MAX_SOURCES, sanitizeSources } from "./sources.ts";
+import { checkTransform } from "./learning.ts";
+import { ProviderError } from "./provider.ts";
 
 export { MAX_SOURCES };
 
@@ -100,5 +104,16 @@ export class KnowledgeService {
   /** Full pipeline: retrieval → provider → server-side source validation + verification status. */
   async query(req: KnowledgeQueryRequest): Promise<KnowledgeQueryResponse> {
     return finalizeAnswer(await this.draft(req), this.provider.simulated);
+  }
+
+  /**
+   * Learning mode: simplify / examples / self-check quiz.
+   * Independent of Phase 1 grading: nothing is sealed, graded or recorded.
+   */
+  async transform(req: TransformRequest): Promise<TransformResponse> {
+    const { output, meta } = await this.provider.transform(req);
+    const checked = checkTransform(output);
+    if (!checked.ok) throw new ProviderError("bad_output", "The AI quiz did not pass SCIORA's checks.");
+    return { mode: checked.output.mode, result: checked.output.data, selfCheckOnly: checked.output.mode === "quiz", meta };
   }
 }
