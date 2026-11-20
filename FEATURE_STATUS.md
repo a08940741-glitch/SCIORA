@@ -86,11 +86,24 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 | Explainable recommendations (review / practice more / next level / keep) + practice shortcut | **Implemented & tested** |
 | Server-side or synced progress | **Not implemented** (would require accounts — see optional Google Sign-In, Phase 2 planned) |
 
+## International interface & real retrieval
+
+| Feature | Status |
+|---|---|
+| English default interface (LTR), international landing section, interface-language switcher | **Implemented & tested** |
+| Optional Arabic (Darija) interface (RTL), identical keys to English (unit-tested) | **Implemented & tested** |
+| Interface language independent from learning / AI response language | **Implemented & tested** |
+| Server system notices as neutral codes translated by the interface | **Implemented & tested** |
+| Wikipedia retrieval (free MediaWiki API) for Knowledge Explorer and Evidence Analyzer | **Implemented & tested** (fake fetch); **real API checked manually** (English OK; Arabic rate-limited from this cloud address) |
+| Rate limiting, cache, bounded retries with backoff, timeout/abort, per-wiki fallback | **Implemented & tested** |
+| Real source metadata (URL, excerpt, last edited, retrieved); no invented publication dates | **Implemented & tested** |
+| Wikipedia-only notice; demo related reading never used as citations/evidence | **Implemented & tested** |
+| French interface | **Not implemented** |
+
 ## Phase 2 — Remaining planned features (NOT implemented)
 
 | Priority | Feature | Status | Notes |
 |---|---|---|---|
-| P1 | Real source retriever for Knowledge Explorer **and Evidence Analyzer** | **Decision pending** | Options: Wikipedia API (needs network approval), paid web-search tool (live only). |
 | P1 | Landing page, Settings, full Responsible-AI / limitations page, French interface | **Planned — Phase 2** | Phase 1 has a short responsible-use panel only. |
 | P2 | **Optional Google Sign-In + progress sync** | **Planned — Phase 2** | Full design: [`docs/planned/GOOGLE_SIGN_IN.md`](docs/planned/GOOGLE_SIGN_IN.md). Requires a database and an owner decision on hosting. |
 | P2 | Persistent replay store (SQLite) | **Planned — Phase 2** | Would remove the Phase 1 "server restart" replay limitation. Shares the database introduced for sign-in. |

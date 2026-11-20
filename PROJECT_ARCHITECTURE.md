@@ -180,5 +180,14 @@ Answers: LEARN (Sonnet 5.5, effort medium). Transforms: FAST (Haiku 5.5, effort 
 ## 7. Learning Progress
 `public/js/progress.js` + `summarizeProgress()` in `learner-model.js`. Reads only the browser-stored learner estimate and card count. Recommendation rules: ≥ 2 answers and (incorrect + ½·partial > correct, or level beginner) → review; fewer than 5 answers → practice more; otherwise next level (or keep at advanced). Uncertain results were never stored, so they never count.
 
-## 8. Planned (not implemented)
-Real source retriever (for Explorer and Evidence), landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.
+## 8. Interface languages
+- `public/js/i18n.js`: `en` (default) and `ar` dictionaries with identical keys (unit-tested). The interface language is stored in `localStorage` (`sciora.ui.lang`), applied on load (`<html lang dir>`), and switched from the header (page reload).
+- Interface language ≠ learning / AI response language (selected per tool).
+- `render.js` gives text elements `dir="auto"`, so Arabic content is RTL inside the English UI; mixed interface/content strings are isolated (`<bdi>`, separate spans).
+- Server system notices are codes (`src/notices.ts`) translated by `public/js/notices.js`.
+
+## 9. Wikipedia retrieval
+`src/knowledge/wikipedia-retriever.ts` implements `SourceRetriever` with the MediaWiki Action API (`generator=search`, intro plain-text extracts, `inprop=url`, latest revision timestamp, `ppprop=disambiguation`, `maxlag=5`). Fixed hosts `{ar,fr,en}.wikipedia.org` chosen by query script and answer language (max 2, with fallback on errors). Throttle (min interval), 1 h cache, ≤ 2 retries per wiki with exponential backoff honouring `Retry-After` (capped), abort-aware waits, response size cap, schema validation, https + exact-host URL check. `publishedAt` is always null (no publication date exists); `lastModified` comes from the API. Results then pass `sanitizeSources()`. Demo mode shows results as related reading only; `wikipedia_only` notice when an answer/verdict rests only on Wikipedia.
+
+## 10. Planned (not implemented)
+Retrieval sources beyond Wikipedia, French interface, landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.

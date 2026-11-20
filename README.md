@@ -6,7 +6,8 @@ SCIORA is an AI-assisted learning platform. Its first implementation, **Darija A
 
 > **Current status: Phase 1 (learning loop), Phase 2A (Knowledge Explorer) and Phase 2B (Evidence Analyzer) implemented and tested in demo mode.**
 > Live AI mode is built but has **not yet been run against the real API** (no live calls without the project owner's approval).
-> **No real source retrieval exists yet:** live Knowledge Explorer answers are labelled *not source-verified*, and factual claims in the Evidence Analyzer receive *Insufficient Evidence*.
+> **Interface:** English by default (international design); an Arabic (Darija) interface is optional. Learning and AI response languages (Darija, MSA, French, English) are chosen separately in each tool.
+> **Sources:** real retrieval from the free public **Wikipedia (MediaWiki) API**. In demo mode retrieved articles are shown only as related reading; Wikipedia alone is never presented as sufficient proof.
 > A **Learning Progress** screen (browser data only) is implemented. Optional Google Sign-In is **planned, not implemented.**
 > See [`FEATURE_STATUS.md`](FEATURE_STATUS.md).
 
@@ -64,6 +65,8 @@ Configuration lives in environment variables; see [`.env.example`](.env.example)
 | `SCIORA_TOKEN_SECRET` | ≥ 32 random bytes; **required in production** (encrypts exercise answer keys). |
 | `SCIORA_GRADE_ESCALATION` | `on` re-grades "uncertain" written answers once with the LEARN model (costs more). |
 | `SCIORA_DAILY_LIMIT` | Max AI calls per day in live mode (0 = no limit). |
+| `SCIORA_RETRIEVER` | `wikipedia` (default, free MediaWiki API) or `none`. |
+| `SCIORA_WIKI_USER_AGENT` | User-Agent with contact info, as Wikimedia asks. Behind an HTTPS proxy, run Node with `NODE_USE_ENV_PROXY=1`. |
 
 ## Tests
 

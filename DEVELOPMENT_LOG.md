@@ -62,6 +62,12 @@ Issues found and fixed:
 - Known cosmetic issue logged: bidi bracket placement when mixed Arabic/Latin topic names wrap in the side panel.
 - Commit `4b0f1da`.
 
+## 2026-11-20 — English-first interface + Wikipedia retrieval (owner-approved)
+- Owner correction: English must be the default interface language; multilingual AI/learning kept. Implemented en/ar dictionaries, landing section, interface-language switcher, auto text direction, notice codes.
+- Owner approval: Wikipedia API retrieval. Created a personal "sciora" cloud environment allowing only {ar,fr,en}.wikipedia.org.
+- Issues found and fixed: a mixed interface/content paragraph test was too broad (made precise); demo topic chips mixed scripts (isolated with `<bdi>`); step lists had markers on the wrong side (`dir="auto"` on content lists); Node `fetch` ignores the proxy (`NODE_USE_ENV_PROXY=1`, documented); ar.wikipedia 429 stopped the search instead of falling back (per-wiki fallback added).
+- Commits `cf3005e` … `eb35df4`.
+
 ## Next actions
 - Owner: review demo lessons and grading labels (Darija + science); decide on API key and live tests.
 - Owner: review Knowledge Explorer demo content; decide on a real source retriever (Wikipedia network approval or paid web search).

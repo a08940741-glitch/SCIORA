@@ -1,48 +1,50 @@
 # SCIORA — Test Report
 
-_Only executed tests are listed; every row was produced by running the test file. History: Phase 1 154/154 (`163b128`), Phase 2A 235/235 (`d8ee223`)._
+_Only executed tests are listed; every row was produced by running the test file. History: Phase 1 154/154, Phase 2A 235/235, Phase 2B + Progress 284/284._
 
-## Run summary (Phase 2B + Learning Progress)
+## Run summary (English-first interface + Wikipedia retrieval)
 
 | Item | Value |
 |---|---|
 | Date | 2026-11-20 |
-| Code version | commit `4b0f1da` + documentation changes (no code changes after this run) |
+| Code version | commit `eb35df4` + documentation changes |
 | Environment | Linux container, Node 22.23.5, Chromium (pre-installed Playwright) |
-| AI mode during tests | **Demo mode or FAKE AI client / FAKE retriever. No real API call and no external network call.** |
-| Automated tests | **284 / 284 passed**, 0 failed, 0 skipped |
-| Unit + API | 262 / 262 passed |
-| Browser (Playwright) | 22 / 22 passed |
+| AI mode during tests | **Demo mode or FAKE AI client. Retrieval tests use a FAKE fetch. No AI API call; no network in automated tests.** |
+| Automated tests | **321 / 321 passed**, 0 failed, 0 skipped |
+| Unit + API | 290 / 290 passed |
+| Browser (Playwright) | 31 / 31 passed |
 | Typecheck | passed |
 | `npm audit` | 0 vulnerabilities |
-| New dependencies since Phase 1 | none |
+| New dependencies | none |
 | Secret scan | passed |
-| Manual server smoke (`npm start`, demo) | health: all three modules demo, retrieval off; evidence analysis of a compound claim → 2 sub-claims, insufficient_evidence, basis none |
 
-## Changes to existing tests in Phase 2B (disclosed)
+## Manual checks against the REAL Wikipedia API (free, no key)
 
-| Test | Change | Reason |
+| Check | Result |
+|---|---|
+| Retriever, English query “What is photosynthesis?” | 2 real articles (Photosynthesis; Artificial photosynthesis) with real URLs, excerpts and last-edited timestamps |
+| Retriever, Arabic query | **HTTP 429** from ar.wikipedia (rate limit on this shared cloud address); retried with backoff, then failed cleanly. Led to the per-wiki fallback fix. |
+| `npm start` (demo) + `/api/knowledge/query` “What is the water cycle?” | 5 real Wikipedia articles returned as related reading; status `demo`; `publishedAt` null; real `lastModified`; no live AI |
+| Node `fetch` behind this container's proxy | requires `NODE_USE_ENV_PROXY=1` (documented); not needed without a proxy |
+
+## Changes to existing tests in this milestone (disclosed)
+
+| Area | Change | Reason |
 |---|---|---|
-| `api.test.ts`, `knowledge-api.test.ts` — health | Assert `evidence_analyzer` is no longer planned; `real_source_retrieval` still is | Evidence Analyzer implemented; real retrieval still missing. |
-| `workspace.e2e.test.ts` — planned feature check | Now asserts no Google Sign-In control exists | Explorer and Evidence are implemented; Google Sign-In is the remaining planned UI feature. |
-| `explorer.e2e.test.ts` — keyboard tabs | Tab order now includes the Evidence tab and checks wrap-around | A 4th tab was added. |
-| `test/helpers/app.ts` | Optional `evidenceProvider` | To inject fakes. |
-| `explorer.e2e.test.ts` — keyboard tabs (Progress milestone) | Tab order read from the DOM; asserts the 5 tabs, focus follows selection, wrap-around both ways | Stronger and robust to future tabs. |
+| Demo caveat assertions (unit/API) | Assert notice codes (`demo_content`, `demo_level_fixed`, `demo_language_fixed`, `citations_removed`, `evidence_removed`) instead of Darija caveat text | System notices are now neutral codes translated by the interface. |
+| Browser tests | English interface text instead of Darija; “no English leakage” checks became “no Arabic script in the English interface” | English-first requirement. The old Arabic-interface guarantee is kept by the new `interface-language.e2e.test.ts`. |
+| Keyboard tab test | ArrowRight = next in the English (LTR) interface | Direction-aware keys; RTL behaviour tested in the Arabic-interface test. |
+| `errors-ui.test.ts` | English wait-time messages + Arabic dictionary check + type-specific unreadable hint | English default. |
+| `knowledge-service.test.ts` | “demo never retrieves” replaced by “demo + retriever → related reading only, status demo, no citations” | Approved real retrieval; intentional behaviour change. |
+| `wikipedia-retriever.test.ts` bounded-retry test | 6 requests max (3 per wiki × 2 wikis) | Per-wiki fallback added. |
 
-## NOT executed / not verified
+## Not verified
 
 | Item | Status |
 |---|---|
-| Any live AI call (lessons, grading, knowledge, evidence) | **Not run** — no key, no approval |
-| `npm run eval:grading`, `npm run test:live` | **Not run** (gated) |
-| Real source retrieval | **Not implemented** — factual claims always get *insufficient evidence* outside tests |
-| Quality of live evidence analysis (claim splitting, classification) | **Not evaluated** |
-| Owner review of all demo content and grading labels | **Pending** |
-
-## What the Phase 2B tests prove — and what they do not
-
-- **Prove:** evidence counts only when it quotes the excerpt of a server-retrieved source (fabricated quotes, unknown ids and duplicates are removed and disclosed); the AI cannot set verdicts or sub-claim ids; opinions, predictions, value judgments and ambiguous claims are never rated true/false; overall verdict rules (incl. mixed and insufficient); retrieval timeout degrades safely; provider errors map to HTTP errors and are never replaced by demo content; no prompts, secrets or claim text leak to responses or logs; shared daily limit and rate limit; the UI labels AI background as not evidence, shows no English words in Arabic interface text, and works on mobile.
-- **Do not prove:** that a live model splits and classifies claims well, or that real sources would be retrieved — no retriever exists.
+| Any live AI call | **Not run** (no key / no approval) |
+| Arabic Wikipedia from a normal (non-shared) address | Not verified (429 here) |
+| Owner review of demo content and grading labels | Pending |
 
 ## Detailed results
 
@@ -80,14 +82,15 @@ _Only executed tests are listed; every row was produced by running the test file
 | 12 | escalation and live-test switches parse on/off values | ✅ PASS |
 | 13 | unknown AI mode is rejected | ✅ PASS |
 
-### `test/unit/errors-ui.test.ts` — 4/4 passed
+### `test/unit/errors-ui.test.ts` — 5/5 passed
 
 | # | Test | Result |
 |---|---|---|
 | 1 | network failure → localized network message | ✅ PASS |
 | 2 | known codes → Darija message; unknown → server message → generic | ✅ PASS |
-| 3 | unreadable_answer keeps the server's localized hint | ✅ PASS |
-| 4 | Retry-After is shown in seconds/minutes for rate limit and capacity only | ✅ PASS |
+| 3 | Retry-After is shown in seconds/minutes for rate limit and capacity only (English default) | ✅ PASS |
+| 4 | Arabic interface dictionary formats wait times in Darija | ✅ PASS |
+| 5 | unreadable answer → interface-language hint chosen by exercise type | ✅ PASS |
 
 ### `test/unit/evidence-service.test.ts` — 12/12 passed
 
@@ -170,6 +173,16 @@ _Only executed tests are listed; every row was produced by running the test file
 | 5 | demo keyword grader safety on fixtures: never 'incorrect', never a false 'correct' | ✅ PASS |
 | 6 | review status is reported honestly (owner review still pending) | ✅ PASS |
 
+### `test/unit/i18n.test.ts` — 5/5 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | English is the default interface language (no stored preference) | ✅ PASS |
+| 2 | English and Arabic dictionaries have identical structure (no missing translations) | ✅ PASS |
+| 3 | every server notice code has a translation in both interface languages | ✅ PASS |
+| 4 | English dictionary contains no Arabic script except deliberate bilingual examples | ✅ PASS |
+| 5 | setUiLanguage rejects unsupported languages | ✅ PASS |
+
 ### `test/unit/knowledge-learning.test.ts` — 6/6 passed
 
 | # | Test | Result |
@@ -209,18 +222,19 @@ _Only executed tests are listed; every row was produced by running the test file
 | 7 | quiz output: choice ids a-d only | ✅ PASS |
 | 8 | retrieved source schema requires a real URL | ✅ PASS |
 
-### `test/unit/knowledge-service.test.ts` — 8/8 passed
+### `test/unit/knowledge-service.test.ts` — 9/9 passed
 
 | # | Test | Result |
 |---|---|---|
-| 1 | demo provider: retriever is never called; note = demo | ✅ PASS |
-| 2 | live provider + default NoopRetriever (D1): no retrieval, note = disabled, provider gets no sources | ✅ PASS |
-| 3 | live provider + enabled fake retriever: sources get server ids S1..Sn and reach the provider | ✅ PASS |
-| 4 | retriever failure: answer continues without sources, note = failed | ✅ PASS |
-| 5 | retriever timeout: aborted, answer continues without sources, note = timeout | ✅ PASS |
-| 6 | retriever returning malformed items: invalid ones dropped; none left → no_results | ✅ PASS |
-| 7 | more than 5 retrieved sources are capped at 5 | ✅ PASS |
-| 8 | provider errors propagate unchanged (route maps them to HTTP) | ✅ PASS |
+| 1 | demo provider + no retriever: nothing retrieved; note = demo | ✅ PASS |
+| 2 | demo provider + enabled retriever: real retrieval runs, but sources are related reading only | ✅ PASS |
+| 3 | live provider + default NoopRetriever (D1): no retrieval, note = disabled, provider gets no sources | ✅ PASS |
+| 4 | live provider + enabled fake retriever: sources get server ids S1..Sn and reach the provider | ✅ PASS |
+| 5 | retriever failure: answer continues without sources, note = failed | ✅ PASS |
+| 6 | retriever timeout: aborted, answer continues without sources, note = timeout | ✅ PASS |
+| 7 | retriever returning malformed items: invalid ones dropped; none left → no_results | ✅ PASS |
+| 8 | more than 5 retrieved sources are capped at 5 | ✅ PASS |
+| 9 | provider errors propagate unchanged (route maps them to HTTP) | ✅ PASS |
 
 ### `test/unit/knowledge-sources.test.ts` — 14/14 passed
 
@@ -345,7 +359,32 @@ _Only executed tests are listed; every row was produced by running the test file
 | 7 | GradeRequest: limits and strictness | ✅ PASS |
 | 8 | WrittenJudgement schema rejects unknown judgement values | ✅ PASS |
 
-### `test/api/api.test.ts` — 31/31 passed
+### `test/unit/wikipedia-retriever.test.ts` — 20/20 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | question words are removed from the search text (Darija, MSA, French, English, Arabizi) | ✅ PASS |
+| 2 | wiki choice follows the query script and answer language (max 2 wikis) | ✅ PASS |
+| 3 | request URL: fixed Wikipedia host, MediaWiki params, query only in the search parameter (no SSRF) | ✅ PASS |
+| 4 | parses results: real title/URL/excerpt, publishedAt null, lastModified from revision, publisher label | ✅ PASS |
+| 5 | untrusted response: wrong host, http, missing, disambiguation, non-article and empty extracts are dropped; order by search index | ✅ PASS |
+| 6 | long extracts are capped; results then pass sanitizeSources with server ids | ✅ PASS |
+| 7 | no results on the first wiki → second wiki is tried; none → empty list | ✅ PASS |
+| 8 | malformed JSON, API error object, unexpected shape and oversized body → errors (degrade upstream) | ✅ PASS |
+| 9 | 429 / 503 / network errors are retried with backoff (max 2 retries), then succeed | ✅ PASS |
+| 10 | retries are bounded: persistent 429 → 1 + maxRetries attempts per wiki, at most 2 wikis (6 requests) | ✅ PASS |
+| 11 | maxlag API response is retried | ✅ PASS |
+| 12 | cache: the same query is served from memory (no second request) until TTL expires | ✅ PASS |
+| 13 | throttle: requests are spaced by the minimum interval | ✅ PASS |
+| 14 | abort signal cancels a pending backoff immediately (timeout respected) | ✅ PASS |
+| 15 | integration: Knowledge Explorer (live, fake client) cites a Wikipedia source → source_backed + wikipedia_only notice | ✅ PASS |
+| 16 | integration: Evidence Analyzer quote from Wikipedia → verdict + wikipedia_only notice | ✅ PASS |
+| 17 | integration: retrieval failure (Wikipedia down) degrades to no sources, never an error | ✅ PASS |
+| 18 | factory: wikipedia by default, none when disabled; custom User-Agent from config | ✅ PASS |
+| 19 | a failing first wiki (e.g. 429 on ar) falls back to the next wiki | ✅ PASS |
+| 20 | all wikis failing → error is raised (service reports retrieval 'failed') | ✅ PASS |
+
+### `test/api/api.test.ts` — 32/32 passed
 
 | # | Test | Result |
 |---|---|---|
@@ -380,6 +419,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 29 | security headers: strict CSP, nosniff, no framing, no CORS | ✅ PASS |
 | 30 | static: index served; server source and demo answer files are NOT served | ✅ PASS |
 | 31 | no-secret-in-logs: tokens, answers, secrets and keys never appear in logs | ✅ PASS |
+| 32 | lesson with broken generated exercises → exercises_removed notice (and the broken ones are not sealed) | ✅ PASS |
 
 ### `test/api/evidence-api.test.ts` — 10/10 passed
 
@@ -425,7 +465,7 @@ _Only executed tests are listed; every row was produced by running the test file
 | 1 | demo: factual claim → insufficient evidence, honest basis banner, background labelled not evidence | ✅ PASS |
 | 2 | demo: opinion → not checkable; compound claim → two sub-claims | ✅ PASS |
 | 3 | demo claim chips fill the claim box; unknown claim shows a localized error | ✅ PASS |
-| 4 | no English leakage in the evidence interface text | ✅ PASS |
+| 4 | English interface: no Arabic script in evidence interface text (content excluded) | ✅ PASS |
 | 5 | FAKE live provider + FAKE retriever: verified quote shown with source link; verdict contradicted | ✅ PASS |
 | 6 | mobile: evidence panel without horizontal overflow | ✅ PASS |
 
@@ -435,11 +475,22 @@ _Only executed tests are listed; every row was produced by running the test file
 |---|---|---|
 | 1 | explorer demo flow: labelled answer, no sources, suggestions, learning mode, save card | ✅ PASS |
 | 2 | explorer: unknown topic in demo shows a localized error, no invented content | ✅ PASS |
-| 3 | no English leakage in explorer and cards interface text (content excluded) | ✅ PASS |
-| 4 | tabs support keyboard navigation (RTL arrows), in DOM order with wrap-around | ✅ PASS |
+| 3 | English interface: no Arabic script in explorer and cards interface text (content excluded) | ✅ PASS |
+| 4 | tabs support keyboard navigation (LTR arrows in the English interface), in DOM order with wrap-around | ✅ PASS |
 | 5 | tampered cards in localStorage render safely (no javascript: links, status downgraded) | ✅ PASS |
 | 6 | mobile: explorer renders in RTL without horizontal overflow | ✅ PASS |
 | 7 | FAKE live provider + FAKE retriever: AI label, source_backed banner, safe https source links | ✅ PASS |
+
+### `test/e2e/interface-language.e2e.test.ts` — 6/6 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | default interface is English (LTR) with an international landing section | ✅ PASS |
+| 2 | Arabic content renders right-to-left inside the English interface | ✅ PASS |
+| 3 | interface language stays English when the response language is Darija or English | ✅ PASS |
+| 4 | switching the interface to Arabic: RTL, Darija labels, no English leakage, RTL arrow keys | ✅ PASS |
+| 5 | tampered interface-language value falls back to English | ✅ PASS |
+| 6 | mobile: English landing and tabs without horizontal overflow | ✅ PASS |
 
 ### `test/e2e/progress.e2e.test.ts` — 4/4 passed
 
@@ -448,7 +499,15 @@ _Only executed tests are listed; every row was produced by running the test file
 | 1 | empty progress: honest empty state, zero stats | ✅ PASS |
 | 2 | progress reflects real graded answers; weak topic flagged; practice button returns to learning | ✅ PASS |
 | 3 | saved cards are counted; clearing my data empties progress | ✅ PASS |
-| 4 | no English leakage in progress interface; mobile without overflow | ✅ PASS |
+| 4 | English interface: no Arabic script in progress interface; mobile without overflow | ✅ PASS |
+
+### `test/e2e/retrieval.e2e.test.ts` — 3/3 passed
+
+| # | Test | Result |
+|---|---|---|
+| 1 | health reports Wikipedia retrieval enabled; 'real_source_retrieval' no longer planned | ✅ PASS |
+| 2 | Explorer demo: Wikipedia article shown as related reading with real metadata; status stays demo | ✅ PASS |
+| 3 | Evidence demo: related sources listed separately; verdict remains insufficient evidence | ✅ PASS |
 
 ### `test/e2e/workspace.e2e.test.ts` — 5/5 passed
 
@@ -462,8 +521,7 @@ _Only executed tests are listed; every row was produced by running the test file
 
 ## Known limitations
 
-- Phase 1: in-memory replay store (single process; restart clears it); numeric parser does not evaluate roots; conservative demo keyword grading; 37 unreviewed fixtures.
-- Phase 2A: no real retrieval; demo knowledge content Darija-only, one level; cards browser-local and user-editable.
-- Phase 2B: no real retrieval, so verdicts other than *insufficient evidence* / *not checkable* occur only with the fake test retriever; demo analyses are Darija-only and unreviewed.
-- Learning Progress: shows only browser-stored data; recommendations are simple rules, not diagnoses.
-- Cosmetic: mixed Arabic/Latin topic names with parentheses can render with misplaced brackets when wrapped in the narrow side panel (browser bidi line-wrapping).
+- In-memory replay store (single process; restart clears it). Numeric parser does not evaluate roots. Conservative demo keyword grading.
+- Wikipedia: rate limits for anonymous/shared addresses; intro extracts only (evidence quotes must come from the intro); Wikipedia alone is never presented as sufficient proof.
+- Demo content (lessons, knowledge answers, evidence analyses) is Darija-only and unreviewed. Live AI quality unverified.
+- Arabic interface is optional; French interface not implemented.

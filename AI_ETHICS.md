@@ -39,6 +39,17 @@ _This document describes real risks and the safeguards that are actually impleme
 | **Hidden contradictions** | Prompt requires reporting contradicting evidence; mixed evidence yields "mixed". | Depends on retrieved sources, none of which exist yet. |
 | **"Insufficient evidence" misread as "false"** | The UI states explicitly that it means neither true nor false. | Students may still misread it; teacher guidance helps. |
 
+### 1.3 Real retrieval (Wikipedia) and interface language
+
+| Risk | Safeguard | Remaining limitation |
+|---|---|---|
+| **Wikipedia treated as proof** | `wikipedia_only` notice whenever an answer/verdict rests only on Wikipedia; caution text next to Wikipedia sources. | Students may still over-trust it. |
+| **Poisoned / manipulated pages** | Retrieved text is untrusted: validated, sanitized, neutralized in prompts; evidence must be an exact quote. | Wikipedia content itself can be wrong or vandalized at retrieval time. |
+| **Fabricated metadata** | Only API-provided title, URL, excerpt and last-edited time are shown; no publication date is invented. | — |
+| **Demo content dressed up with real sources** | In demo mode retrieved articles are labelled related reading and never cited. | — |
+| **Abusing a free public API** | Throttle, cache, bounded retries, `maxlag`, identifying User-Agent. | Shared cloud addresses may still be rate-limited. |
+| **Language exclusion** | English interface by default for an international audience; Arabic interface optional; learning content stays in Darija/Arabic/French/English. | French interface not yet available. |
+
 ## 2. Unintended consequences we considered
 - **The level estimate could discourage students.** It is labelled *preliminary*, is based only on answers in SCIORA, never measures intelligence, ignores uncertain results, and the student can always choose the level.
 - **“Uncertain” could confuse students.** SCIORA explains *why* it is unsure, shows the model answer, and suggests asking a teacher.

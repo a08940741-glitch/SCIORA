@@ -25,6 +25,8 @@ _Items marked **(reported)** come from the project owner's reading of the offici
 - [ ] No invented statistics in the problem statement; any number has a verified source.
 - [ ] Five Big Ideas described honestly (Perception not implemented; SCIORA does not train models).
 - [ ] Knowledge Explorer presented honestly: no real source retrieval yet; demo answers have no sources.
+- [ ] Interface shown in English (default); mention optional Arabic interface and multilingual learning content.
+- [ ] Wikipedia retrieval presented honestly: related reading in demo mode; Wikipedia alone is not sufficient proof.
 - [ ] Evidence Analyzer presented honestly: without retrieval, factual claims get “insufficient evidence”; AI background is not evidence.
 - [ ] Ethics section reflects `AI_ETHICS.md`.
 - [ ] The student can explain: provider abstraction, encrypted exercise tokens, replay protection, rule-based grading, rubric aggregation and “uncertain”, the Elo estimate and its limits.
