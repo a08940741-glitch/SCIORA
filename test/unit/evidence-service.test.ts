@@ -60,7 +60,7 @@ test("demo verdicts: factual → insufficient_evidence (no sources), opinion/pre
   assert.equal(earth.basis.retrievalNote, "demo");
   assert.deepEqual(earth.sources, []);
   assert.ok(earth.subClaims[0]!.backgroundNote, "background note kept, shown as not-evidence");
-  assert.match(earth.caveats[0]!, /^DEMO:/);
+  assert.ok(earth.notices.includes("demo_content"));
   assert.equal((await svc.analyze({ claim: "الرياضيات أصعب مادة", language: "darija" })).overall.verdict, "not_checkable");
   assert.equal((await svc.analyze({ claim: "غدا غادي تشتا فالرباط", language: "darija" })).overall.verdict, "not_checkable");
   const compound = await svc.analyze({ claim: "فيثاغورس كتخدم فكل مثلث", language: "darija" });
@@ -72,7 +72,7 @@ test("demo: unknown claim → not_in_demo; other language → honest caveat", as
   const svc = new EvidenceService({ provider: new DemoEvidenceProvider() });
   await assert.rejects(svc.analyze({ claim: "something completely unknown here", language: "en" }), (e: unknown) => e instanceof ProviderError && e.code === "not_in_demo");
   const r = await svc.analyze({ claim: "Water boils at 100 degrees everywhere", language: "en" });
-  assert.ok(r.caveats.some((c) => /غير بالدارجة/.test(c)));
+  assert.ok(r.notices.includes("demo_language_fixed"));
 });
 
 // ---------------------------------------------------------------- live (fake client)
@@ -88,7 +88,7 @@ test("live, no retrieval (D1): AI-invented evidence removed → insufficient_evi
   assert.equal(r.basis.kind, "none");
   assert.equal(r.basis.retrievalNote, "disabled");
   assert.equal(r.basis.removedEvidence, 1);
-  assert.match(r.caveats[0]!, /حيد 1/);
+  assert.ok(r.notices.includes("evidence_removed"));
 });
 
 test("live + FAKE retriever: real quote → contradicted; fabricated quote removed", async () => {

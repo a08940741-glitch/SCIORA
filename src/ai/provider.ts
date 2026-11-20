@@ -1,3 +1,4 @@
+import type { NoticeCode } from "../notices.ts";
 import type {
   GeneratedLesson,
   Language,
@@ -18,6 +19,8 @@ import type {
 export interface LessonOutput {
   lesson: GeneratedLesson;
   meta: Meta;
+  /** System notices (codes translated by the UI). */
+  notices?: NoticeCode[];
 }
 
 export interface JudgeInput {

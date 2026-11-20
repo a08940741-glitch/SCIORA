@@ -48,7 +48,7 @@ test("demo query: 200, status demo, no sources, DEMO caveat, suggestions labelle
   assert.equal(b.meta.simulated, true);
   assert.equal(b.verification.status, "demo");
   assert.deepEqual(b.sources, []);
-  assert.match(b.answer.caveats[0], /^DEMO:/);
+  assert.ok(b.notices.includes("demo_content"));
   assert.ok(b.connections.every((c: any) => c.suggested === true));
   assert.ok(b.answer.segments.every((s: any) => ["fact", "explanation", "assumption", "uncertainty"].includes(s.kind)));
 });

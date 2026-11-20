@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { GeneratedLesson, type LessonRequest, type WrittenJudgement } from "../domain/schemas.ts";
 import { normalizeAnswer, normalizeForMatch } from "../domain/normalize.ts";
+import type { NoticeCode } from "../notices.ts";
 import {
   ProviderError,
   type AIProvider,
@@ -78,16 +79,16 @@ export class DemoProvider implements AIProvider {
     if (!file) {
       throw new ProviderError(
         "not_in_demo",
-        "وضع DEMO: هاد الموضوع ما متوفرش بلا الاتصال بالذكاء الاصطناعي. جرب واحد من المواضيع المتوفرة فالعرض التجريبي.",
+        "Demo mode: this topic is not available without the AI connection. Try one of the listed demo topics.",
       );
     }
-    const caveats = [...file.lesson.caveats];
-    caveats.unshift("DEMO: محتوى تجريبي مكتوب مسبقاً، ماشي مولّد مباشرة بالذكاء الاصطناعي.");
-    if (req.level !== "school") caveats.push("المحتوى التجريبي مكتوب غير بالمستوى المدرسي؛ المستوى اللي اخترتي ما كيبدلوش.");
-    if (!file.reviewed) caveats.push("هاد الدرس التجريبي مازال ما تراجعش من طرف صاحب المشروع.");
+    const notices: NoticeCode[] = ["demo_content"];
+    if (req.level !== "school") notices.push("demo_level_fixed");
+    if (!file.reviewed) notices.push("content_unreviewed");
     return {
-      lesson: { ...file.lesson, caveats: caveats.slice(0, 5) },
+      lesson: { ...file.lesson },
       meta: { source: "demo", simulated: true, model: null, fallbackUsed: false, generatedAt: new Date().toISOString() },
+      notices,
     };
   }
 

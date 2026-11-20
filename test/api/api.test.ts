@@ -49,7 +49,7 @@ test("demo lesson via HTTP is labelled simulated with a DEMO caveat", async () =
   assert.equal(body.meta.source, "demo");
   assert.equal(body.meta.simulated, true);
   assert.equal(body.meta.model, null);
-  assert.match(body.lesson.caveats[0], /^DEMO:/);
+  assert.ok(body.notices.includes("demo_content"));
   assert.ok(body.exerciseSet.token.startsWith("v1."));
 });
 
@@ -398,4 +398,17 @@ test("no-secret-in-logs: tokens, answers, secrets and keys never appear in logs"
   assert.equal(all.includes(TEST_SECRET_B64), false, "secret in logs");
   assert.equal(all.includes("FAKE_KEY_SHOULD_NEVER_APPEAR_ZETA"), false, "api key in logs");
   for (const m of SECRET_MARKERS) assert.equal(all.includes(m), false, `marker ${m} in logs`);
+});
+
+test("lesson with broken generated exercises → exercises_removed notice (and the broken ones are not sealed)", async () => {
+  const p = new StubLiveProvider();
+  p.lessonImpl = async () => {
+    const l = (await import("../helpers/sample-lesson.ts")).sampleLesson();
+    (l.exercises[0] as any).correctChoiceId = "z";
+    return { lesson: l, meta: { source: "anthropic", simulated: false, model: "claude-sonnet-5-5", fallbackUsed: false, generatedAt: "t" } };
+  };
+  const { app } = await makeApp({ provider: p });
+  const { body } = await learn(app);
+  assert.ok(body.notices.includes("exercises_removed"));
+  assert.equal(body.lesson.exercises.some((e: any) => e.id === "q1"), false);
 });

@@ -179,6 +179,8 @@ export interface KnowledgeQueryResponse {
   /** AI-suggested related concepts. Always suggestions, never established facts. */
   connections: { concept: string; relation: string; suggested: true }[];
   meta: KnowledgeMeta;
+  /** System notices (codes translated by the UI). */
+  notices: string[];
 }
 
 export interface TransformResponse {
@@ -187,4 +189,5 @@ export interface TransformResponse {
   /** Quizzes are self-check practice: not graded, not recorded, independent of Phase 1 grading. */
   selfCheckOnly: boolean;
   meta: KnowledgeMeta;
+  notices: string[];
 }

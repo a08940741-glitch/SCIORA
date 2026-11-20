@@ -38,7 +38,7 @@ test("quiz cleaning: questions with a missing correct choice or duplicate ids ar
   assert.equal(q.questions.length, 1);
   assert.equal(dropped, 2);
   const chk = checkTransform({ mode: "quiz", data: quiz });
-  assert.ok(chk.ok && chk.output.mode === "quiz" && chk.output.data.caveats.some((c) => /تحيدو/.test(c)));
+  assert.ok(chk.ok && chk.dropped === 2 && chk.output.mode === "quiz" && chk.output.data.questions.length === 1);
 });
 
 test("quiz with no valid question → bad_output from the service", async () => {

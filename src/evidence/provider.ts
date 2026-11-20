@@ -6,6 +6,7 @@ import { z } from "zod";
 import { callStructured, type MessagesClient } from "../ai/structured-call.ts";
 import { ProviderError } from "../ai/provider.ts";
 import { normalizeForMatch } from "../domain/normalize.ts";
+import type { NoticeCode } from "../notices.ts";
 import type { KnowledgeMeta, PublicSource } from "../knowledge/schemas.ts";
 import { EVIDENCE_SYSTEM_PROMPT, evidenceUserMessage } from "./prompts.ts";
 import { GeneratedClaimAnalysis, type EvidenceRequest } from "./schemas.ts";
@@ -14,7 +15,7 @@ export interface EvidenceProvider {
   readonly name: "anthropic" | "demo";
   readonly simulated: boolean;
   readonly model: string | null;
-  analyze(input: { request: EvidenceRequest; sources: PublicSource[] }): Promise<{ analysis: GeneratedClaimAnalysis; meta: KnowledgeMeta }>;
+  analyze(input: { request: EvidenceRequest; sources: PublicSource[] }): Promise<{ analysis: GeneratedClaimAnalysis; meta: KnowledgeMeta; notices?: NoticeCode[] }>;
 }
 
 /**
@@ -103,15 +104,14 @@ export class DemoEvidenceProvider implements EvidenceProvider {
 
   async analyze(input: { request: EvidenceRequest; sources: PublicSource[] }) {
     const f = this.find(input.request.claim);
-    if (!f) throw new ProviderError("not_in_demo", "وضع DEMO: هاد الادعاء ما متوفرش فمحلل الأدلة بلا الاتصال بالذكاء الاصطناعي. جرب واحد من الادعاءات المتوفرة.");
-    const caveats = ["DEMO: تحليل تجريبي مكتوب مسبقاً، بلا مصادر وبلا أدلة مسترجعة."];
-    if (input.request.language !== "darija") caveats.push("المحتوى التجريبي متوفر غير بالدارجة؛ اللغة اللي اخترتي ما كتبدلوش.");
-    if (!f.reviewed) caveats.push("هاد التحليل التجريبي مازال ما تراجعش من طرف صاحب المشروع.");
+    if (!f) throw new ProviderError("not_in_demo", "Demo mode: this claim is not available in the Evidence Analyzer without the AI connection. Try one of the listed demo claims.");
+    const notices: NoticeCode[] = ["demo_content"];
+    if (input.request.language !== "darija") notices.push("demo_language_fixed");
+    if (!f.reviewed) notices.push("content_unreviewed");
     const analysis: GeneratedClaimAnalysis = {
       ...f.analysis,
       subClaims: f.analysis.subClaims.map((s) => ({ ...s, evidence: [] })), // D1: never any evidence in demo
-      caveats: [...caveats, ...f.analysis.caveats].slice(0, 5),
     };
-    return { analysis, meta: { source: "demo" as const, simulated: true, model: null, fallbackUsed: false, generatedAt: new Date().toISOString() } };
+    return { analysis, meta: { source: "demo" as const, simulated: true, model: null, fallbackUsed: false, generatedAt: new Date().toISOString() }, notices };
   }
 }

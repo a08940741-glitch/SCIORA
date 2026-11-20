@@ -38,9 +38,6 @@ export function enforceLessonIntegrity(lesson: GeneratedLesson): { lesson: Gener
       seen.add(ex.id);
     }
   }
-  const caveats = [...lesson.caveats];
-  if (dropped.length > 0 && caveats.length < 5) {
-    caveats.push("تحيدو بعض التمارين حيت ما دازوش الفحص الأوتوماتيكي ديال SCIORA.");
-  }
-  return { lesson: { ...lesson, exercises: kept, caveats }, dropped };
+  // The UI shows an "exercises_removed" notice when `dropped` is not empty.
+  return { lesson: { ...lesson, exercises: kept }, dropped };
 }

@@ -75,10 +75,8 @@ export function finalizeAnswer(draft: KnowledgeDraft, simulated: boolean): Knowl
   const uncitedFacts = segments.filter((s) => s.kind === "fact" && s.sourceIds.length === 0).length;
   const status = simulated ? "demo" : cited.size > 0 ? "source_backed" : "not_source_verified";
 
-  const serverCaveats: string[] = [];
-  if (removedCitations > 0) {
-    serverCaveats.push(`SCIORA حيد ${removedCitations} ديال الإحالات اللي ما كانتش مطابقة لشي مصدر مسترجع.`);
-  }
+  const notices = [...(draft.notices ?? [])];
+  if (removedCitations > 0) notices.push("citations_removed");
 
   return {
     answer: {
@@ -88,7 +86,7 @@ export function finalizeAnswer(draft: KnowledgeDraft, simulated: boolean): Knowl
       segments,
       keyConcepts: generated.keyConcepts,
       confidence: generated.confidence,
-      caveats: [...serverCaveats, ...generated.caveats].slice(0, 6),
+      caveats: generated.caveats.slice(0, 5),
     },
     sources: simulated ? [] : retrieval.sources,
     verification: {
@@ -102,5 +100,6 @@ export function finalizeAnswer(draft: KnowledgeDraft, simulated: boolean): Knowl
     },
     connections: cleanConnections(generated).map((c) => ({ concept: c.concept, relation: c.relation, suggested: true as const })),
     meta,
+    notices,
   };
 }

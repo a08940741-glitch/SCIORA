@@ -34,7 +34,7 @@ export class EvidenceService {
       now: this.now,
       prepare: sanitizeSources,
     });
-    const { analysis, meta } = await this.provider.analyze({ request: req, sources: retrieval.sources });
+    const { analysis, meta, notices: providerNotices } = await this.provider.analyze({ request: req, sources: retrieval.sources });
 
     let removedEvidence = 0;
     // Sub-claim ids are re-assigned by the server (c1..cn); AI-provided ids are not trusted.
@@ -53,8 +53,8 @@ export class EvidenceService {
     });
 
     const evidenceItems = subClaims.reduce((n, s) => n + s.evidence.length, 0);
-    const caveats = [...analysis.caveats];
-    if (removedEvidence > 0) caveats.unshift(`SCIORA حيد ${removedEvidence} ديال الأدلة اللي ما كانتش مقتبسة من مصدر مسترجع.`);
+    const notices: string[] = [...(providerNotices ?? [])];
+    if (removedEvidence > 0) notices.push("evidence_removed");
 
     return {
       understood: analysis.understood,
@@ -69,8 +69,9 @@ export class EvidenceService {
         evidenceItems,
         removedEvidence,
       },
-      caveats: caveats.slice(0, 6),
+      caveats: analysis.caveats.slice(0, 5),
       meta,
+      notices,
     };
   }
 }

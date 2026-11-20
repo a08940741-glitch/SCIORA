@@ -39,7 +39,7 @@ test("demo analysis: insufficient_evidence, basis none, no sources, DEMO caveat"
   assert.equal(b.basis.kind, "none");
   assert.deepEqual(b.sources, []);
   assert.ok(b.subClaims.every((s: any) => s.evidence.length === 0));
-  assert.match(b.caveats[0], /^DEMO:/);
+  assert.ok(b.notices.includes("demo_content"));
 });
 
 test("demo opinion → not_checkable; unknown claim → 404 not_in_demo", async () => {

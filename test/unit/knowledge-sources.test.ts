@@ -73,7 +73,7 @@ test("live without retrieval (D1 default) → not_source_verified; AI-invented i
   assert.equal(r.verification.retrievalNote, "disabled");
   assert.equal(r.verification.removedCitations, 2);
   assert.ok(r.answer.segments.every((s) => s.sourceIds.length === 0));
-  assert.match(r.answer.caveats[0]!, /حيد 2/);
+  assert.ok(r.notices.includes("citations_removed"));
   assert.equal(r.verification.uncitedFacts, 1);
 });
 

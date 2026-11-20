@@ -203,11 +203,12 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
       throw err;
     }
 
-    const { lesson } = enforceLessonIntegrity(out.lesson);
+    const { lesson, dropped } = enforceLessonIntegrity(out.lesson);
     const publicLesson = toPublicLesson(lesson);
+    const notices = [...(out.notices ?? []), ...(dropped.length ? (["exercises_removed"] as const) : [])];
 
     if (!lesson.understood.isEducational || lesson.exercises.length === 0) {
-      return { lesson: { ...publicLesson, exercises: [] }, exerciseSet: null, meta: out.meta };
+      return { lesson: { ...publicLesson, exercises: [] }, exerciseSet: null, meta: out.meta, notices };
     }
 
     const sealed = codec.seal({
@@ -221,6 +222,7 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
       lesson: publicLesson,
       exerciseSet: { token: sealed.token, expiresAt: new Date(sealed.exp * 1000).toISOString() },
       meta: out.meta,
+      notices,
     };
   });
 

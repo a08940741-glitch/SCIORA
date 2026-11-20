@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { normalizeForMatch } from "../domain/normalize.ts";
+import type { NoticeCode } from "../notices.ts";
 import { ProviderError, type KnowledgeAnswerInput, type KnowledgeProvider } from "./provider.ts";
 import {
   ExamplesOutput,
@@ -44,7 +45,7 @@ export function loadKnowledgeDemo(dir = KNOWLEDGE_DEMO_DIR): DemoKnowledgeFile[]
     });
 }
 
-const NOT_IN_DEMO = "وضع DEMO: هاد الموضوع ما متوفرش فمستكشف المعرفة بلا الاتصال بالذكاء الاصطناعي. جرب واحد من المواضيع المتوفرة.";
+const NOT_IN_DEMO = "Demo mode: this topic is not available in the Knowledge Explorer without the AI connection. Try one of the listed demo topics.";
 
 export class DemoKnowledgeProvider implements KnowledgeProvider {
   readonly name = "demo" as const;
@@ -77,25 +78,26 @@ export class DemoKnowledgeProvider implements KnowledgeProvider {
   async answer(input: KnowledgeAnswerInput) {
     const f = this.find(input.request.question);
     if (!f) throw new ProviderError("not_in_demo", NOT_IN_DEMO);
-    const caveats = ["DEMO: محتوى تجريبي مكتوب مسبقاً، ماشي مولّد بالذكاء الاصطناعي وماشي موثق بمصادر."];
-    if (input.request.language !== "darija") caveats.push("المحتوى التجريبي متوفر غير بالدارجة؛ اللغة اللي اخترتي ما كتبدلوش.");
-    if (input.request.level !== "intermediate") caveats.push("المحتوى التجريبي مكتوب بمستوى واحد؛ المستوى اللي اخترتي ما كيبدلوش.");
-    if (!f.reviewed) caveats.push("هاد المحتوى التجريبي مازال ما تراجعش من طرف صاحب المشروع.");
+    const notices: NoticeCode[] = ["demo_content"];
+    if (input.request.language !== "darija") notices.push("demo_language_fixed");
+    if (input.request.level !== "intermediate") notices.push("demo_level_fixed");
+    if (!f.reviewed) notices.push("content_unreviewed");
     // D1: strip any source ids defensively (demo content must never carry citations).
     const answer = {
       ...f.answer,
       segments: f.answer.segments.map((s) => ({ ...s, sourceIds: [] })),
-      caveats: [...caveats, ...f.answer.caveats].slice(0, 5),
     };
-    return { answer, meta: this.meta() };
+    return { answer, meta: this.meta(), notices };
   }
 
-  async transform(req: TransformRequest): Promise<{ output: TransformOutput; meta: KnowledgeMeta }> {
+  async transform(req: TransformRequest): Promise<{ output: TransformOutput; meta: KnowledgeMeta; notices: NoticeCode[] }> {
     const f = this.find(`${req.content.topic} ${req.content.summary}`);
     if (!f) throw new ProviderError("not_in_demo", NOT_IN_DEMO);
     const t = f.transforms;
     const output: TransformOutput =
       req.mode === "simplify" ? { mode: "simplify", data: t.simplify } : req.mode === "examples" ? { mode: "examples", data: t.examples } : { mode: "quiz", data: t.quiz };
-    return { output, meta: this.meta() };
+    const notices: NoticeCode[] = ["demo_content"];
+    if (!f.reviewed) notices.push("content_unreviewed");
+    return { output, meta: this.meta(), notices };
   }
 }

@@ -37,6 +37,6 @@ export function checkTransform(out: TransformOutput): { ok: true; output: Transf
   if (out.mode !== "quiz") return { ok: true, output: out, dropped: 0 };
   const { quiz, dropped } = cleanQuiz(out.data);
   if (quiz.questions.length === 0) return { ok: false };
-  const caveats = dropped > 0 ? [...quiz.caveats, "تحيدو بعض الأسئلة حيت ما دازوش الفحص الأوتوماتيكي."].slice(0, 3) : quiz.caveats;
-  return { ok: true, output: { mode: "quiz", data: { ...quiz, caveats } }, dropped };
+  // The service adds a "quiz_questions_removed" notice when dropped > 0.
+  return { ok: true, output: { mode: "quiz", data: quiz }, dropped };
 }

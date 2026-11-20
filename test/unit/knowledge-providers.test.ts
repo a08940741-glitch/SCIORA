@@ -55,14 +55,14 @@ test("demo answer: labelled demo, DEMO caveat first, no sources even if a citati
   assert.equal(out.meta.source, "demo");
   assert.equal(out.meta.simulated, true);
   assert.equal(out.meta.model, null);
-  assert.match(out.answer.caveats[0]!, /^DEMO:/);
+  assert.ok(out.notices?.includes("demo_content"));
   assert.ok(out.answer.segments.every((s) => s.sourceIds.length === 0));
 });
 
 test("demo answer: other language / level → honest caveats in Darija", async () => {
   const out = await new DemoKnowledgeProvider().answer({ request: { ...REQ, language: "en", level: "advanced" }, sources: [] });
-  assert.ok(out.answer.caveats.some((c) => /غير بالدارجة/.test(c)));
-  assert.ok(out.answer.caveats.some((c) => /بمستوى واحد/.test(c)));
+  assert.ok(out.notices?.includes("demo_language_fixed"));
+  assert.ok(out.notices?.includes("demo_level_fixed"));
 });
 
 test("demo: unknown topic → not_in_demo (404), never invented content", async () => {

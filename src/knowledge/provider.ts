@@ -8,6 +8,7 @@ import type {
 } from "./schemas.ts";
 
 export { ProviderError } from "../ai/provider.ts";
+import type { NoticeCode } from "../notices.ts";
 
 /**
  * Knowledge Explorer provider abstraction (separate from Phase 1's AIProvider,
@@ -23,6 +24,6 @@ export interface KnowledgeProvider {
   readonly name: "anthropic" | "demo";
   readonly simulated: boolean;
   readonly models: { learn: string; fast: string } | null;
-  answer(input: KnowledgeAnswerInput): Promise<{ answer: GeneratedKnowledgeAnswer; meta: KnowledgeMeta }>;
-  transform(req: TransformRequest): Promise<{ output: TransformOutput; meta: KnowledgeMeta }>;
+  answer(input: KnowledgeAnswerInput): Promise<{ answer: GeneratedKnowledgeAnswer; meta: KnowledgeMeta; notices?: NoticeCode[] }>;
+  transform(req: TransformRequest): Promise<{ output: TransformOutput; meta: KnowledgeMeta; notices?: NoticeCode[] }>;
 }

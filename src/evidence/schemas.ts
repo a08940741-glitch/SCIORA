@@ -94,4 +94,6 @@ export interface EvidenceResponse {
   };
   caveats: string[];
   meta: KnowledgeMeta;
+  /** System notices (codes translated by the UI). */
+  notices: string[];
 }

@@ -37,6 +37,7 @@ export interface KnowledgeDraft {
   generated: GeneratedKnowledgeAnswer;
   meta: KnowledgeMeta;
   retrieval: RetrievalOutcome;
+  notices?: string[];
 }
 
 export interface KnowledgeServiceOptions {
@@ -123,8 +124,8 @@ export class KnowledgeService {
   /** Retrieval → provider. Provider errors propagate (mapped to HTTP by the route). */
   async draft(req: KnowledgeQueryRequest): Promise<KnowledgeDraft> {
     const retrieval = await this.retrieve(req);
-    const { answer, meta } = await this.provider.answer({ request: req, sources: retrieval.sources });
-    return { generated: answer, meta, retrieval };
+    const { answer, meta, notices } = await this.provider.answer({ request: req, sources: retrieval.sources });
+    return { generated: answer, meta, retrieval, notices: notices ?? [] };
   }
 
   /** Full pipeline: retrieval → provider → server-side source validation + verification status. */
@@ -137,9 +138,10 @@ export class KnowledgeService {
    * Independent of Phase 1 grading: nothing is sealed, graded or recorded.
    */
   async transform(req: TransformRequest): Promise<TransformResponse> {
-    const { output, meta } = await this.provider.transform(req);
+    const { output, meta, notices } = await this.provider.transform(req);
     const checked = checkTransform(output);
     if (!checked.ok) throw new ProviderError("bad_output", "The AI quiz did not pass SCIORA's checks.");
-    return { mode: checked.output.mode, result: checked.output.data, selfCheckOnly: checked.output.mode === "quiz", meta };
+    const all = [...(notices ?? []), ...(checked.dropped > 0 ? ["quiz_questions_removed"] : [])];
+    return { mode: checked.output.mode, result: checked.output.data, selfCheckOnly: checked.output.mode === "quiz", meta, notices: all };
   }
 }
