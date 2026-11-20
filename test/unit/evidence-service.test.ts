@@ -150,3 +150,11 @@ test("factory: demo never creates a client; live uses the REASON model", () => {
   assert.equal(live.simulated, false);
   assert.equal(live.model, "claude-opus-5-5");
 });
+
+test("sub-claim ids are re-assigned by the server (duplicates from the AI cannot collide)", async () => {
+  const a = analysis([]);
+  a.subClaims = [a.subClaims[0]!, { ...a.subClaims[0]!, text: "second" }]; // both "c1"
+  const { client } = fakeClient([okResponse(a, "claude-opus-5-5")]);
+  const r = await new EvidenceService({ provider: new AnthropicEvidenceProvider({ client, model: "claude-opus-5-5" }) }).analyze(REQ);
+  assert.deepEqual(r.subClaims.map((s) => s.id), ["c1", "c2"]);
+});

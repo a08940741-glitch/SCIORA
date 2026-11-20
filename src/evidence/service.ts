@@ -37,11 +37,12 @@ export class EvidenceService {
     const { analysis, meta } = await this.provider.analyze({ request: req, sources: retrieval.sources });
 
     let removedEvidence = 0;
-    const subClaims: AnalyzedSubClaim[] = analysis.subClaims.map((s) => {
+    // Sub-claim ids are re-assigned by the server (c1..cn); AI-provided ids are not trusted.
+    const subClaims: AnalyzedSubClaim[] = analysis.subClaims.map((s, i) => {
       const { kept, removed } = checkEvidence(s.evidence, retrieval.sources);
       removedEvidence += removed;
       return {
-        id: s.id,
+        id: `c${i + 1}`,
         text: s.text,
         type: s.type,
         verdict: subClaimVerdict(s.type, kept),
