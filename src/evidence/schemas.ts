@@ -12,7 +12,8 @@ import { KLanguage, SourceId, type KnowledgeMeta, type PublicSource, type Verifi
 
 export const CLAIM_TYPES = ["factual", "opinion", "prediction", "value_judgment", "ambiguous"] as const;
 export const STANCES = ["supports", "contradicts", "context"] as const;
-export const VERDICTS = ["supported", "contradicted", "mixed", "insufficient_evidence", "not_checkable"] as const;
+/** "partially_supported" is an OVERALL verdict only: some checkable parts supported, none contradicted, the rest lack evidence. */
+export const VERDICTS = ["supported", "partially_supported", "contradicted", "mixed", "insufficient_evidence", "not_checkable"] as const;
 
 export const ClaimType = z.enum(CLAIM_TYPES);
 export const Stance = z.enum(STANCES);
@@ -75,6 +76,8 @@ export interface AnalyzedSubClaim {
   evidence: CheckedEvidence[];
   missingEvidence: string;
   backgroundNote: string | null;
+  /** Keyword-matched sentences from retrieved sources. NOT evidence; never affects the verdict. */
+  relatedPassages: { sourceId: string; passage: string; matchedTerms: string[] }[];
 }
 
 export interface EvidenceResponse {

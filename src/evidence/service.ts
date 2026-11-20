@@ -6,6 +6,7 @@ import { sanitizeSources } from "../knowledge/sources.ts";
 import { AnthropicEvidenceProvider, DemoEvidenceProvider, type EvidenceProvider } from "./provider.ts";
 import type { AnalyzedSubClaim, EvidenceRequest, EvidenceResponse } from "./schemas.ts";
 import { checkEvidence, overallVerdict, subClaimVerdict } from "./verdicts.ts";
+import { relevantPassages } from "./passages.ts";
 
 /**
  * Evidence Analyzer service: claim → (optional) retrieval → AI analysis → server-side evidence
@@ -49,6 +50,7 @@ export class EvidenceService {
         evidence: kept,
         missingEvidence: s.missingEvidence,
         backgroundNote: s.backgroundNote,
+        relatedPassages: relevantPassages(s.text, retrieval.sources),
       };
     });
 

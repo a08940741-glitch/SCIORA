@@ -100,7 +100,11 @@ test("overall verdict rules", () => {
   assert.equal(v("contradicted"), "contradicted");
   assert.equal(v("supported", "contradicted"), "mixed");
   assert.equal(v("mixed", "supported"), "mixed");
-  assert.equal(v("supported", "insufficient_evidence"), "insufficient_evidence", "cannot conclude the whole claim");
+  // Requested refinement: a claim with some supported parts and no contradictions is "partially supported",
+  // which is more informative than "insufficient" and still never claims the whole claim is verified.
+  assert.equal(v("supported", "insufficient_evidence"), "partially_supported");
+  assert.equal(v("supported", "insufficient_evidence", "not_checkable"), "partially_supported");
+  assert.equal(v("contradicted", "insufficient_evidence"), "insufficient_evidence", "a contradiction alone with gaps is not 'partial support'");
   assert.equal(v("supported", "not_checkable"), "supported", "opinion parts are excluded");
   assert.equal(v("insufficient_evidence", "not_checkable"), "insufficient_evidence");
 });

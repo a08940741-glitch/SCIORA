@@ -60,6 +60,29 @@ function subClaimCard(s, r) {
     evidence,
     el("p", { class: "label", text: E.missingTitle }),
     el("p", { text: s.missingEvidence }),
+    s.relatedPassages?.length
+      ? el(
+          "div",
+          { class: "passages", "data-not-evidence": "true" },
+          el("p", { class: "label", text: E.passagesTitle }),
+          el("p", { class: "muted", text: E.passagesHelp }),
+          el(
+            "ul",
+            { class: "passage-list" },
+            ...s.relatedPassages.map((p) => {
+              const src = sourcesById.get(p.sourceId);
+              return el(
+                "li",
+                { "data-passage-source": p.sourceId },
+                el("q", { text: p.passage }),
+                el("span", { class: "muted", dir: "ltr", text: ` [${p.sourceId}] ` }),
+                src && isSafeHttpsUrl(src.url) ? el("a", { href: src.url, target: "_blank", rel: "noopener noreferrer nofollow", text: src.title }) : null,
+                el("p", { class: "muted matched-terms", text: E.matchedTerms(p.matchedTerms.join(", ")) }),
+              );
+            }),
+          ),
+        )
+      : null,
     s.backgroundNote
       ? el("div", { class: "background-note", "data-not-evidence": "true" }, el("p", { class: "label", text: r.meta.simulated ? E.backgroundDemo : E.backgroundAi }), ...paragraphs(s.backgroundNote))
       : null,

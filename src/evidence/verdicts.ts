@@ -16,7 +16,8 @@ import type { AnalyzedSubClaim, CheckedEvidence, EvidenceVerdict, GeneratedSubCl
  *    - none checkable → not_checkable
  *    - any mixed, or supported and contradicted both present → mixed
  *    - all supported → supported; all contradicted → contradicted
- *    - otherwise (some insufficient) → insufficient_evidence
+ *    - some supported, none contradicted, rest insufficient → partially_supported
+ *    - otherwise (nothing supported) → insufficient_evidence
  */
 
 export function quoteInSource(quote: string, source: PublicSource): boolean {
@@ -55,5 +56,6 @@ export function overallVerdict(subs: Pick<AnalyzedSubClaim, "verdict">[]): Evide
   if (v.includes("mixed") || (v.includes("supported") && v.includes("contradicted"))) return "mixed";
   if (v.every((x) => x === "supported")) return "supported";
   if (v.every((x) => x === "contradicted")) return "contradicted";
+  if (v.includes("supported") && !v.includes("contradicted")) return "partially_supported";
   return "insufficient_evidence";
 }
