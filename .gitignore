@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+# Secrets: never commit real environment files
+.env
+.env.*
+!.env.example
+# Local evaluation outputs may contain model responses
+eval-results/
+test-results/

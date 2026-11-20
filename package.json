@@ -1,0 +1,43 @@
+{
+  "name": "sciora",
+  "version": "0.1.0",
+  "description": "SCIORA — Global Knowledge & Learning Intelligence (WAICY 2026 AI Showcase). Phase 1: Darija AI Study learning loop.",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test \"test/unit/**/*.test.ts\" \"test/api/**/*.test.ts\"",
+    "test:e2e": "tsx --test \"test/e2e/**/*.test.ts\"",
+    "test:live": "tsx scripts/live-smoke.ts",
+    "eval:grading": "tsx scripts/eval-grading.ts",
+    "secret-scan": "bash scripts/secret-scan.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a08940741-glitch/sciora.git"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/a08940741-glitch/sciora/issues"
+  },
+  "homepage": "https://github.com/a08940741-glitch/sciora#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.11.0",
+    "@fastify/helmet": "^13.2.0",
+    "@fastify/rate-limit": "^11.2.2",
+    "@fastify/static": "^10.1.12",
+    "fastify": "^5.12.8",
+    "mathjs": "^15.2.0",
+    "zod": "^4.6.7",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  }
+}
