@@ -24,6 +24,9 @@ import type { SourceRetriever } from "./knowledge/retriever.ts";
 import { DemoKnowledgeProvider } from "./knowledge/demo-provider.ts";
 import { KnowledgeService } from "./knowledge/service.ts";
 import { registerKnowledgeRoutes } from "./knowledge/routes.ts";
+import { DemoEvidenceProvider, type EvidenceProvider } from "./evidence/provider.ts";
+import { EvidenceService } from "./evidence/service.ts";
+import { EvidenceRequest } from "./evidence/schemas.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(HERE, "..", "public");
@@ -38,6 +41,8 @@ export interface AppDeps {
    * same demo/live rule as Phase 1. Defaults to the demo provider (used by tests).
    */
   knowledgeProvider?: KnowledgeProvider;
+  /** Evidence Analyzer provider (same rule as above). Defaults to the demo provider (tests). */
+  evidenceProvider?: EvidenceProvider;
   /** Source retriever. Defaults to NoopRetriever (decision D1: no real retrieval). */
   retriever?: SourceRetriever;
   /** Capture logs in tests. */
@@ -73,6 +78,9 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
   const knowledge = new KnowledgeService({ provider: knowledgeProvider, retriever: deps.retriever, now });
   // Same shared daily budget; demo knowledge calls cost nothing and are not counted.
   const takeKnowledgeBudget = () => knowledgeProvider.simulated || budget.take();
+  const evidenceProvider = deps.evidenceProvider ?? new DemoEvidenceProvider();
+  const evidence = new EvidenceService({ provider: evidenceProvider, retriever: deps.retriever, now });
+  const takeEvidenceBudget = () => evidenceProvider.simulated || budget.take();
 
   await app.register(helmet, {
     contentSecurityPolicy: {
@@ -145,8 +153,31 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
       sourceRetrieval: knowledge.retriever.enabled,
       retriever: knowledge.retriever.enabled ? knowledge.retriever.name : null,
     },
-    plannedNotImplemented: ["evidence_analyzer", "progress_screen", "google_sign_in"],
+    evidence: {
+      mode: evidenceProvider.simulated ? "demo" : "live",
+      simulated: evidenceProvider.simulated,
+      model: evidenceProvider.model,
+      demoClaims: evidenceProvider instanceof DemoEvidenceProvider ? evidenceProvider.claims() : null,
+      sourceRetrieval: evidence.retriever.enabled,
+    },
+    plannedNotImplemented: ["real_source_retrieval", "progress_screen", "google_sign_in"],
   }));
+
+  // ------------------------------------------------------------------ evidence (Phase 2B)
+  app.post("/api/evidence/analyze", async (req, reply) => {
+    const body = EvidenceRequest.parse(req.body);
+    if (!takeEvidenceBudget()) return sendError(reply, 503, "daily_limit", "SCIORA reached its daily AI usage limit. Please try again tomorrow.");
+    try {
+      return await evidence.analyze(body);
+    } catch (err) {
+      if (err instanceof ProviderError) {
+        req.log.warn({ providerError: err.code }, "evidence analysis failed");
+        // Never replaced by demo content.
+        return sendError(reply, err.httpStatus, err.code, err.message, err.retryAfterSec);
+      }
+      throw err;
+    }
+  });
 
   registerKnowledgeRoutes(app, { service: knowledge, takeBudget: takeKnowledgeBudget });
 

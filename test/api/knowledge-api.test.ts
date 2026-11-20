@@ -35,7 +35,7 @@ test("health reports the knowledge module: demo, no retrieval, demo topics; Expl
   assert.equal(b.knowledge.retriever, null);
   assert.equal(b.knowledge.demoTopics.length, 5);
   assert.equal(b.plannedNotImplemented.includes("knowledge_explorer"), false);
-  assert.ok(b.plannedNotImplemented.includes("evidence_analyzer"));
+  assert.ok(b.plannedNotImplemented.includes("real_source_retrieval"));
 });
 
 // ============================================================ query (demo)
