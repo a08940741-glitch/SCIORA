@@ -2,6 +2,10 @@ import { api } from "./api.js";
 import { T } from "./i18n.js";
 import { el, clear, paragraphs } from "./render.js";
 import { createLearnerModel } from "./learner-model.js";
+import { errorMessage } from "./errors.js";
+import { createCardStore } from "./cards-store.js";
+import { createExplorer } from "./explorer.js";
+import { createCardsPanel } from "./cards.js";
 
 const learner = createLearnerModel(window.localStorage);
 const $ = (id) => document.getElementById(id);
@@ -20,14 +24,6 @@ function card(title, ...body) {
   return el("section", { class: "card" }, el("header", { class: "card-head" }, el("h3", { text: title }), provenanceBadge(state.meta)), ...body);
 }
 
-/** Localized message for a failed API call. 422 unreadable_answer keeps the server's localized hint. */
-function errorMessage(r) {
-  if (r.status === 0) return T.errors.network;
-  const code = r.data?.error;
-  if (code === "unreadable_answer" && r.data?.message) return r.data.message;
-  return T.errorCodes[code] ?? r.data?.message ?? T.errors.generic;
-}
-
 function showError(target, message) {
   clear(target);
   target.append(el("div", { class: "alert alert-error", role: "alert", text: message }));
@@ -41,7 +37,7 @@ async function loadHealth() {
   if (!r.ok) {
     banner.className = "mode-banner mode-unknown";
     banner.textContent = T.modeUnknown;
-    return;
+    return null;
   }
   state.mode = r.data.mode;
   banner.className = `mode-banner ${r.data.simulated ? "mode-demo" : "mode-live"}`;
@@ -68,6 +64,7 @@ async function loadHealth() {
     }
     topics.append(list);
   }
+  return r.data;
 }
 
 // ------------------------------------------------------------------ lesson
@@ -323,8 +320,48 @@ function initStatic() {
   $("phase-note").textContent = T.phaseNote;
 }
 
+// ------------------------------------------------------------------ tabs (Phase 2A)
+
+const cardStore = createCardStore(window.localStorage);
+const cardsPanel = createCardsPanel(cardStore);
+const explorer = createExplorer({ cards: cardStore, onCardSaved: () => cardsPanel.render() });
+const TABS = ["learn", "explore", "cards"];
+
+function selectTab(name, focus = false) {
+  for (const t of TABS) {
+    const tab = $(`tab-${t}`);
+    const panel = $(`panel-${t}`);
+    const on = t === name;
+    tab.setAttribute("aria-selected", String(on));
+    tab.tabIndex = on ? 0 : -1;
+    panel.hidden = !on;
+    if (on && focus) tab.focus();
+  }
+  if (name === "cards") cardsPanel.render();
+}
+
+function initTabs() {
+  for (const t of TABS) {
+    const tab = $(`tab-${t}`);
+    tab.textContent = T.tabs[t];
+    tab.addEventListener("click", () => selectTab(t));
+    tab.addEventListener("keydown", (ev) => {
+      const i = TABS.indexOf(t);
+      // RTL: ArrowLeft moves to the next tab, ArrowRight to the previous one.
+      if (ev.key === "ArrowLeft") selectTab(TABS[(i + 1) % TABS.length], true);
+      else if (ev.key === "ArrowRight") selectTab(TABS[(i + TABS.length - 1) % TABS.length], true);
+      else return;
+      ev.preventDefault();
+    });
+  }
+  selectTab("learn");
+}
+
 initStatic();
 renderEstimate();
 $("ask-form").addEventListener("submit", onAsk);
 $("clear-btn").addEventListener("click", onClearData);
-loadHealth();
+initTabs();
+explorer.initStatic();
+cardsPanel.initStatic();
+loadHealth().then((h) => explorer.renderTopics(h?.knowledge?.demoTopics ?? []));

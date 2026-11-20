@@ -55,7 +55,8 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   assert.match(await page.textContent("#mode-banner"), /DEMO/);
 
   // Demo topic chips fill the question box (no dead buttons).
-  const chips = page.locator(".chip");
+  // Scoped to the learning panel: the Knowledge Explorer panel (Phase 2A) has its own topic chips.
+  const chips = page.locator("#demo-topics .chip");
   assert.equal(await chips.count(), 5);
   await chips.first().click();
   assert.ok((await page.inputValue("#question")).length > 3);
@@ -103,9 +104,10 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   assert.match(await page.textContent("#estimate"), /تقدير أولي/);
   assert.doesNotMatch(await page.textContent("#estimate"), /إتقان تام|mastered/i);
 
-  // Phase 2 features are not offered as working links or buttons.
+  // Phase 2B (Evidence Analyzer) is not offered as a working link or button.
+  // (D3: Knowledge Explorer is implemented in Phase 2A, so it is no longer asserted absent.)
   const navTexts = await page.locator("a, button").allTextContents();
-  assert.equal(navTexts.some((t: string) => /مستكشف|محلل الأدلة|Explorer|Evidence/i.test(t)), false);
+  assert.equal(navTexts.some((t: string) => /محلل الأدلة|Evidence/i.test(t)), false);
 
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/desktop-demo-flow.png`, fullPage: true });
   assert.deepEqual(problems, [], "no console errors / CSP violations");

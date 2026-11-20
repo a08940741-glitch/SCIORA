@@ -25,4 +25,6 @@ export const api = {
   health: () => call("GET", "/api/health"),
   learn: (question, level, language) => call("POST", "/api/learn", { question, level, language }),
   grade: (token, exerciseId, answer) => call("POST", "/api/grade", { token, exerciseId, answer }),
+  knowledge: (question, level, language) => call("POST", "/api/knowledge/query", { question, level, language }),
+  transform: (mode, level, language, content) => call("POST", "/api/knowledge/transform", { mode, level, language, content }),
 };
