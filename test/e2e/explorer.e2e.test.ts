@@ -199,9 +199,13 @@ test("tabs support keyboard navigation (RTL arrows)", async () => {
   await page.keyboard.press("ArrowLeft");
   assert.equal(await page.getAttribute("#tab-explore", "aria-selected"), "true");
   await page.keyboard.press("ArrowLeft");
+  assert.equal(await page.getAttribute("#tab-evidence", "aria-selected"), "true", "Phase 2B tab is next in order");
+  await page.keyboard.press("ArrowLeft");
   assert.equal(await page.getAttribute("#tab-cards", "aria-selected"), "true");
+  await page.keyboard.press("ArrowLeft");
+  assert.equal(await page.getAttribute("#tab-learn", "aria-selected"), "true", "wraps around");
   await page.keyboard.press("ArrowRight");
-  assert.equal(await page.getAttribute("#tab-explore", "aria-selected"), "true");
+  assert.equal(await page.getAttribute("#tab-cards", "aria-selected"), "true");
   await ctx.close();
 });
 

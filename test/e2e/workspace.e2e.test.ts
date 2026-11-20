@@ -104,10 +104,11 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   assert.match(await page.textContent("#estimate"), /تقدير أولي/);
   assert.doesNotMatch(await page.textContent("#estimate"), /إتقان تام|mastered/i);
 
-  // Phase 2B (Evidence Analyzer) is not offered as a working link or button.
-  // (D3: Knowledge Explorer is implemented in Phase 2A, so it is no longer asserted absent.)
+  // Planned-but-not-implemented features are not offered as working links or buttons.
+  // (Explorer — Phase 2A — and Evidence Analyzer — Phase 2B — are now implemented, so the
+  //  check targets the remaining planned feature: optional Google Sign-In.)
   const navTexts = await page.locator("a, button").allTextContents();
-  assert.equal(navTexts.some((t: string) => /محلل الأدلة|Evidence/i.test(t)), false);
+  assert.equal(navTexts.some((t: string) => /Google|تسجيل الدخول|sign in/i.test(t)), false);
 
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/desktop-demo-flow.png`, fullPage: true });
   assert.deepEqual(problems, [], "no console errors / CSP violations");

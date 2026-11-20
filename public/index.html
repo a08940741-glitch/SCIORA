@@ -26,6 +26,7 @@
   <nav class="tabs" role="tablist" aria-label="SCIORA">
     <button type="button" role="tab" id="tab-learn" aria-controls="panel-learn" aria-selected="true"></button>
     <button type="button" role="tab" id="tab-explore" aria-controls="panel-explore" aria-selected="false" tabindex="-1"></button>
+    <button type="button" role="tab" id="tab-evidence" aria-controls="panel-evidence" aria-selected="false" tabindex="-1"></button>
     <button type="button" role="tab" id="tab-cards" aria-controls="panel-cards" aria-selected="false" tabindex="-1"></button>
   </nav>
 
@@ -79,6 +80,26 @@
       <div id="k-result"><p id="k-empty" class="empty-state"></p></div>
      </section>
 
+     <section id="panel-evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
+      <section class="card ask-card">
+        <h2 id="e-title"></h2>
+        <p id="e-intro" class="muted"></p>
+        <form id="e-form" novalidate>
+          <label id="e-claim-label" for="e-claim" class="label"></label>
+          <textarea id="e-claim" rows="3" maxlength="1000" required></textarea>
+          <div class="row">
+            <div class="field">
+              <label id="e-language-label" for="e-language" class="label"></label>
+              <select id="e-language"></select>
+            </div>
+            <button id="e-analyze" type="submit" class="btn btn-primary"></button>
+          </div>
+        </form>
+        <div id="e-claims"></div>
+      </section>
+      <div id="e-result"><p id="e-empty" class="empty-state"></p></div>
+     </section>
+
      <section id="panel-cards" role="tabpanel" aria-labelledby="tab-cards" hidden>
       <section class="card">
         <h2 id="c-title"></h2>
@@ -110,7 +131,7 @@
   </main>
 
   <footer class="footer" dir="ltr">
-    SCIORA · Global Knowledge &amp; Learning Intelligence · WAICY 2026 AI Showcase · Phase 2A
+    SCIORA · Global Knowledge &amp; Learning Intelligence · WAICY 2026 AI Showcase · Phase 2B
   </footer>
 </body>
 </html>

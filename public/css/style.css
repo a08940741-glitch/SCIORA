@@ -182,3 +182,20 @@ textarea:focus, input:focus, select:focus, button:focus-visible {
 .badge-checked { background: var(--ok-bg); color: var(--ok); border: 1px solid #b5dcc1; }
 .btn-danger { color: var(--bad); }
 #k-collection { max-width: 240px; }
+
+/* ---------------------------------------------------------------- Phase 2B: evidence analyzer */
+.verdict-chip { display: inline-block; font-weight: 700; font-size: 0.85rem; padding: 3px 12px; border-radius: 999px; border: 1px solid; }
+.verdict-chip-supported { background: var(--ok-bg); color: var(--ok); border-color: #b5dcc1; }
+.verdict-chip-contradicted { background: var(--bad-bg); color: var(--bad); border-color: #ecc0c0; }
+.verdict-chip-mixed { background: var(--part-bg); color: var(--part); border-color: #ecd39a; }
+.verdict-chip-insufficient_evidence { background: var(--unsure-bg); color: var(--unsure); border-color: #c9cdf0; }
+.verdict-chip-not_checkable { background: var(--navy-50); color: var(--navy-700); border-color: var(--line); }
+.badge-type { background: var(--navy-50); color: var(--navy-700); border: 1px solid var(--line); }
+.overall-line { font-size: 1.1rem; }
+.evidence-list { list-style: none; padding: 0; display: grid; gap: 8px; }
+.evidence { padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; }
+.evidence-supports .kind-chip { background: var(--ok-bg); color: var(--ok); }
+.evidence-contradicts .kind-chip { background: var(--bad-bg); color: var(--bad); }
+.evidence-context .kind-chip { background: var(--navy-50); color: var(--navy-700); }
+.background-note { background: var(--navy-50); border: 1px dashed var(--line); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
+.background-note .label { color: var(--muted); margin-top: 0; }

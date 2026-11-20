@@ -27,4 +27,5 @@ export const api = {
   grade: (token, exerciseId, answer) => call("POST", "/api/grade", { token, exerciseId, answer }),
   knowledge: (question, level, language) => call("POST", "/api/knowledge/query", { question, level, language }),
   transform: (mode, level, language, content) => call("POST", "/api/knowledge/transform", { mode, level, language, content }),
+  analyze: (claim, language) => call("POST", "/api/evidence/analyze", { claim, language }),
 };

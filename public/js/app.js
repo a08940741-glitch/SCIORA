@@ -6,6 +6,7 @@ import { errorMessage } from "./errors.js";
 import { createCardStore } from "./cards-store.js";
 import { createExplorer } from "./explorer.js";
 import { createCardsPanel } from "./cards.js";
+import { createEvidencePanel } from "./evidence.js";
 
 const learner = createLearnerModel(window.localStorage);
 const $ = (id) => document.getElementById(id);
@@ -325,7 +326,8 @@ function initStatic() {
 const cardStore = createCardStore(window.localStorage);
 const cardsPanel = createCardsPanel(cardStore);
 const explorer = createExplorer({ cards: cardStore, onCardSaved: () => cardsPanel.render() });
-const TABS = ["learn", "explore", "cards"];
+const evidencePanel = createEvidencePanel();
+const TABS = ["learn", "explore", "evidence", "cards"];
 
 function selectTab(name, focus = false) {
   for (const t of TABS) {
@@ -363,5 +365,9 @@ $("ask-form").addEventListener("submit", onAsk);
 $("clear-btn").addEventListener("click", onClearData);
 initTabs();
 explorer.initStatic();
+evidencePanel.initStatic();
 cardsPanel.initStatic();
-loadHealth().then((h) => explorer.renderTopics(h?.knowledge?.demoTopics ?? []));
+loadHealth().then((h) => {
+  explorer.renderTopics(h?.knowledge?.demoTopics ?? []);
+  evidencePanel.renderClaims(h?.evidence?.demoClaims ?? []);
+});
