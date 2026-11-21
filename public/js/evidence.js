@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { T } from "./i18n.js";
+import { T, DEFAULT_CONTENT_LANGUAGE, demoTitle } from "./i18n.js";
 import { el, clear, paragraphs } from "./render.js";
 import { errorMessage } from "./errors.js";
 import { noticesBox } from "./notices.js";
@@ -103,9 +103,9 @@ export function createEvidencePanel() {
           el("button", {
             type: "button",
             class: "chip",
-            text: c.claim,
+            text: demoTitle(c.claim, c.claimEn),
             onclick: () => {
-              $("e-claim").value = c.claim;
+              $("e-claim").value = demoTitle(c.claim, c.claimEn);
               $("e-claim").focus();
             },
           }),
@@ -186,6 +186,7 @@ export function createEvidencePanel() {
     $("e-claim").placeholder = E.claimPlaceholder;
     $("e-language-label").textContent = E.languageLabel;
     for (const [v, label] of Object.entries(T.k.languages)) $("e-language").append(el("option", { value: v, text: label }));
+    $("e-language").value = DEFAULT_CONTENT_LANGUAGE;
     $("e-analyze").textContent = E.analyze;
     $("e-empty").textContent = E.empty;
     $("e-form").addEventListener("submit", onAnalyze);

@@ -181,5 +181,160 @@
         "river"
       ]
     }
+  },
+  "lessonEn": {
+    "understood": {
+      "subject": "general_science",
+      "topic": "The water cycle",
+      "isEducational": true,
+      "clarification": null
+    },
+    "explanationDarija": "Water on Earth is always moving and never runs out. The Sun heats the water in seas and rivers, and the water evaporates, rising into the sky as vapour. High up the air is cold, so the vapour cools and turns into tiny droplets that form clouds (condensation). When the droplets grow and get heavy, they fall as rain or snow (precipitation). Some of the fallen water runs over the ground back to rivers and the sea (runoff), and some soaks into the ground to form groundwater (infiltration). Then the cycle starts again.",
+    "explanationFormal": "The water cycle is the continuous movement of water between the oceans, the atmosphere and the land. Its main stages are: evaporation caused by the Sun's heat; condensation in the cold layers of the atmosphere, forming clouds; precipitation (rain, snow, hail); then surface runoff towards rivers and seas and infiltration into the ground, which recharges groundwater. The cycle is driven by solar energy.",
+    "steps": [
+      "Evaporation: the Sun heats water and it turns into vapour.",
+      "Condensation: the vapour cools in the sky and clouds form.",
+      "Precipitation: water falls as rain or snow.",
+      "Runoff and infiltration: water returns to rivers and seas or soaks into the ground."
+    ],
+    "example": {
+      "problem": "Why do water droplets appear on the outside of a glass of cold water?",
+      "solution": "Water vapour in the air touches the cold glass, cools down and turns into droplets of water. This is condensation — the same stage that forms clouds in the water cycle."
+    },
+    "exercises": [
+      {
+        "id": "q1",
+        "type": "mcq",
+        "prompt": "In which stage does water turn into vapour because of the Sun's heat?",
+        "hint": "It is the first stage of the cycle.",
+        "explanation": "Evaporation is the change of water from liquid to gas because of heat.",
+        "choices": [
+          {
+            "id": "a",
+            "text": "Condensation"
+          },
+          {
+            "id": "b",
+            "text": "Evaporation"
+          },
+          {
+            "id": "c",
+            "text": "Infiltration"
+          }
+        ],
+        "correctChoiceId": "b"
+      },
+      {
+        "id": "q2",
+        "type": "mcq",
+        "prompt": "How do clouds form?",
+        "hint": "What happens to water vapour when it cools?",
+        "explanation": "Clouds form by condensation: water vapour cools in the upper atmosphere and turns into very small droplets.",
+        "choices": [
+          {
+            "id": "a",
+            "text": "Vapour cools and turns into tiny droplets (condensation)"
+          },
+          {
+            "id": "b",
+            "text": "The wind carries water straight from the sea"
+          },
+          {
+            "id": "c",
+            "text": "Water gets very hot in the sky"
+          }
+        ],
+        "correctChoiceId": "a"
+      },
+      {
+        "id": "q3",
+        "type": "short_text",
+        "prompt": "List the stages of the water cycle in order.",
+        "hint": "Start with the sea and the Sun, and finish with water returning to the sea.",
+        "explanation": "Evaporation → condensation (clouds) → precipitation → runoff and infiltration, and then the cycle starts again.",
+        "rubric": {
+          "criteria": [
+            {
+              "id": "evaporation",
+              "description": "Mentions evaporation",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "condensation",
+              "description": "Mentions condensation / cloud formation",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "precipitation",
+              "description": "Mentions precipitation (rain, snow)",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "return",
+              "description": "Mentions runoff or infiltration (water returns to rivers, sea or ground)",
+              "weight": 1,
+              "required": false
+            }
+          ],
+          "acceptedExamples": [
+            "Water evaporates, forms clouds, falls as rain and goes back to the sea",
+            "التبخر ثم التكاثف ثم التساقطات ثم الجريان السطحي والتسرب",
+            "Évaporation, condensation, précipitations, puis ruissellement et infiltration"
+          ],
+          "misconceptions": [
+            {
+              "id": "clouds_are_smoke",
+              "description": "Believes clouds are made of smoke or gas rather than water droplets"
+            }
+          ],
+          "languageSensitive": false
+        },
+        "modelAnswer": "1) Evaporation caused by the Sun's heat, 2) condensation and cloud formation, 3) precipitation (rain, snow), 4) runoff over the ground and infiltration into groundwater — then the cycle starts again."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "demoKeywordsEn": {
+    "q3": {
+      "evaporation": [
+        "evaporat",
+        "vapour",
+        "vapor",
+        "تبخر",
+        "بخار",
+        "évaporation"
+      ],
+      "condensation": [
+        "condens",
+        "cloud",
+        "تكاثف",
+        "سحاب",
+        "nuage"
+      ],
+      "precipitation": [
+        "rain",
+        "snow",
+        "precipitation",
+        "hail",
+        "شتا",
+        "مطر",
+        "pluie",
+        "neige"
+      ],
+      "return": [
+        "runoff",
+        "infiltrat",
+        "river",
+        "sea",
+        "ground",
+        "جريان",
+        "تسرب",
+        "ruissellement"
+      ]
+    }
   }
 }

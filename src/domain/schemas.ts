@@ -11,7 +11,7 @@ import { z } from "zod";
  */
 
 export const LEVELS = ["beginner", "school", "intermediate", "advanced"] as const;
-export const LANGUAGES = ["darija", "msa", "fr"] as const;
+export const LANGUAGES = ["darija", "msa", "fr", "en"] as const;
 export const SUBJECTS = ["math", "physics", "life_earth_sciences", "arabic", "french", "general_science"] as const;
 export const VERDICTS = ["correct", "partially_correct", "incorrect", "uncertain"] as const;
 
@@ -121,6 +121,7 @@ export const GeneratedLesson = z.object({
     /** Set when the question is unclear or off-topic. */
     clarification: z.string().max(500).nullable(),
   }),
+  /** Simple explanation: Moroccan Darija, or plain English when the lesson language is "en". */
   explanationDarija: Text(6000),
   explanationFormal: Text(6000),
   steps: z.array(Text(600)).min(1).max(8),

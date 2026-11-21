@@ -11,7 +11,8 @@
     "right triangle",
     "الوتر",
     "hypoténuse",
-    "hypotenuse"
+    "hypotenuse",
+    "pythagorean"
   ],
   "lesson": {
     "understood": {
@@ -131,6 +132,127 @@
         "right angle",
         "90",
         "9a2im"
+      ]
+    }
+  },
+  "lessonEn": {
+    "understood": {
+      "subject": "math",
+      "topic": "The Pythagorean theorem",
+      "isEducational": true,
+      "clarification": null
+    },
+    "explanationDarija": "The Pythagorean theorem only works in a right triangle — a triangle with a 90° angle. The longest side, opposite the right angle, is called the hypotenuse. The theorem says: the square of the hypotenuse equals the sum of the squares of the other two sides. So if triangle ABC has its right angle at A: BC² = AB² + AC². For example, if AB = 3 and AC = 4, then BC² = 9 + 16 = 25, so BC = 5.",
+    "explanationFormal": "Pythagorean theorem: if triangle ABC is right-angled at A, then the square of the length of the hypotenuse equals the sum of the squares of the lengths of the other two sides: BC² = AB² + AC². It is used to compute an unknown side of a right triangle when the other two sides are known. Note: the converse of the theorem is used to prove that a triangle is right-angled.",
+    "steps": [
+      "Check that the triangle is right-angled and locate the right angle.",
+      "Identify the hypotenuse: the side opposite the right angle (the longest side).",
+      "Write the relation: hypotenuse² = first side² + second side².",
+      "Substitute the values and calculate.",
+      "Take the square root to find the length."
+    ],
+    "example": {
+      "problem": "Triangle ABC is right-angled at A, with AB = 6 cm and AC = 8 cm. Calculate BC.",
+      "solution": "BC² = AB² + AC² = 6² + 8² = 36 + 64 = 100, so BC = √100 = 10 cm."
+    },
+    "exercises": [
+      {
+        "id": "q1",
+        "type": "mcq",
+        "prompt": "In a right triangle, what is the hypotenuse?",
+        "hint": "Look for the side that does not touch the right angle.",
+        "explanation": "The hypotenuse is the side opposite the right angle; it is the longest side of a right triangle.",
+        "choices": [
+          {
+            "id": "a",
+            "text": "The shortest side of the triangle"
+          },
+          {
+            "id": "b",
+            "text": "The side opposite the right angle"
+          },
+          {
+            "id": "c",
+            "text": "Any side of the triangle"
+          }
+        ],
+        "correctChoiceId": "b"
+      },
+      {
+        "id": "q2",
+        "type": "numeric",
+        "prompt": "Triangle ABC is right-angled at A, with AB = 5 cm and AC = 12 cm. What is the length of BC in centimetres?",
+        "hint": "Calculate 5² + 12², then take the square root.",
+        "explanation": "BC² = 5² + 12² = 25 + 144 = 169, so BC = √169 = 13 cm.",
+        "answer": 13,
+        "tolerance": 0.01,
+        "unit": "cm",
+        "allowPercent": false
+      },
+      {
+        "id": "q3",
+        "type": "short_text",
+        "prompt": "What does the Pythagorean theorem state, and when can we use it?",
+        "hint": "Mention the hypotenuse, the squares, and the type of triangle.",
+        "explanation": "In a right triangle, the square of the hypotenuse equals the sum of the squares of the other two sides. It only applies to right triangles.",
+        "rubric": {
+          "criteria": [
+            {
+              "id": "relation",
+              "description": "States that the square of the hypotenuse equals the sum of the squares of the other two sides (in words or as a formula)",
+              "weight": 2,
+              "required": true
+            },
+            {
+              "id": "right_triangle",
+              "description": "States that it applies only to right triangles",
+              "weight": 1,
+              "required": true
+            }
+          ],
+          "acceptedExamples": [
+            "In a right triangle, the hypotenuse squared equals the sum of the squares of the other two sides",
+            "في المثلث القائم الزاوية يكون مربع الوتر مساويا لمجموع مربعي الضلعين الآخرين",
+            "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés"
+          ],
+          "misconceptions": [
+            {
+              "id": "any_triangle",
+              "description": "Believes the theorem applies to any triangle"
+            },
+            {
+              "id": "no_squares",
+              "description": "Adds the side lengths without squaring them"
+            }
+          ],
+          "languageSensitive": false
+        },
+        "modelAnswer": "In a right triangle, the square of the hypotenuse equals the sum of the squares of the other two sides: BC² = AB² + AC². It only works in right triangles."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "demoKeywordsEn": {
+    "q3": {
+      "relation": [
+        "square",
+        "squares",
+        "squared",
+        "^2",
+        "مربع",
+        "مربعات",
+        "carré",
+        "carre"
+      ],
+      "right_triangle": [
+        "right triangle",
+        "right-angled",
+        "right angle",
+        "90",
+        "قائم",
+        "قائمة",
+        "rectangle"
       ]
     }
   }

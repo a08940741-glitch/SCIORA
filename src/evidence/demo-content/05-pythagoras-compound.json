@@ -6,7 +6,9 @@
     "فيثاغورس فكل مثلث",
     "pythagore dans tous les triangles",
     "pythagoras works for every triangle",
-    "fitagors f kol mthalath"
+    "fitagors f kol mthalath",
+    "works for every triangle",
+    "pythagorean theorem works"
   ],
   "analysis": {
     "understood": {
@@ -35,6 +37,35 @@
     ],
     "caveats": [
       "الادعاء فيه جوج أجزاء مستقلين؛ كل جزء كيتحلل بوحدو."
+    ]
+  },
+  "analysisEn": {
+    "understood": {
+      "claimRestated": "The Pythagorean theorem works for every triangle, and the hypotenuse is the longest side of a right triangle.",
+      "detectedLanguage": "en",
+      "isAnalyzable": true,
+      "clarification": null
+    },
+    "subClaims": [
+      {
+        "id": "c1",
+        "text": "The Pythagorean theorem works for every triangle.",
+        "type": "factual",
+        "evidence": [],
+        "missingEvidence": "A school mathematics textbook or a mathematics reference giving the statement of the theorem and its conditions.",
+        "backgroundNote": "According to the school curriculum, the theorem applies only to right triangles. General knowledge, not evidence."
+      },
+      {
+        "id": "c2",
+        "text": "The hypotenuse is the longest side of a right triangle.",
+        "type": "factual",
+        "evidence": [],
+        "missingEvidence": "The same mathematics reference: the definition and properties of the hypotenuse.",
+        "backgroundNote": "The hypotenuse is opposite the right angle and is the longest side. General knowledge, not evidence."
+      }
+    ],
+    "caveats": [
+      "The claim has two independent parts; each part is analyzed separately."
     ]
   }
 }

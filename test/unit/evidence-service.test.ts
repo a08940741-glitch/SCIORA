@@ -71,7 +71,8 @@ test("demo verdicts: factual → insufficient_evidence (no sources), opinion/pre
 test("demo: unknown claim → not_in_demo; other language → honest caveat", async () => {
   const svc = new EvidenceService({ provider: new DemoEvidenceProvider() });
   await assert.rejects(svc.analyze({ claim: "something completely unknown here", language: "en" }), (e: unknown) => e instanceof ProviderError && e.code === "not_in_demo");
-  const r = await svc.analyze({ claim: "Water boils at 100 degrees everywhere", language: "en" });
+  // French has no demo version → served in Darija with an honest notice.
+  const r = await svc.analyze({ claim: "Water boils at 100 degrees everywhere", language: "fr" });
   assert.ok(r.notices.includes("demo_language_fixed"));
 });
 

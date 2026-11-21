@@ -412,3 +412,37 @@ test("lesson with broken generated exercises → exercises_removed notice (and t
   assert.ok(body.notices.includes("exercises_removed"));
   assert.equal(body.lesson.exercises.some((e: any) => e.id === "q1"), false);
 });
+
+// ============================================================ English demo flow (default English experience)
+
+test("english demo flow: /api/learn in English → English lesson; rule and written grading feedback in English", async () => {
+  const ARABIC = /[؀-ۿ]/;
+  const { app } = await makeApp();
+  const res = await app.inject({ method: "POST", url: "/api/learn", payload: { question: "What is the Pythagorean theorem?", language: "en" } });
+  const body = res.json() as any;
+  assert.equal(res.statusCode, 200);
+  assert.equal(body.lesson.understood.topic, "The Pythagorean theorem");
+  assert.equal(body.notices.includes("demo_language_fixed"), false);
+  assert.equal(ARABIC.test(JSON.stringify(body.lesson)), false, "public English lesson contains no Arabic script");
+  const token = body.exerciseSet.token;
+
+  const q1 = await grade(app, token, "q1", "b");
+  assert.equal(q1.body.result.verdict, "correct");
+  assert.equal(ARABIC.test(q1.body.result.feedback), false);
+
+  const q2 = await grade(app, token, "q2", "13 cm");
+  assert.equal(q2.body.result.verdict, "correct");
+
+  const q3 = await grade(app, token, "q3", "In a right triangle the hypotenuse squared equals the sum of the squares of the other two sides.");
+  assert.equal(q3.res.statusCode, 200);
+  assert.equal(q3.body.result.verdict, "correct");
+  assert.equal(ARABIC.test(q3.body.result.feedback), false);
+});
+
+test("health (demo): English titles are listed for every demo topic and claim", async () => {
+  const { app } = await makeApp();
+  const b = (await app.inject({ url: "/api/health" })).json() as any;
+  assert.ok(b.demoTopics.every((t: any) => typeof t.topicEn === "string"));
+  assert.ok(b.knowledge.demoTopics.every((t: any) => typeof t.topicEn === "string"));
+  assert.ok(b.evidence.demoClaims.every((c: any) => typeof c.claimEn === "string"));
+});

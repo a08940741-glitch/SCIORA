@@ -30,8 +30,8 @@ test("every server notice code has a translation in both interface languages", (
   }
 });
 
-test("English dictionary contains no Arabic script except deliberate bilingual examples", () => {
-  const allowed = new Set(["$.ui.interfaceNames.ar", "$.askPlaceholder", "$.k.askPlaceholder", "$.e.claimPlaceholder"]);
+test("English dictionary contains no Arabic script (only the Arabic interface's own name)", () => {
+  const allowed = new Set(["$.ui.interfaceNames.ar"]);
   const walk = (v: any, path = "$"): string[] => {
     if (typeof v === "string") return /[؀-ۿ]/.test(v) && !allowed.has(path) ? [path] : [];
     if (typeof v === "function") {
@@ -46,4 +46,21 @@ test("English dictionary contains no Arabic script except deliberate bilingual e
 
 test("setUiLanguage rejects unsupported languages", () => {
   assert.equal(I.setUiLanguage("de"), false);
+});
+
+test("default content language follows the interface: English UI → en, Arabic UI → darija", () => {
+  assert.equal(I.DEFAULT_CONTENT_LANGUAGE, "en");
+  assert.equal(I.defaultContentLanguage("en"), "en");
+  assert.equal(I.defaultContentLanguage("ar"), "darija");
+  for (const lang of I.UI_LANGUAGES) {
+    assert.ok("en" in I.DICTIONARIES[lang].languages, `${lang}: Learning Assistant offers English`);
+    assert.ok("en" in I.DICTIONARIES[lang].k.languages, `${lang}: Explorer/Evidence offer English`);
+    assert.ok("darija" in I.DICTIONARIES[lang].languages, `${lang}: Darija still offered`);
+  }
+});
+
+test("demoTitle: English title in the English UI when available; original otherwise", () => {
+  assert.equal(I.demoTitle("التركيب الضوئي", "Photosynthesis", "en"), "Photosynthesis");
+  assert.equal(I.demoTitle("التركيب الضوئي", "Photosynthesis", "ar"), "التركيب الضوئي");
+  assert.equal(I.demoTitle("التركيب الضوئي", null, "en"), "التركيب الضوئي");
 });

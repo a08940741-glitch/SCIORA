@@ -6,7 +6,9 @@
     "غادي تطيح الشتا",
     "il va pleuvoir demain",
     "it will rain tomorrow",
-    "ghda ghadi tchta"
+    "ghda ghadi tchta",
+    "rain in rabat tomorrow",
+    "rain tomorrow"
   ],
   "analysis": {
     "understood": {
@@ -27,6 +29,27 @@
     ],
     "caveats": [
       "هادا توقع على المستقبل؛ ما يمكنش يتحقق منو دابا."
+    ]
+  },
+  "analysisEn": {
+    "understood": {
+      "claimRestated": "It will rain in Rabat tomorrow.",
+      "detectedLanguage": "en",
+      "isAnalyzable": true,
+      "clarification": null
+    },
+    "subClaims": [
+      {
+        "id": "c1",
+        "text": "It will rain in Rabat tomorrow.",
+        "type": "prediction",
+        "evidence": [],
+        "missingEvidence": "Official weather forecasts, and then observing the actual weather tomorrow.",
+        "backgroundNote": "Weather forecasts give probabilities, not certainty. Not evidence."
+      }
+    ],
+    "caveats": [
+      "This is a prediction about the future; it cannot be checked yet."
     ]
   }
 }

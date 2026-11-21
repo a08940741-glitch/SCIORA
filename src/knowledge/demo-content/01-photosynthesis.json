@@ -157,5 +157,150 @@
       ],
       "caveats": []
     }
+  },
+  "answerEn": {
+    "understood": {
+      "topic": "Photosynthesis",
+      "isEducational": true,
+      "clarification": null,
+      "detectedLanguage": "en"
+    },
+    "title": "Photosynthesis: how plants make their own food",
+    "summary": "Photosynthesis is the process in which green plants use light energy to make organic matter (sugar) from water and carbon dioxide, releasing oxygen.",
+    "segments": [
+      {
+        "kind": "fact",
+        "text": "Green plants carry out photosynthesis in their leaves, thanks to a green substance called chlorophyll.",
+        "sourceIds": []
+      },
+      {
+        "kind": "fact",
+        "text": "The plant needs water (from the roots) and carbon dioxide (from the air); the energy comes from light.",
+        "sourceIds": []
+      },
+      {
+        "kind": "explanation",
+        "text": "Think of the leaf as a small factory: light is the electricity, water and CO₂ are the raw materials, and sugar is the product.",
+        "sourceIds": []
+      },
+      {
+        "kind": "assumption",
+        "text": "This answer assumes middle-school level, so it does not go into detailed chemical reactions.",
+        "sourceIds": []
+      },
+      {
+        "kind": "uncertainty",
+        "text": "This explanation is simplified: the real process has many chemical stages studied at higher levels.",
+        "sourceIds": []
+      }
+    ],
+    "keyConcepts": [
+      "Chlorophyll",
+      "Light energy",
+      "Carbon dioxide",
+      "Organic matter"
+    ],
+    "connections": [
+      {
+        "concept": "Cellular respiration",
+        "relation": "A process that uses the sugar made by photosynthesis to release energy."
+      },
+      {
+        "concept": "Carbon cycle",
+        "relation": "Photosynthesis takes carbon from the air and brings it into living things."
+      },
+      {
+        "concept": "Food chains",
+        "relation": "Plants are the first producers that animals' food starts from."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "transformsEn": {
+    "simplify": {
+      "title": "Photosynthesis in simple words",
+      "text": "A plant is like a cook: it takes water from the soil and air from around it, uses the Sun like an oven, and cooks the sugar it lives on. Then it gives out the oxygen we breathe.",
+      "caveats": [
+        "This comparison is simplified and does not show the chemical stages."
+      ]
+    },
+    "examples": {
+      "title": "Everyday examples",
+      "examples": [
+        {
+          "title": "A plant in a dark room",
+          "body": "If you leave a plant in a room without light for a long time, it turns yellow and weakens because it cannot make its food."
+        },
+        {
+          "title": "Fields in summer",
+          "body": "Wheat fields need sunlight and water to grow; a lack of rain reduces the harvest."
+        }
+      ],
+      "caveats": []
+    },
+    "quiz": {
+      "title": "Check yourself: photosynthesis",
+      "questions": [
+        {
+          "question": "Where does photosynthesis mainly take place?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "In the leaves"
+            },
+            {
+              "id": "b",
+              "text": "In the roots"
+            },
+            {
+              "id": "c",
+              "text": "In the fruit"
+            }
+          ],
+          "correctChoiceId": "a",
+          "explanation": "Leaves contain chlorophyll, which captures light."
+        },
+        {
+          "question": "Which gas does the plant release?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Carbon dioxide"
+            },
+            {
+              "id": "b",
+              "text": "Oxygen"
+            },
+            {
+              "id": "c",
+              "text": "Nitrogen"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "The plant releases oxygen during photosynthesis."
+        },
+        {
+          "question": "Where does the energy for photosynthesis come from?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "From the soil"
+            },
+            {
+              "id": "b",
+              "text": "From water"
+            },
+            {
+              "id": "c",
+              "text": "From light"
+            }
+          ],
+          "correctChoiceId": "c",
+          "explanation": "The energy comes from light; the soil provides water and mineral salts."
+        }
+      ],
+      "caveats": []
+    }
   }
 }

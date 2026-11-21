@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { T } from "./i18n.js";
+import { T, DEFAULT_CONTENT_LANGUAGE, demoTitle } from "./i18n.js";
 import { el, clear, paragraphs } from "./render.js";
 import { errorMessage } from "./errors.js";
 import { noticesBox } from "./notices.js";
@@ -62,9 +62,9 @@ export function createExplorer({ cards, onCardSaved, onCheckClaim }) {
           el("button", {
             type: "button",
             class: "chip",
-            text: t.topic,
+            text: demoTitle(t.topic, t.topicEn),
             onclick: () => {
-              $("k-question").value = t.topic;
+              $("k-question").value = demoTitle(t.topic, t.topicEn);
               $("k-question").focus();
             },
           }),
@@ -311,6 +311,7 @@ export function createExplorer({ cards, onCardSaved, onCheckClaim }) {
     $("k-ask").textContent = K.ask;
     for (const [v, label] of Object.entries(K.levels)) $("k-level").append(el("option", { value: v, text: label, selected: v === "intermediate" }));
     for (const [v, label] of Object.entries(K.languages)) $("k-language").append(el("option", { value: v, text: label }));
+    $("k-language").value = DEFAULT_CONTENT_LANGUAGE;
     $("k-empty").textContent = K.empty;
     $("k-form").addEventListener("submit", onAsk);
   }

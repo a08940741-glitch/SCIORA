@@ -11,7 +11,8 @@
     "المثلث القائم",
     "triangle rectangle",
     "right triangle",
-    "الوتر"
+    "الوتر",
+    "pythagorean"
   ],
   "answer": {
     "understood": {
@@ -146,6 +147,144 @@
           ],
           "correctChoiceId": "b",
           "explanation": "الوتر مقابل للزاوية القائمة وهو أطول ضلع."
+        }
+      ],
+      "caveats": []
+    }
+  },
+  "answerEn": {
+    "understood": {
+      "topic": "The Pythagorean theorem",
+      "isEducational": true,
+      "clarification": null,
+      "detectedLanguage": "en"
+    },
+    "title": "The Pythagorean theorem",
+    "summary": "In a right triangle, the square of the hypotenuse equals the sum of the squares of the other two sides: BC² = AB² + AC² when the right angle is at A.",
+    "segments": [
+      {
+        "kind": "fact",
+        "text": "The theorem only works in a right triangle; the hypotenuse is the side opposite the right angle.",
+        "sourceIds": []
+      },
+      {
+        "kind": "fact",
+        "text": "If AB = 3 and AC = 4 in a triangle right-angled at A, then BC = 5, because 9 + 16 = 25.",
+        "sourceIds": []
+      },
+      {
+        "kind": "explanation",
+        "text": "We use it to calculate a missing side when we know the other two sides.",
+        "sourceIds": []
+      },
+      {
+        "kind": "uncertainty",
+        "text": "The converse of the theorem (used to prove a triangle is right-angled) is a related but different topic, not explained in detail here.",
+        "sourceIds": []
+      }
+    ],
+    "keyConcepts": [
+      "Right triangle",
+      "Hypotenuse",
+      "Square",
+      "Square root"
+    ],
+    "connections": [
+      {
+        "concept": "Square root",
+        "relation": "Needed in the last step to get the length from its square."
+      },
+      {
+        "concept": "Distance between two points",
+        "relation": "Calculating a distance on a grid uses the same Pythagorean idea."
+      },
+      {
+        "concept": "Converse of the Pythagorean theorem",
+        "relation": "Used to check whether a triangle is right-angled."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "transformsEn": {
+    "simplify": {
+      "title": "Pythagoras in simple words",
+      "text": "In a triangle with a right angle, if you draw a square on each side, the area of the big square (on the hypotenuse) equals the areas of the two small squares added together.",
+      "caveats": []
+    },
+    "examples": {
+      "title": "Everyday examples",
+      "examples": [
+        {
+          "title": "A ladder against a wall",
+          "body": "A 5 m ladder with its foot 3 m from the wall reaches a height of 4 m."
+        },
+        {
+          "title": "A TV screen",
+          "body": "A screen's size (in inches) is the length of its diagonal, calculated with Pythagoras from its width and height."
+        }
+      ],
+      "caveats": []
+    },
+    "quiz": {
+      "title": "Check yourself: Pythagoras",
+      "questions": [
+        {
+          "question": "When does the Pythagorean theorem apply?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "In any triangle"
+            },
+            {
+              "id": "b",
+              "text": "Only in right triangles"
+            },
+            {
+              "id": "c",
+              "text": "Only in equilateral triangles"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "The theorem is specific to right triangles."
+        },
+        {
+          "question": "A right triangle has sides 6 and 8 next to the right angle. What is the hypotenuse?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "10"
+            },
+            {
+              "id": "b",
+              "text": "14"
+            },
+            {
+              "id": "c",
+              "text": "48"
+            }
+          ],
+          "correctChoiceId": "a",
+          "explanation": "36 + 64 = 100, and its square root is 10."
+        },
+        {
+          "question": "What is the hypotenuse?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "The shortest side"
+            },
+            {
+              "id": "b",
+              "text": "The side opposite the right angle"
+            },
+            {
+              "id": "c",
+              "text": "The height"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "The hypotenuse is opposite the right angle and is the longest side."
         }
       ],
       "caveats": []

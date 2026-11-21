@@ -38,5 +38,34 @@
     "caveats": [
       "هاد الادعاء فيه جوج أجزاء: درجة الغليان، و\"فكل بلاصة\". الجزء الثاني هو اللي كيحتاج تدقيق."
     ]
+  },
+  "analysisEn": {
+    "understood": {
+      "claimRestated": "Water always boils at 100 degrees everywhere.",
+      "detectedLanguage": "en",
+      "isAnalyzable": true,
+      "clarification": null
+    },
+    "subClaims": [
+      {
+        "id": "c1",
+        "text": "Water boils at 100 degrees Celsius.",
+        "type": "factual",
+        "evidence": [],
+        "missingEvidence": "A physics reference giving the boiling point of water and the pressure at which it was measured.",
+        "backgroundNote": "Pure water boils at about 100 °C at normal atmospheric pressure (at sea level). General knowledge, not evidence."
+      },
+      {
+        "id": "c2",
+        "text": "This is true everywhere (even in the mountains).",
+        "type": "factual",
+        "evidence": [],
+        "missingEvidence": "Measurements of the boiling point at different altitudes, or a reference on how pressure affects boiling point.",
+        "backgroundNote": "At high altitude the air pressure is lower and water boils below 100 °C. This is a general note, not evidence, and it shows why the \"everywhere\" part must be checked on its own."
+      }
+    ],
+    "caveats": [
+      "This claim has two parts: the boiling temperature, and \"everywhere\". The second part needs checking."
+    ]
   }
 }

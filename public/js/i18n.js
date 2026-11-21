@@ -23,7 +23,7 @@ const en = {
       evidence: { title: "Evidence Analyzer", text: "Claims are split into parts and judged only on quoted, retrieved evidence." },
     },
     open: "Open",
-    learnIntro: "Darija AI Study: explanations of Moroccan school topics in Darija and Arabic (or French), with exercises and feedback.",
+    learnIntro: "Learning Assistant: explanations of Moroccan school topics in English, Darija, Arabic or French, with exercises and feedback.",
     footer: "SCIORA · Global Knowledge & Learning Intelligence · WAICY 2026 · AI Showcase",
   },
   notices: {
@@ -64,19 +64,20 @@ const en = {
   modeUnknown: "The server mode could not be determined.",
   demoTopicsTitle: "Topics available in demo mode:",
   askLabel: "Ask about a lesson or concept",
-  askPlaceholder: "e.g. What is photosynthesis? / شنو هو التركيب الضوئي؟",
+  askPlaceholder: "e.g. What is photosynthesis?",
   levelLabel: "Level",
   languageLabel: "Explanation language",
   submit: "Explain",
   loading: "Preparing the explanation…",
   levels: { beginner: "Beginner", school: "School", intermediate: "Intermediate", advanced: "Advanced" },
-  languages: { darija: "Darija + Modern Standard Arabic", msa: "Modern Standard Arabic", fr: "French" },
+  languages: { en: "English", darija: "Darija + Modern Standard Arabic", msa: "Modern Standard Arabic", fr: "French" },
   subjects: { math: "Mathematics", physics: "Physics", life_earth_sciences: "Life & Earth Sciences", arabic: "Arabic", french: "French", general_science: "General Science" },
   badgeDemo: "DEMO · pre-written sample, not live AI",
   badgeLive: (model) => `AI-generated (${model}) · may contain mistakes`,
   badgeFallback: " · fallback model used",
   understood: "What SCIORA understood",
   explanationDarija: "Explanation in Darija",
+  explanationSimple: "Simple explanation",
   explanationFormal: "Formal explanation",
   steps: "Steps",
   example: "Worked example",
@@ -128,7 +129,7 @@ const en = {
     title: "Knowledge Explorer",
     intro: "Ask any school or research question. SCIORA separates facts, explanations, assumptions and uncertainty, and tells you whether the answer is backed by sources.",
     askLabel: "What would you like to know?",
-    askPlaceholder: "e.g. What is the water cycle? / شنو هي دورة الماء؟ / chno howa tarkib daw2i",
+    askPlaceholder: "e.g. What is the water cycle?",
     languageLabel: "Response language",
     ask: "Explore",
     loading: "Looking for an answer…",
@@ -215,7 +216,7 @@ const en = {
     intro: "Enter a claim you have read or heard. SCIORA splits it into parts, separates checkable facts from opinions, and judges only on evidence quoted from retrieved sources.",
     claimLabel: "Claim to analyze",
     languageLabel: "Analysis language",
-    claimPlaceholder: "e.g. Water boils at 100 degrees everywhere / الما كيغلي ف 100 درجة فكل بلاصة",
+    claimPlaceholder: "e.g. Water boils at 100 degrees everywhere",
     analyze: "Analyze claim",
     loading: "Analyzing…",
     tooShort: "The claim is too short.",
@@ -317,7 +318,7 @@ const ar = {
       evidence: { title: "محلل الأدلة", text: "الادعاءات كتقسم لأجزاء وكيتحكم عليها غير بأدلة مقتبسة من مصادر مسترجعة." },
     },
     open: "افتح",
-    learnIntro: "قراية بالدارجة: شروحات لدروس المدرسة المغربية بالدارجة والعربية (ولا بالفرنسية)، مع تمارين وتصحيح.",
+    learnIntro: "مساعد التعلم: شروحات لدروس المدرسة المغربية بالدارجة والعربية والإنجليزية ولا بالفرنسية، مع تمارين وتصحيح.",
     footer: "SCIORA · ذكاء المعرفة والتعلّم · WAICY 2026 · عرض الذكاء الاصطناعي",
   },
   notices: {
@@ -364,13 +365,14 @@ const ar = {
   submit: "شرح ليا",
   loading: "كنحضر الشرح…",
   levels: { beginner: "مبتدئ", school: "مدرسي", intermediate: "متوسط", advanced: "متقدم" },
-  languages: { darija: "الدارجة + العربية الفصحى", msa: "العربية الفصحى", fr: "Français" },
+  languages: { en: "English", darija: "الدارجة + العربية الفصحى", msa: "العربية الفصحى", fr: "Français" },
   subjects: { math: "الرياضيات", physics: "الفيزياء", life_earth_sciences: "علوم الحياة والأرض", arabic: "العربية", french: "الفرنسية", general_science: "علوم عامة" },
   badgeDemo: "DEMO · محتوى تجريبي مكتوب مسبقاً، ماشي ذكاء اصطناعي مباشر",
   badgeLive: (model) => `مولّد بالذكاء الاصطناعي (${model}) · ممكن يكون فيه غلط`,
   badgeFallback: " · تم استعمال نموذج احتياطي",
   understood: "شنو فهمت من السؤال",
   explanationDarija: "الشرح بالدارجة",
+  explanationSimple: "شرح مبسط",
   explanationFormal: "الشرح الرسمي",
   steps: "الخطوات",
   example: "مثال محلول",
@@ -612,6 +614,20 @@ function storedLanguage() {
 export const UI_LANG = storedLanguage();
 export const UI_DIR = UI_LANG === "ar" ? "rtl" : "ltr";
 export const T = DICTIONARIES[UI_LANG];
+
+/**
+ * Default AI/content language, which follows the interface language: English interface → English
+ * content; Arabic interface → Darija. Students can still pick any language in each form.
+ */
+export function defaultContentLanguage(uiLang) {
+  return uiLang === "ar" ? "darija" : "en";
+}
+export const DEFAULT_CONTENT_LANGUAGE = defaultContentLanguage(UI_LANG);
+
+/** Title of a demo topic/claim for the current interface: English when available in the English UI. */
+export function demoTitle(original, english, uiLang = UI_LANG) {
+  return uiLang === "en" && english ? english : original;
+}
 
 /** Persists the interface language; the caller reloads the page to apply it. */
 export function setUiLanguage(lang) {

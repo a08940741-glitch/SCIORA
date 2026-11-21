@@ -60,7 +60,8 @@ test("demo answer: labelled demo, DEMO caveat first, no sources even if a citati
 });
 
 test("demo answer: other language / level → honest caveats in Darija", async () => {
-  const out = await new DemoKnowledgeProvider().answer({ request: { ...REQ, language: "en", level: "advanced" }, sources: [] });
+  // French has no demo version → served in Darija with an honest notice.
+  const out = await new DemoKnowledgeProvider().answer({ request: { ...REQ, language: "fr", level: "advanced" }, sources: [] });
   assert.ok(out.notices?.includes("demo_language_fixed"));
   assert.ok(out.notices?.includes("demo_level_fixed"));
 });

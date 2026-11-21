@@ -162,5 +162,154 @@
         "karbon"
       ]
     }
+  },
+  "lessonEn": {
+    "understood": {
+      "subject": "life_earth_sciences",
+      "topic": "Photosynthesis",
+      "isEducational": true,
+      "clarification": null
+    },
+    "explanationDarija": "Green plants don't eat like we do — they make their own food! They take light from the Sun, water that the roots pull up from the soil, and carbon dioxide (CO₂) that enters through the leaves. Inside the leaf there is a green substance called chlorophyll that captures the light energy. With this energy the plant turns water and CO₂ into sugar (glucose), which it uses to live and grow. It then releases oxygen (O₂) into the air — the oxygen we breathe.",
+    "explanationFormal": "Photosynthesis is the process by which green plants, in the presence of chlorophyll, use light energy to make organic matter (such as glucose and starch) from water and carbon dioxide, releasing oxygen. Water and mineral salts are absorbed by the roots, and carbon dioxide enters through the stomata of the leaves. Summary: water + carbon dioxide → (light energy + chlorophyll) → organic matter + oxygen.",
+    "steps": [
+      "The roots absorb water and mineral salts from the soil.",
+      "The leaf takes in carbon dioxide (CO₂) from the air through the stomata.",
+      "Chlorophyll in the leaf captures light energy.",
+      "The plant makes organic matter (sugar/starch) from water and CO₂.",
+      "The plant releases oxygen (O₂) into the air."
+    ],
+    "example": {
+      "problem": "A plant was kept in a dark room for two days, then a leaf was tested with iodine solution. The leaf did not turn blue-black. Why?",
+      "solution": "Iodine turns blue-black when it meets starch. In the dark there is no light, so the plant could not carry out photosynthesis and made no new starch — it used up the starch it had. This shows that light is necessary for photosynthesis."
+    },
+    "exercises": [
+      {
+        "id": "q1",
+        "type": "mcq",
+        "prompt": "Which substances does a plant need to carry out photosynthesis?",
+        "hint": "Think about what the roots take from the soil, what the leaf takes from the air, and what comes from the Sun.",
+        "explanation": "The plant needs light (energy), water (from the roots) and carbon dioxide (from the air). Soil provides water and mineral salts, but it is not the plant's food.",
+        "choices": [
+          {
+            "id": "a",
+            "text": "Light, water and carbon dioxide"
+          },
+          {
+            "id": "b",
+            "text": "Soil only"
+          },
+          {
+            "id": "c",
+            "text": "Oxygen and darkness"
+          },
+          {
+            "id": "d",
+            "text": "Sugar and salt"
+          }
+        ],
+        "correctChoiceId": "a"
+      },
+      {
+        "id": "q2",
+        "type": "mcq",
+        "prompt": "Which gas does a plant release into the air during photosynthesis?",
+        "hint": "It is the gas we need to breathe.",
+        "explanation": "During photosynthesis the plant releases oxygen (O₂).",
+        "choices": [
+          {
+            "id": "a",
+            "text": "Carbon dioxide (CO₂)"
+          },
+          {
+            "id": "b",
+            "text": "Oxygen (O₂)"
+          },
+          {
+            "id": "c",
+            "text": "Nitrogen (N₂)"
+          }
+        ],
+        "correctChoiceId": "b"
+      },
+      {
+        "id": "q3",
+        "type": "short_text",
+        "prompt": "In your own words: how does a plant make its own food?",
+        "hint": "Mention the energy source and the substances the plant uses.",
+        "explanation": "The plant uses light energy (thanks to chlorophyll) to turn water and carbon dioxide into organic matter (sugar), and releases oxygen.",
+        "rubric": {
+          "criteria": [
+            {
+              "id": "light",
+              "description": "Mentions light / the Sun as the energy source",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "water",
+              "description": "Mentions water as an input",
+              "weight": 1,
+              "required": true
+            },
+            {
+              "id": "co2",
+              "description": "Mentions carbon dioxide (CO₂) as an input",
+              "weight": 1,
+              "required": true
+            }
+          ],
+          "acceptedExamples": [
+            "The plant uses sunlight, water and CO2 to make sugar",
+            "تستعمل النبتة الطاقة الضوئية لتحويل الماء وثنائي أكسيد الكربون إلى مادة عضوية",
+            "La plante utilise la lumière, l'eau et le CO2 pour fabriquer du sucre"
+          ],
+          "misconceptions": [
+            {
+              "id": "soil_food",
+              "description": "Believes plants get their food directly from the soil"
+            }
+          ],
+          "languageSensitive": false
+        },
+        "modelAnswer": "The plant captures light energy from the Sun with its chlorophyll and uses it to turn water (from the roots) and carbon dioxide (from the air) into sugar, releasing oxygen."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "demoKeywordsEn": {
+    "q3": {
+      "light": [
+        "light",
+        "sunlight",
+        "sun",
+        "energy from the sun",
+        "الضو",
+        "ضوء",
+        "الشمس",
+        "lumière",
+        "lumiere",
+        "soleil",
+        "daw",
+        "chams"
+      ],
+      "water": [
+        "water",
+        "الماء",
+        "ماء",
+        "eau",
+        "lma"
+      ],
+      "co2": [
+        "carbon dioxide",
+        "co2",
+        "co₂",
+        "ثاني اكسيد الكربون",
+        "ثنائي اكسيد الكربون",
+        "الكربون",
+        "dioxyde"
+      ]
+    }
   }
 }

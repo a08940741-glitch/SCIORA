@@ -152,5 +152,145 @@
       ],
       "caveats": []
     }
+  },
+  "answerEn": {
+    "understood": {
+      "topic": "The principle of inertia (Newton's first law)",
+      "isEducational": true,
+      "clarification": null,
+      "detectedLanguage": "en"
+    },
+    "title": "The principle of inertia (Newton's first law)",
+    "summary": "If the forces acting on an object cancel out, the object either stays at rest or keeps moving in a straight line at a constant speed.",
+    "segments": [
+      {
+        "kind": "fact",
+        "text": "The principle of inertia says an object does not change its motion unless an unbalanced force acts on it.",
+        "sourceIds": []
+      },
+      {
+        "kind": "explanation",
+        "text": "When a bus brakes suddenly, your body tends to keep moving forward — that is inertia.",
+        "sourceIds": []
+      },
+      {
+        "kind": "fact",
+        "text": "A seat belt provides the force that stops your body together with the car.",
+        "sourceIds": []
+      },
+      {
+        "kind": "uncertainty",
+        "text": "In everyday life there is always friction and air resistance, so it is hard to observe uniform straight-line motion for long.",
+        "sourceIds": []
+      }
+    ],
+    "keyConcepts": [
+      "Force",
+      "Rest",
+      "Uniform straight-line motion",
+      "Inertia"
+    ],
+    "connections": [
+      {
+        "concept": "Newton's second law",
+        "relation": "Explains what happens when the forces do not cancel out."
+      },
+      {
+        "concept": "Friction",
+        "relation": "A force that slows objects down, which is why things stop in everyday life."
+      },
+      {
+        "concept": "Road safety",
+        "relation": "Seat belts and airbags protect against the effects of inertia."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "transformsEn": {
+    "simplify": {
+      "title": "Inertia in simple words",
+      "text": "Objects are \"lazy\": if they are still, they want to stay still, and if they are moving, they want to keep moving the same way — until a force changes that.",
+      "caveats": [
+        "\"Lazy\" is only a comparison; objects do not have a will."
+      ]
+    },
+    "examples": {
+      "title": "Everyday examples",
+      "examples": [
+        {
+          "title": "The bus",
+          "body": "When the bus starts suddenly, you feel pushed backwards."
+        },
+        {
+          "title": "The tablecloth trick",
+          "body": "If you pull a tablecloth very quickly, the cups on it can stay in place."
+        }
+      ],
+      "caveats": []
+    },
+    "quiz": {
+      "title": "Check yourself: inertia",
+      "questions": [
+        {
+          "question": "An object moves at constant speed in a straight line. What can we say?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "The forces cancel out"
+            },
+            {
+              "id": "b",
+              "text": "A large force is pushing it"
+            },
+            {
+              "id": "c",
+              "text": "No object is present"
+            }
+          ],
+          "correctChoiceId": "a",
+          "explanation": "According to the principle of inertia, the forces are balanced."
+        },
+        {
+          "question": "Why do we wear a seat belt?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "To increase speed"
+            },
+            {
+              "id": "b",
+              "text": "So it stops us together with the car when braking"
+            },
+            {
+              "id": "c",
+              "text": "Because it looks nice"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "The seat belt provides the force that stops the body."
+        },
+        {
+          "question": "Why does a rolling ball eventually stop on the ground?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Because of friction"
+            },
+            {
+              "id": "b",
+              "text": "Because the principle of inertia is wrong"
+            },
+            {
+              "id": "c",
+              "text": "Because the ball gets tired"
+            }
+          ],
+          "correctChoiceId": "a",
+          "explanation": "Friction is a force that slows the ball down."
+        }
+      ],
+      "caveats": []
+    }
   }
 }

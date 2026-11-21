@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { T, UI_LANG, UI_DIR, UI_LANGUAGES, setUiLanguage } from "./i18n.js";
+import { T, UI_LANG, UI_DIR, UI_LANGUAGES, DEFAULT_CONTENT_LANGUAGE, demoTitle, setUiLanguage } from "./i18n.js";
 import { noticesBox } from "./notices.js";
 import { summarizeSession, nextLevel } from "./session.js";
 import { el, clear, paragraphs } from "./render.js";
@@ -61,14 +61,14 @@ async function loadHealth() {
             type: "button",
             class: "chip",
             onclick: () => {
-              $("question").value = t.topic;
+              $("question").value = demoTitle(t.topic, t.topicEn);
               $("question").focus();
             },
           },
           // Interface label (subject) and content (topic) are isolated so mixed scripts keep their order.
           el("span", { class: "chip-label", text: T.subjects[t.subject] ?? t.subject }),
           " · ",
-          el("bdi", { text: t.topic }),
+          el("bdi", { text: demoTitle(t.topic, t.topicEn) }),
         ),
       );
     }
@@ -86,7 +86,7 @@ async function onAsk(ev) {
   const language = $("language").value;
   const out = $("lesson");
   if (question.length < 3) {
-    showError(out, "السؤال قصير بزاف.");
+    showError(out, T.k.tooShort);
     return;
   }
   const btn = $("ask-btn");
@@ -108,6 +108,7 @@ async function onAsk(ev) {
   state.meta = r.data.meta;
   state.token = r.data.exerciseSet?.token ?? null;
   state.level = level;
+  state.language = language;
   state.topic = r.data.lesson.understood.topic;
   state.notices = r.data.notices ?? [];
   state.results = {};
@@ -131,7 +132,8 @@ function renderLesson(lesson) {
     ),
   );
   if (!u.isEducational) return;
-  out.append(card(T.explanationDarija, ...paragraphs(lesson.explanationDarija)));
+  // This field is a simple explanation in Darija, except for English lessons (plain English).
+  out.append(card(state.language === "en" ? T.explanationSimple : T.explanationDarija, ...paragraphs(lesson.explanationDarija)));
   out.append(card(T.explanationFormal, ...paragraphs(lesson.explanationFormal)));
   out.append(card(T.steps, el("ol", { dir: "auto", class: "content-list" }, ...lesson.steps.map((s) => el("li", { text: s })))));
 
@@ -410,6 +412,7 @@ function initStatic() {
   $("ask-btn").textContent = T.submit;
   for (const [v, label] of Object.entries(T.levels)) $("level").append(el("option", { value: v, text: label, selected: v === "school" }));
   for (const [v, label] of Object.entries(T.languages)) $("language").append(el("option", { value: v, text: label }));
+  $("language").value = DEFAULT_CONTENT_LANGUAGE;
   $("estimate-title").textContent = T.estimateTitle;
   $("clear-btn").textContent = T.clearData;
   $("responsible-title").textContent = T.responsibleTitle;

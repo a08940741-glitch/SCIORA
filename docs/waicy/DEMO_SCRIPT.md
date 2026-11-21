@@ -5,7 +5,7 @@ _Records the real application. Say on screen that this is **demo mode** (pre-wri
 | Time | Screen | Narration (suggested) |
 |---|---|---|
 | 0:00–0:15 | Home: sidebar, intro section, three tool cards | "This is SCIORA, an AI learning and knowledge platform that always shows what is verified and what is not." |
-| 0:15–0:50 | Learning Assistant → ask «شنو هو التركيب الضوئي؟» → explanation in Darija + formal Arabic, labelled DEMO | "Students ask in Darija. SCIORA explains in Darija and in formal Arabic, with steps and a worked example." |
+| 0:15–0:50 | Learning Assistant → choose «Darija» as the response language (default is English) → ask «شنو هو التركيب الضوئي؟» → explanation in Darija + formal Arabic, labelled DEMO | "Students ask in Darija. SCIORA explains in Darija and in formal Arabic, with steps and a worked example." |
 | 0:50–1:20 | Answer the 3 exercises (one wrong on purpose) → feedback → session summary | "Answers are graded by rules or a rubric. SCIORA explains mistakes, and when it is not sure it says so. The session summary shows what to work on and the next step." |
 | 1:20–1:50 | Knowledge Explorer → "What is the water cycle?" → labelled segments, verification banner, related reading from Wikipedia | "Each part of an answer is labelled as fact, explanation, assumption or uncertainty. Sources come from real Wikipedia retrieval — and Wikipedia alone is never presented as proof." |
 | 1:50–2:30 | Evidence Analyzer → "Pythagoras works for every triangle" → two sub-claims, insufficient evidence, missing-evidence guidance, background labelled *not evidence* | "SCIORA splits claims and judges them only on quotes found in retrieved sources. Opinions are 'not checkable', and missing evidence is shown honestly." |

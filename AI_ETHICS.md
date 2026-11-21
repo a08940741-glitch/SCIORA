@@ -67,4 +67,4 @@ _This document describes real risks and the safeguards that are actually impleme
 - Phase 1 covers a small set of topics in demo mode; it does not claim curriculum coverage.
 - The level estimate is not a validated assessment instrument.
 - The Evidence Analyzer cannot reach verdicts other than *insufficient evidence* / *not checkable* without a real retriever; its demo analyses are pre-written and unreviewed.
-- The Knowledge Explorer has no real source retrieval yet; its demo answers are pre-written, unreviewed, and in Darija at one level only.
+- The Knowledge Explorer has no real source retrieval yet; its demo answers are pre-written, unreviewed, and available in English and Darija at one level only.

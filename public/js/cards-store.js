@@ -67,7 +67,7 @@ export function normalizeCard(c) {
     checkedByMe: c.checkedByMe === true,
     origin,
     model: origin === "ai" ? str(c.model, 64) || null : null,
-    collection: str(c.collection, 40) || "عام",
+    collection: str(c.collection, 40) || "General",
     createdAt: str(c.createdAt, 40) || new Date(0).toISOString(),
     updatedAt: str(c.updatedAt, 40) || str(c.createdAt, 40) || new Date(0).toISOString(),
   };

@@ -150,5 +150,143 @@
       ],
       "caveats": []
     }
+  },
+  "answerEn": {
+    "understood": {
+      "topic": "Expanding and the distributive property",
+      "isEducational": true,
+      "clarification": null,
+      "detectedLanguage": "en"
+    },
+    "title": "The distributive property and expanding",
+    "summary": "Expanding means removing the brackets: k(a + b) = ka + kb. The number outside the brackets multiplies every term inside.",
+    "segments": [
+      {
+        "kind": "fact",
+        "text": "For all numbers k, a and b: k(a + b) = ka + kb and k(a − b) = ka − kb.",
+        "sourceIds": []
+      },
+      {
+        "kind": "explanation",
+        "text": "Think of it as sharing out: if you give 3 boxes, each with two apples and one lemon, you give 6 apples and 3 lemons.",
+        "sourceIds": []
+      },
+      {
+        "kind": "fact",
+        "text": "The reverse operation of expanding is called factorising.",
+        "sourceIds": []
+      },
+      {
+        "kind": "assumption",
+        "text": "This answer assumes you know the sign rules (minus times minus gives plus).",
+        "sourceIds": []
+      }
+    ],
+    "keyConcepts": [
+      "Brackets",
+      "Term",
+      "Expanding",
+      "Factorising"
+    ],
+    "connections": [
+      {
+        "concept": "Factorising",
+        "relation": "The reverse of expanding: turning a sum back into a product."
+      },
+      {
+        "concept": "Special products",
+        "relation": "Special cases of expanding, like (a + b)² = a² + 2ab + b²."
+      },
+      {
+        "concept": "Solving equations",
+        "relation": "Many equations need expanding before they can be solved."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "transformsEn": {
+    "simplify": {
+      "title": "Expanding in simple words",
+      "text": "Expanding means the number outside the brackets has to say hello to everyone inside. 3(x + 2) becomes 3x + 6.",
+      "caveats": []
+    },
+    "examples": {
+      "title": "Examples",
+      "examples": [
+        {
+          "title": "At the shop",
+          "body": "You buy 4 notebooks, each costing 10 dirhams plus 2 dirhams for a cover: 4(10 + 2) = 40 + 8 = 48 dirhams."
+        },
+        {
+          "title": "An algebraic expression",
+          "body": "5(2x − 1) = 10x − 5."
+        }
+      ],
+      "caveats": []
+    },
+    "quiz": {
+      "title": "Check yourself: expanding",
+      "questions": [
+        {
+          "question": "What is the expansion of 2(x + 4)?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "2x + 4"
+            },
+            {
+              "id": "b",
+              "text": "2x + 8"
+            },
+            {
+              "id": "c",
+              "text": "x + 8"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "2 multiplies both x and 4."
+        },
+        {
+          "question": "What is the expansion of −3(x − 2)?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "−3x − 6"
+            },
+            {
+              "id": "b",
+              "text": "−3x + 6"
+            },
+            {
+              "id": "c",
+              "text": "3x + 6"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "Minus times minus gives plus: −3 × −2 = +6."
+        },
+        {
+          "question": "What is the reverse operation of expanding?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Factorising"
+            },
+            {
+              "id": "b",
+              "text": "Dividing"
+            },
+            {
+              "id": "c",
+              "text": "Adding"
+            }
+          ],
+          "correctChoiceId": "a",
+          "explanation": "Factorising turns the sum back into a product."
+        }
+      ],
+      "caveats": []
+    }
   }
 }

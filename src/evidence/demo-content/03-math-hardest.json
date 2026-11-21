@@ -8,7 +8,9 @@
     "الرياضيات أصعب",
     "maths est la plus difficile",
     "math is the hardest",
-    "riyadiyat s3iba"
+    "riyadiyat s3iba",
+    "mathematics is the hardest",
+    "hardest school subject"
   ],
   "analysis": {
     "understood": {
@@ -29,6 +31,27 @@
     ],
     "caveats": [
       "هادا رأي شخصي، لذلك ما كيتحكمش عليه بصحيح ولا غالط."
+    ]
+  },
+  "analysisEn": {
+    "understood": {
+      "claimRestated": "Mathematics is the hardest school subject.",
+      "detectedLanguage": "en",
+      "isAnalyzable": true,
+      "clarification": null
+    },
+    "subClaims": [
+      {
+        "id": "c1",
+        "text": "Mathematics is the hardest subject.",
+        "type": "opinion",
+        "evidence": [],
+        "missingEvidence": "No evidence can settle this opinion; difficulty differs from student to student. Data such as exam results could be compared, but they do not measure \"difficulty\" directly.",
+        "backgroundNote": null
+      }
+    ],
+    "caveats": [
+      "This is a personal opinion, so it is not judged true or false."
     ]
   }
 }

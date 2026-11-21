@@ -12,6 +12,11 @@ const MESSAGES: Record<Language, Record<Exclude<Verdict, "partially_correct">, s
     incorrect: "الإجابة غير صحيحة هذه المرة. اقرأ الشرح لتفهم موضع الخطأ، ثم جرّب تمرينا جديدا.",
     uncertain: "SCIORA غير متأكد من تصحيح هذه الإجابة.",
   },
+  en: {
+    correct: "Correct! Well done.",
+    incorrect: "Not correct this time. Read the explanation to see where the mistake is, then try a new exercise.",
+    uncertain: "SCIORA is not sure about the grading of this answer.",
+  },
   fr: {
     correct: "Bonne réponse ! Bravo.",
     incorrect: "La réponse n'est pas correcte cette fois. Lis l'explication pour comprendre l'erreur, puis essaie un nouvel exercice.",
@@ -31,6 +36,10 @@ export const UNREADABLE_HINT: Record<Language, Record<"numeric" | "expression", 
   msa: {
     numeric: "تعذّرت قراءة الإجابة كعدد. اكتب العدد فقط، مثلا: 0.5 أو 1/2 أو 13",
     expression: "تعذّرت قراءة التعبير. اكتبه مثل: 2*x + 2 أو 2(x+1)",
+  },
+  en: {
+    numeric: "Your answer could not be read as a number. Write only the number, for example 0.5, 1/2 or 13.",
+    expression: "Your expression could not be read. Write it like 2*x + 2 or 2(x+1).",
   },
   fr: {
     numeric: "Je n'ai pas pu lire un nombre. Écris seulement le nombre, par exemple : 0.5 ou 1/2 ou 13",
@@ -55,12 +64,14 @@ export function correctAnswerText(ex: SealedExercise): string {
 /** Localized explanation of WHY a grade is uncertain. */
 export function uncertaintyText(language: Language, unclearRequired: string[]): string {
   if (unclearRequired.length > 0) {
-    const list = unclearRequired.join(" ؛ ");
+    const list = unclearRequired.join(language === "en" ? "; " : " ؛ ");
     if (language === "fr") return `SCIORA n'a pas pu déterminer : ${list}`;
+    if (language === "en") return `SCIORA could not determine: ${list}`;
     if (language === "msa") return `لم يتمكن SCIORA من التحقق من: ${list}`;
     return `SCIORA ما قدرش يتأكد من: ${list}`;
   }
   if (language === "fr") return "Le correcteur automatique n'était pas sûr de son jugement.";
+  if (language === "en") return "The automatic grader was not sure about its judgement.";
   if (language === "msa") return "لم يكن المصحح الآلي متأكدا من حكمه.";
   return "المصحح الآلي ما كانش متأكد من الحكم ديالو.";
 }

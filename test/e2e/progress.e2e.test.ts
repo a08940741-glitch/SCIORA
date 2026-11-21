@@ -49,7 +49,7 @@ test("progress reflects real graded answers; weak topic flagged; practice button
   const { page, problems, ctx } = await page0();
   await page.goto(base + "/");
   // Two wrong answers on the Pythagoras demo lesson (MCQ b, numeric 17).
-  await page.fill("#question", "فيثاغورس");
+  await page.fill("#question", "Pythagoras");
   await page.click("#ask-btn");
   const q1 = page.locator('form[data-exercise-id="q1"]');
   await q1.locator('input[value="a"]').check();
@@ -78,7 +78,7 @@ test("progress reflects real graded answers; weak topic flagged; practice button
 
   await topic.locator('[data-action="practice"]').click();
   assert.equal(await page.getAttribute("#tab-learn", "aria-selected"), "true");
-  assert.match(await page.inputValue("#question"), /فيثاغورس/);
+  assert.match(await page.inputValue("#question"), /The Pythagorean theorem/);
   assert.deepEqual(problems, []);
   await ctx.close();
 });

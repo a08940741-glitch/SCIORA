@@ -120,5 +120,110 @@
         "fkol"
       ]
     }
+  },
+  "lessonEn": {
+    "understood": {
+      "subject": "math",
+      "topic": "Expanding and the distributive property",
+      "isEducational": true,
+      "clarification": null
+    },
+    "explanationDarija": "Expanding means removing the brackets. The rule is simple: the number outside the brackets multiplies every term inside. For example: 3(x + 2) = 3×x + 3×2 = 3x + 6. If the number is negative, watch the signs: −2(x − 5) = −2x + 10, because minus times minus gives plus. With two brackets: (a + b)(c + d) = ac + ad + bc + bd — every term of the first bracket multiplies every term of the second.",
+    "explanationFormal": "Distributive property of multiplication over addition: for all numbers k, a and b, k(a + b) = ka + kb and k(a − b) = ka − kb. Expanding an algebraic expression means writing it as a sum by removing the brackets. Also, (a + b)(c + d) = ac + ad + bc + bd. The reverse operation of expanding is factorising.",
+    "steps": [
+      "Identify the number (or expression) outside the brackets.",
+      "Multiply it by the first term inside the brackets.",
+      "Multiply it by the second term inside the brackets, paying attention to the sign.",
+      "Collect like terms if there are any."
+    ],
+    "example": {
+      "problem": "Expand and simplify: 4(2x − 3) + 5",
+      "solution": "4(2x − 3) + 5 = 4×2x − 4×3 + 5 = 8x − 12 + 5 = 8x − 7."
+    },
+    "exercises": [
+      {
+        "id": "q1",
+        "type": "mcq",
+        "prompt": "What is the result of expanding 5(x + 3)?",
+        "hint": "Multiply 5 by x, then multiply 5 by 3.",
+        "explanation": "5(x + 3) = 5x + 15, because 5 multiplies every term inside the brackets.",
+        "choices": [
+          {
+            "id": "a",
+            "text": "5x + 3"
+          },
+          {
+            "id": "b",
+            "text": "5x + 15"
+          },
+          {
+            "id": "c",
+            "text": "x + 15"
+          },
+          {
+            "id": "d",
+            "text": "8x"
+          }
+        ],
+        "correctChoiceId": "b"
+      },
+      {
+        "id": "q2",
+        "type": "expression",
+        "prompt": "Expand and simplify: 2(x + 3) − x",
+        "hint": "Expand 2(x + 3) first, then subtract x.",
+        "explanation": "2(x + 3) − x = 2x + 6 − x = x + 6.",
+        "answer": "x + 6",
+        "variables": [
+          "x"
+        ]
+      },
+      {
+        "id": "q3",
+        "type": "short_text",
+        "prompt": "In your own words, explain how to expand an expression like k(a + b).",
+        "hint": "What do you do with the number outside the brackets?",
+        "explanation": "Multiply the number outside the brackets by every term inside: k(a + b) = ka + kb.",
+        "rubric": {
+          "criteria": [
+            {
+              "id": "multiply_each",
+              "description": "Explains that the factor outside the brackets multiplies EACH term inside",
+              "weight": 1,
+              "required": true
+            }
+          ],
+          "acceptedExamples": [
+            "You multiply the number outside by each term inside the brackets",
+            "نضرب العامل الموجود خارج القوس في كل حد من حدود القوس",
+            "On multiplie le facteur par chaque terme de la parenthèse"
+          ],
+          "misconceptions": [
+            {
+              "id": "first_term_only",
+              "description": "Multiplies only the first term inside the brackets"
+            }
+          ],
+          "languageSensitive": false
+        },
+        "modelAnswer": "Multiply the number outside the brackets by every term inside the brackets and add the results: k(a + b) = ka + kb."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "demoKeywordsEn": {
+    "q3": {
+      "multiply_each": [
+        "each",
+        "every",
+        "all the terms",
+        "both terms",
+        "فكل",
+        "في كل",
+        "كل حد",
+        "chaque"
+      ]
+    }
   }
 }

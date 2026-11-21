@@ -150,5 +150,143 @@
       ],
       "caveats": []
     }
+  },
+  "answerEn": {
+    "understood": {
+      "topic": "The water cycle",
+      "isEducational": true,
+      "clarification": null,
+      "detectedLanguage": "en"
+    },
+    "title": "The water cycle in nature",
+    "summary": "Water moves between seas, the air and the land: evaporation, condensation, precipitation, then runoff and infiltration. The Sun provides the energy for this cycle.",
+    "segments": [
+      {
+        "kind": "fact",
+        "text": "The Sun's heat evaporates water from seas and rivers.",
+        "sourceIds": []
+      },
+      {
+        "kind": "fact",
+        "text": "Water vapour cools in the air, condenses and forms clouds, then falls as rain or snow.",
+        "sourceIds": []
+      },
+      {
+        "kind": "explanation",
+        "text": "Part of the water that falls runs into rivers and the sea, and part soaks into the ground and forms groundwater.",
+        "sourceIds": []
+      },
+      {
+        "kind": "uncertainty",
+        "text": "The amount of rain varies a lot from year to year and from region to region in Morocco; this lesson gives no figures.",
+        "sourceIds": []
+      }
+    ],
+    "keyConcepts": [
+      "Evaporation",
+      "Condensation",
+      "Precipitation",
+      "Groundwater"
+    ],
+    "connections": [
+      {
+        "concept": "Weather and climate",
+        "relation": "The water cycle affects rain and drought."
+      },
+      {
+        "concept": "Groundwater",
+        "relation": "Infiltration refills the underground water we use."
+      },
+      {
+        "concept": "States of matter",
+        "relation": "The cycle shows water changing between liquid, gas and solid."
+      }
+    ],
+    "confidence": "high",
+    "caveats": []
+  },
+  "transformsEn": {
+    "simplify": {
+      "title": "The water cycle in simple words",
+      "text": "The Sun heats water and it rises into the sky as vapour; up high it cools and becomes clouds; then it falls as rain, goes back to rivers and the sea, and the cycle starts again.",
+      "caveats": []
+    },
+    "examples": {
+      "title": "Everyday examples",
+      "examples": [
+        {
+          "title": "A cold glass",
+          "body": "The droplets on a cold glass are water vapour that has condensed."
+        },
+        {
+          "title": "Drying laundry",
+          "body": "Clothes on a washing line dry because the water in them evaporates."
+        }
+      ],
+      "caveats": []
+    },
+    "quiz": {
+      "title": "Check yourself: the water cycle",
+      "questions": [
+        {
+          "question": "In which stage do clouds form?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Evaporation"
+            },
+            {
+              "id": "b",
+              "text": "Condensation"
+            },
+            {
+              "id": "c",
+              "text": "Infiltration"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "Vapour cools, condenses and forms clouds."
+        },
+        {
+          "question": "What provides the energy for the water cycle?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "The Sun"
+            },
+            {
+              "id": "b",
+              "text": "The Moon"
+            },
+            {
+              "id": "c",
+              "text": "The wind alone"
+            }
+          ],
+          "correctChoiceId": "a",
+          "explanation": "The Sun's heat evaporates the water."
+        },
+        {
+          "question": "Where does water that soaks into the ground go?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Straight back to the clouds"
+            },
+            {
+              "id": "b",
+              "text": "To the groundwater"
+            },
+            {
+              "id": "c",
+              "text": "It disappears"
+            }
+          ],
+          "correctChoiceId": "b",
+          "explanation": "Infiltration refills the groundwater."
+        }
+      ],
+      "caveats": []
+    }
   }
 }

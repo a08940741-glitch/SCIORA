@@ -9,7 +9,9 @@
     "earth orbits",
     "la terre tourne",
     "l2ard katdor",
-    "lard katdor"
+    "lard katdor",
+    "sun orbits the earth",
+    "orbits the earth"
   ],
   "analysis": {
     "understood": {
@@ -26,6 +28,25 @@
         "evidence": [],
         "missingEvidence": "مصدر علمي موثوق: كتاب الفيزياء ولا علوم الأرض المدرسي، ولا مرجع فلكي رسمي.",
         "backgroundNote": "حسب الفهم العلمي المتعارف عليه، الأرض هي اللي كتدور حول الشمس مرة فالعام، وكتدور على راسها مرة فاليوم. هادي معلومة عامة من الذكاء الاصطناعي، ماشي دليل؛ تحقق منها فالكتاب المدرسي."
+      }
+    ],
+    "caveats": []
+  },
+  "analysisEn": {
+    "understood": {
+      "claimRestated": "The Sun orbits the Earth.",
+      "detectedLanguage": "en",
+      "isAnalyzable": true,
+      "clarification": null
+    },
+    "subClaims": [
+      {
+        "id": "c1",
+        "text": "The Sun orbits the Earth.",
+        "type": "factual",
+        "evidence": [],
+        "missingEvidence": "A reliable scientific source: a physics or Earth-science textbook, or an official astronomy reference.",
+        "backgroundNote": "According to the accepted scientific understanding, the Earth orbits the Sun once a year and spins on its axis once a day. This is general AI knowledge, not evidence; check it in your textbook."
       }
     ],
     "caveats": []

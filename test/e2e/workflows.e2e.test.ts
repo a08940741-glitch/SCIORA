@@ -34,7 +34,7 @@ async function open() {
 
 test("LEARN → PRACTICE → EVALUATE → IMPROVE: session summary appears only after all exercises, with real gaps", async () => {
   const { page, problems, ctx } = await open();
-  await page.fill("#question", "فيثاغورس");
+  await page.fill("#question", "Pythagoras");
   await page.click("#ask-btn");
   await page.waitForSelector('form[data-exercise-id="q3"]');
   const grade = async (id: string, fill: (f: any) => Promise<void>) => {
@@ -46,7 +46,7 @@ test("LEARN → PRACTICE → EVALUATE → IMPROVE: session summary appears only 
   await grade("q1", (f) => f.locator('input[value="a"]').check()); // wrong
   assert.equal(await page.locator("#session-summary").count(), 0, "not shown before all exercises are graded");
   await grade("q2", (f) => f.locator("input").fill("17")); // wrong
-  await grade("q3", (f) => f.locator("textarea").fill("مربع الوتر كيساوي مجموع مربعات الضلعين فالمثلث القائم")); // demo keyword grading
+  await grade("q3", (f) => f.locator("textarea").fill("In a right triangle the square of the hypotenuse equals the sum of the squares of the other two sides")); // demo keyword grading
   const s = page.locator("#session-summary");
   await s.waitFor();
   assert.equal(await s.getAttribute("data-recommendation"), "review_first");
@@ -55,7 +55,7 @@ test("LEARN → PRACTICE → EVALUATE → IMPROVE: session summary appears only 
   // IMPROVE: a new set at the same level is requested for the same topic.
   await s.locator('[data-action="retry"]').click();
   await page.waitForFunction(() => !document.querySelector("#session-summary") && document.querySelector('form[data-exercise-id="q1"] button[type="submit"]:not([disabled])'));
-  assert.match(await page.inputValue("#question"), /فيثاغورس/);
+  assert.match(await page.inputValue("#question"), /The Pythagorean theorem/);
   assert.deepEqual(problems, []);
   await ctx.close();
 });
