@@ -16,7 +16,7 @@ const r = (verdict: string, score: number | null = null, counts = verdict !== "u
 
 test("no estimate before any graded answer", () => {
   const lm = LM.createLearnerModel(memoryStorage());
-  assert.equal(lm.estimate("التركيب الضوئي"), null);
+  assert.equal(lm.estimate("Photosynthesis"), null);
 });
 
 test("estimate is preliminary and low-confidence below 5 answers", () => {

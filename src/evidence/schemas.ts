@@ -25,7 +25,7 @@ const Text = (max: number) => z.string().min(1).max(max);
 
 export const EvidenceRequest = z.strictObject({
   claim: z.string().trim().min(5).max(1000),
-  language: KLanguage.default("darija"),
+  language: KLanguage.default("en"),
 });
 export type EvidenceRequest = z.infer<typeof EvidenceRequest>;
 
@@ -50,7 +50,7 @@ export const GeneratedSubClaim = z.object({
 export const GeneratedClaimAnalysis = z.object({
   understood: z.object({
     claimRestated: Text(500),
-    detectedLanguage: z.enum(["darija", "msa", "fr", "en", "arabizi", "mixed", "other"]),
+    detectedLanguage: z.enum(["en", "mixed", "other"]),
     isAnalyzable: z.boolean(),
     clarification: z.string().max(500).nullable(),
   }),

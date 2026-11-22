@@ -1,221 +1,826 @@
 {
-  "description": "SCIORA grading fixtures. Drafted with AI assistance; EVERY expected label must be reviewed by the project owner (native Darija speaker) before results are reported as validated. recordedJudgement = what a well-behaved grader should return; offline tests use it to verify SCIORA's pipeline (evidence check + verdict rule), NOT the quality of any AI model.",
+  "description": "SCIORA grading fixtures (English-only, like the rest of SCIORA). Drafted with AI assistance; EVERY expected label must be reviewed by the project owner before results are reported as validated. recordedJudgement = what a well-behaved grader should return; offline tests use it to verify SCIORA's pipeline (evidence check + verdict rule), NOT the quality of any AI model.",
   "cases": [
-    { "id": "ps-darija-1", "category": "darija_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "النبتة كتاخد الضو ديال الشمس والما وثاني أكسيد الكربون وكتصاوب منهم السكر",
+    {
+      "id": "ps-english-1",
+      "category": "english_correct",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "The plant takes light from the sun, water and carbon dioxide and makes sugar from them",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "الضو ديال الشمس" },
-        { "criterionId": "water", "judgement": "met", "evidence": "والما" },
-        { "criterionId": "co2", "judgement": "met", "evidence": "ثاني أكسيد الكربون" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-msa-1", "category": "msa_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "تستعمل النبتة الطاقة الضوئية لتحويل الماء وثنائي أكسيد الكربون إلى سكر",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "light from the sun"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "met",
+            "evidence": "water"
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "met",
+            "evidence": "carbon dioxide"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-formal-1",
+      "category": "formal_correct",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "Photosynthesis is the process in which green plants use solar energy to convert water and carbon dioxide into glucose, releasing oxygen.",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "الطاقة الضوئية" },
-        { "criterionId": "water", "judgement": "met", "evidence": "الماء" },
-        { "criterionId": "co2", "judgement": "met", "evidence": "ثنائي أكسيد الكربون" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-paraphrase-1", "category": "paraphrase_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "كتجمع الطاقة من الشمس باش تحول الما والغاز اللي كنخرجو حنا فالتنفس لسكر",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "solar energy"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "met",
+            "evidence": "water"
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "met",
+            "evidence": "carbon dioxide"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-paraphrase-1",
+      "category": "paraphrase_correct",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "Leaves catch sunlight, pull up H2O through the roots and take in CO2 from the air to build their food",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "الطاقة من الشمس" },
-        { "criterionId": "water", "judgement": "met", "evidence": "الما" },
-        { "criterionId": "co2", "judgement": "met", "evidence": "الغاز اللي كنخرجو حنا فالتنفس" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-arabizi-1", "category": "arabizi_or_french_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "kat9ad lmakla dyalha b daw dyal chams, lma w CO2",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "sunlight"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "met",
+            "evidence": "H2O"
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "met",
+            "evidence": "CO2"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-informal-1",
+      "category": "informal_correct",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "sun + water + co2 = plant food (sugar)",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "daw dyal chams" },
-        { "criterionId": "water", "judgement": "met", "evidence": "lma" },
-        { "criterionId": "co2", "judgement": "met", "evidence": "CO2" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-french-1", "category": "arabizi_or_french_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "La plante utilise la lumière du soleil, l'eau et le dioxyde de carbone pour fabriquer du sucre",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "sun"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "met",
+            "evidence": "water"
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "met",
+            "evidence": "co2"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-informal-2",
+      "category": "informal_correct",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "basically sunlight, some water and the CO2 gas, and the plant makes sugar",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "la lumière du soleil" },
-        { "criterionId": "water", "judgement": "met", "evidence": "l'eau" },
-        { "criterionId": "co2", "judgement": "met", "evidence": "le dioxyde de carbone" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-misspelled-1", "category": "misspelled_correct", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "النبته كتاخد الضوو ديال الشمس و الماء و تاني اوكسيد الكاربون",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "sunlight"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "met",
+            "evidence": "water"
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "met",
+            "evidence": "CO2 gas"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-misspelled-1",
+      "category": "misspelled_correct",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "the plant uses sunlite and watter and carbon dioxyde to make sugar",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "الضوو ديال الشمس" },
-        { "criterionId": "water", "judgement": "met", "evidence": "الماء" },
-        { "criterionId": "co2", "judgement": "met", "evidence": "تاني اوكسيد الكاربون" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-partial-1", "category": "partial", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "كتستعمل الضو ديال الشمس",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "sunlite"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "met",
+            "evidence": "watter"
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "met",
+            "evidence": "carbon dioxyde"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-partial-1",
+      "category": "partial",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "Plants need sunlight to grow and make food.",
       "expected": "partially_correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "الضو ديال الشمس" },
-        { "criterionId": "water", "judgement": "not_met", "evidence": null },
-        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-partial-2", "category": "partial", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "كتاخد الما والضو",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "sunlight"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-partial-2",
+      "category": "partial",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "The plant uses light and water to make its food.",
       "expected": "partially_correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "met", "evidence": "الضو" },
-        { "criterionId": "water", "judgement": "met", "evidence": "الما" },
-        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-incorrect-1", "category": "incorrect", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "النبات كياكل من التراب",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "met",
+            "evidence": "light"
+          },
+          {
+            "criterionId": "water",
+            "judgement": "met",
+            "evidence": "water"
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-incorrect-1",
+      "category": "incorrect",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "The plant eats soil to get its food.",
       "expected": "incorrect",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "not_met", "evidence": null },
-        { "criterionId": "water", "judgement": "not_met", "evidence": null },
-        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": "soil_food", "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-incorrect-2", "category": "incorrect", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "تتغذى النبتة على الأسمدة الموجودة في التربة",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "water",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": "soil_food",
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-incorrect-2",
+      "category": "incorrect",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "Plants get all their food from the soil through their roots.",
       "expected": "incorrect",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "not_met", "evidence": null },
-        { "criterionId": "water", "judgement": "not_met", "evidence": null },
-        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": "soil_food", "feedback": "f", "confidence": "high" } },
-
-    { "id": "ps-unclear-1", "category": "unclear", "exerciseRef": "photosynthesis/q3", "reviewedByStudent": false,
-      "answer": "بالطاقة",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "water",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": "soil_food",
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "ps-unclear-1",
+      "category": "unclear",
+      "exerciseRef": "photosynthesis/q3",
+      "reviewedByStudent": false,
+      "answer": "It happens in the leaves, something with energy.",
       "expected": "uncertain",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "light", "judgement": "unclear", "evidence": null },
-        { "criterionId": "water", "judgement": "not_met", "evidence": null },
-        { "criterionId": "co2", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "low" } },
-
-    { "id": "in-darija-1", "category": "darija_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "إلا كانت القوى كتعوض بعضياتها، الجسم كيبقى واقف ولا كيكمل يتحرك فخط مستقيم بنفس السرعة",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "light",
+            "judgement": "unclear",
+            "evidence": null
+          },
+          {
+            "criterionId": "water",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "co2",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "in-english-1",
+      "category": "english_correct",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "If the forces on an object cancel out, it stays at rest or keeps moving in a straight line at constant speed",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "met", "evidence": "القوى كتعوض بعضياتها" },
-        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "كيبقى واقف ولا كيكمل يتحرك فخط مستقيم بنفس السرعة" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "in-msa-1", "category": "msa_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "إذا انعدم مجموع القوى المطبقة على جسم فإنه يظل ساكنا أو يتحرك حركة مستقيمية منتظمة",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "met",
+            "evidence": "cancel out"
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "met",
+            "evidence": "stays at rest"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "in-formal-1",
+      "category": "formal_correct",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "When the net force acting on a body is zero, the body remains at rest or continues in uniform rectilinear motion.",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "met", "evidence": "انعدم مجموع القوى المطبقة" },
-        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "يظل ساكنا أو يتحرك حركة مستقيمية منتظمة" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "in-paraphrase-1", "category": "paraphrase_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "ملي ما كاينش شي حاجة كتدفع الجسم كثر من لاخرا، كيبقى على الحالة ديالو: إلا كان واقف كيبقى واقف وإلا كان غادي كيبقى غادي نيشان بنفس السرعة",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "met",
+            "evidence": "net force acting on a body is zero"
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "met",
+            "evidence": "remains at rest"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "in-paraphrase-1",
+      "category": "paraphrase_correct",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "No overall push or pull means nothing changes: a still object stays still and a moving one keeps the same speed and direction",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "met", "evidence": "ما كاينش شي حاجة كتدفع الجسم كثر من لاخرا" },
-        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "إلا كان واقف كيبقى واقف وإلا كان غادي كيبقى غادي نيشان بنفس السرعة" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "in-french-1", "category": "arabizi_or_french_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "Si les forces qui s'exercent sur un corps se compensent, il reste immobile ou garde un mouvement rectiligne uniforme",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "met",
+            "evidence": "No overall push or pull"
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "met",
+            "evidence": "a still object stays still"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "in-informal-1",
+      "category": "informal_correct",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "forces balanced -> object chills or keeps cruising same speed straight",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "met", "evidence": "les forces qui s'exercent sur un corps se compensent" },
-        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "il reste immobile ou garde un mouvement rectiligne uniforme" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "in-arabizi-1", "category": "arabizi_or_french_correct", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "ila kanet l9owat kat3awed b3diyatha, ljism kayb9a wa9ef wla kaytharrek f khat mosta9im b nafs sor3a",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "met",
+            "evidence": "forces balanced"
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "met",
+            "evidence": "keeps cruising same speed straight"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "in-informal-2",
+      "category": "informal_correct",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "zero net force = no change in motion (rest stays rest, moving stays moving)",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "met", "evidence": "l9owat kat3awed b3diyatha" },
-        { "criterionId": "rest_or_uniform", "judgement": "met", "evidence": "kayb9a wa9ef wla kaytharrek f khat mosta9im b nafs sor3a" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "in-partial-1", "category": "partial", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "الجسم كيبقى واقف",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "met",
+            "evidence": "zero net force"
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "met",
+            "evidence": "rest stays rest"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "in-partial-1",
+      "category": "partial",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "An object keeps moving in a straight line.",
       "expected": "partially_correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "not_met", "evidence": null },
-        { "criterionId": "rest_or_uniform", "judgement": "partial", "evidence": "كيبقى واقف" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "in-incorrect-1", "category": "incorrect", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "باش الجسم يبقى يتحرك خاصو ديما قوة كتدفعو",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "partial",
+            "evidence": "keeps moving in a straight line"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "in-incorrect-1",
+      "category": "incorrect",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "A moving object always needs a force pushing it, otherwise it stops.",
       "expected": "incorrect",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "not_met", "evidence": null },
-        { "criterionId": "rest_or_uniform", "judgement": "not_met", "evidence": null } ], "misconceptionId": "motion_needs_force", "feedback": "f", "confidence": "high" } },
-
-    { "id": "in-unclear-1", "category": "unclear", "exerciseRef": "inertia/q3", "reviewedByStudent": false,
-      "answer": "القوى",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": "motion_needs_force",
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "in-unclear-1",
+      "category": "unclear",
+      "exerciseRef": "inertia/q3",
+      "reviewedByStudent": false,
+      "answer": "It is about Newton and motion stuff.",
       "expected": "uncertain",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "forces_balance", "judgement": "unclear", "evidence": null },
-        { "criterionId": "rest_or_uniform", "judgement": "unclear", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "low" } },
-
-    { "id": "py-darija-1", "category": "darija_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
-      "answer": "فالمثلث القائم، المربع ديال الوتر كيساوي المجموع ديال المربعات ديال الضلعين لخرين",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "forces_balance",
+            "judgement": "unclear",
+            "evidence": null
+          },
+          {
+            "criterionId": "rest_or_uniform",
+            "judgement": "unclear",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "py-english-1",
+      "category": "english_correct",
+      "exerciseRef": "pythagoras/q3",
+      "reviewedByStudent": false,
+      "answer": "In a right triangle, the square of the hypotenuse equals the sum of the squares of the other two sides",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "relation", "judgement": "met", "evidence": "المربع ديال الوتر كيساوي المجموع ديال المربعات ديال الضلعين لخرين" },
-        { "criterionId": "right_triangle", "judgement": "met", "evidence": "فالمثلث القائم" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "py-msa-1", "category": "msa_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
-      "answer": "في كل مثلث قائم الزاوية، مربع الوتر يساوي مجموع مربعي الضلعين الآخرين",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "relation",
+            "judgement": "met",
+            "evidence": "the square of the hypotenuse equals the sum of the squares"
+          },
+          {
+            "criterionId": "right_triangle",
+            "judgement": "met",
+            "evidence": "right triangle"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "py-formal-1",
+      "category": "formal_correct",
+      "exerciseRef": "pythagoras/q3",
+      "reviewedByStudent": false,
+      "answer": "For any right-angled triangle, the hypotenuse squared is equal to the sum of the squares of the two legs.",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "relation", "judgement": "met", "evidence": "مربع الوتر يساوي مجموع مربعي الضلعين الآخرين" },
-        { "criterionId": "right_triangle", "judgement": "met", "evidence": "مثلث قائم الزاوية" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "py-formula-1", "category": "paraphrase_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
-      "answer": "BC² = AB² + AC² ملي يكون المثلث قائم فـ A",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "relation",
+            "judgement": "met",
+            "evidence": "the hypotenuse squared is equal to the sum of the squares"
+          },
+          {
+            "criterionId": "right_triangle",
+            "judgement": "met",
+            "evidence": "right-angled triangle"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "py-formula-1",
+      "category": "paraphrase_correct",
+      "exerciseRef": "pythagoras/q3",
+      "reviewedByStudent": false,
+      "answer": "c² = a² + b², where c is the hypotenuse, and only for a triangle with a 90° angle",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "relation", "judgement": "met", "evidence": "BC² = AB² + AC²" },
-        { "criterionId": "right_triangle", "judgement": "met", "evidence": "المثلث قائم" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "py-french-1", "category": "arabizi_or_french_correct", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
-      "answer": "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "relation",
+            "judgement": "met",
+            "evidence": "c² = a² + b²"
+          },
+          {
+            "criterionId": "right_triangle",
+            "judgement": "met",
+            "evidence": "90° angle"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "py-informal-1",
+      "category": "informal_correct",
+      "exerciseRef": "pythagoras/q3",
+      "reviewedByStudent": false,
+      "answer": "right triangle: long side squared = the other two squared added up",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "relation", "judgement": "met", "evidence": "le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés" },
-        { "criterionId": "right_triangle", "judgement": "met", "evidence": "triangle rectangle" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "py-partial-1", "category": "partial", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
-      "answer": "مربع الوتر = مجموع مربعات الضلعين",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "relation",
+            "judgement": "met",
+            "evidence": "long side squared = the other two squared added up"
+          },
+          {
+            "criterionId": "right_triangle",
+            "judgement": "met",
+            "evidence": "right triangle"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "py-partial-1",
+      "category": "partial",
+      "exerciseRef": "pythagoras/q3",
+      "reviewedByStudent": false,
+      "answer": "The square of the longest side equals the sum of the squares of the other two sides.",
       "expected": "partially_correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "relation", "judgement": "met", "evidence": "مربع الوتر = مجموع مربعات الضلعين" },
-        { "criterionId": "right_triangle", "judgement": "not_met", "evidence": null } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "py-incorrect-1", "category": "incorrect", "exerciseRef": "pythagoras/q3", "reviewedByStudent": false,
-      "answer": "الوتر كيساوي المجموع ديال الضلعين لخرين فأي مثلث",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "relation",
+            "judgement": "met",
+            "evidence": "The square of the longest side equals the sum of the squares"
+          },
+          {
+            "criterionId": "right_triangle",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "py-incorrect-1",
+      "category": "incorrect",
+      "exerciseRef": "pythagoras/q3",
+      "reviewedByStudent": false,
+      "answer": "You add the two short sides together to get the long side, in any triangle.",
       "expected": "incorrect",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "relation", "judgement": "not_met", "evidence": null },
-        { "criterionId": "right_triangle", "judgement": "not_met", "evidence": null } ], "misconceptionId": "no_squares", "feedback": "f", "confidence": "high" } },
-
-    { "id": "di-darija-1", "category": "darija_correct", "exerciseRef": "distributivity/q3", "reviewedByStudent": false,
-      "answer": "كنضربو العدد اللي برا فكل واحد من اللي داخل القوس",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "relation",
+            "judgement": "not_met",
+            "evidence": null
+          },
+          {
+            "criterionId": "right_triangle",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": "no_squares",
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "di-english-1",
+      "category": "english_correct",
+      "exerciseRef": "distributivity/q3",
+      "reviewedByStudent": false,
+      "answer": "You multiply the number outside the brackets by each term inside",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "multiply_each", "judgement": "met", "evidence": "كنضربو العدد اللي برا فكل واحد من اللي داخل القوس" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "di-msa-paraphrase-1", "category": "paraphrase_correct", "exerciseRef": "distributivity/q3", "reviewedByStudent": false,
-      "answer": "نضرب العدد الموجود خارج القوس في جميع حدود القوس",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "multiply_each",
+            "judgement": "met",
+            "evidence": "by each term inside"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "di-paraphrase-1",
+      "category": "paraphrase_correct",
+      "exerciseRef": "distributivity/q3",
+      "reviewedByStudent": false,
+      "answer": "The factor in front is distributed over every term in the parentheses, then you add the products",
       "expected": "correct",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "multiply_each", "judgement": "met", "evidence": "نضرب العدد الموجود خارج القوس في جميع حدود القوس" } ], "misconceptionId": null, "feedback": "f", "confidence": "high" } },
-
-    { "id": "di-incorrect-1", "category": "incorrect", "exerciseRef": "distributivity/q3", "reviewedByStudent": false,
-      "answer": "كنضربو غير فالأول",
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "multiply_each",
+            "judgement": "met",
+            "evidence": "over every term in the parentheses"
+          }
+        ],
+        "misconceptionId": null,
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "di-incorrect-1",
+      "category": "incorrect",
+      "exerciseRef": "distributivity/q3",
+      "reviewedByStudent": false,
+      "answer": "You multiply the number outside only by the first term in the brackets",
       "expected": "incorrect",
-      "recordedJudgement": { "criteria": [
-        { "criterionId": "multiply_each", "judgement": "not_met", "evidence": null } ], "misconceptionId": "first_term_only", "feedback": "f", "confidence": "high" } },
-
-    { "id": "py-num-1", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "13", "expected": "correct" },
-    { "id": "py-num-2", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "13 cm", "expected": "correct" },
-    { "id": "py-num-3", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "١٣", "expected": "correct" },
-    { "id": "py-num-4", "category": "math_equivalent", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "BC = 13", "expected": "correct" },
-    { "id": "py-num-5", "category": "incorrect", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "17", "expected": "incorrect" },
-    { "id": "py-num-6", "category": "known_limitation", "exerciseRef": "pythagoras/q2", "reviewedByStudent": false, "answer": "√169", "expected": "unreadable",
-      "note": "Correct, but the Phase 1 numeric parser does not evaluate roots; the student is asked to rewrite the answer (no attempt consumed)." },
-
-    { "id": "di-expr-1", "category": "math_equivalent", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "x+6", "expected": "correct" },
-    { "id": "di-expr-2", "category": "math_equivalent", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "6 + x", "expected": "correct" },
-    { "id": "di-expr-3", "category": "math_equivalent", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "2x+6-x", "expected": "correct" },
-    { "id": "di-expr-4", "category": "incorrect", "exerciseRef": "distributivity/q2", "reviewedByStudent": false, "answer": "2x+6", "expected": "incorrect" }
+      "recordedJudgement": {
+        "criteria": [
+          {
+            "criterionId": "multiply_each",
+            "judgement": "not_met",
+            "evidence": null
+          }
+        ],
+        "misconceptionId": "first_term_only",
+        "feedback": "Feedback.",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "py-num-1",
+      "category": "math_equivalent",
+      "exerciseRef": "pythagoras/q2",
+      "reviewedByStudent": false,
+      "answer": "13",
+      "expected": "correct"
+    },
+    {
+      "id": "py-num-2",
+      "category": "math_equivalent",
+      "exerciseRef": "pythagoras/q2",
+      "reviewedByStudent": false,
+      "answer": "13 cm",
+      "expected": "correct"
+    },
+    {
+      "id": "py-num-3",
+      "category": "math_equivalent",
+      "exerciseRef": "pythagoras/q2",
+      "reviewedByStudent": false,
+      "answer": "١٣",
+      "expected": "correct"
+    },
+    {
+      "id": "py-num-4",
+      "category": "math_equivalent",
+      "exerciseRef": "pythagoras/q2",
+      "reviewedByStudent": false,
+      "answer": "BC = 13",
+      "expected": "correct"
+    },
+    {
+      "id": "py-num-5",
+      "category": "incorrect",
+      "exerciseRef": "pythagoras/q2",
+      "reviewedByStudent": false,
+      "answer": "17",
+      "expected": "incorrect"
+    },
+    {
+      "id": "py-num-6",
+      "category": "known_limitation",
+      "exerciseRef": "pythagoras/q2",
+      "reviewedByStudent": false,
+      "answer": "√169",
+      "expected": "unreadable",
+      "note": "Correct, but the Phase 1 numeric parser does not evaluate roots; the student is asked to rewrite the answer (no attempt consumed)."
+    },
+    {
+      "id": "di-expr-1",
+      "category": "math_equivalent",
+      "exerciseRef": "distributivity/q2",
+      "reviewedByStudent": false,
+      "answer": "x+6",
+      "expected": "correct"
+    },
+    {
+      "id": "di-expr-2",
+      "category": "math_equivalent",
+      "exerciseRef": "distributivity/q2",
+      "reviewedByStudent": false,
+      "answer": "6 + x",
+      "expected": "correct"
+    },
+    {
+      "id": "di-expr-3",
+      "category": "math_equivalent",
+      "exerciseRef": "distributivity/q2",
+      "reviewedByStudent": false,
+      "answer": "2x+6-x",
+      "expected": "correct"
+    },
+    {
+      "id": "di-expr-4",
+      "category": "incorrect",
+      "exerciseRef": "distributivity/q2",
+      "reviewedByStudent": false,
+      "answer": "2x+6",
+      "expected": "incorrect"
+    }
   ]
 }

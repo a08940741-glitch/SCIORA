@@ -10,18 +10,19 @@ import {
 import { sampleKnowledgeAnswer } from "../helpers/knowledge.ts";
 
 test("knowledge query: defaults, trimming, limits, strictness", () => {
-  const ok = KnowledgeQueryRequest.parse({ question: "  شنو هو التركيب الضوئي؟ " });
+  const ok = KnowledgeQueryRequest.parse({ question: "  What is photosynthesis? " });
   assert.equal(ok.level, "intermediate");
-  assert.equal(ok.language, "darija");
-  assert.equal(ok.question, "شنو هو التركيب الضوئي؟");
+  assert.equal(ok.language, "en");
+  assert.equal(ok.question, "What is photosynthesis?");
   for (const bad of [{}, { question: "ab" }, { question: "x".repeat(1001) }, { question: "valid?", level: "school" }, { question: "valid?", language: "de" }, { question: "valid?", x: 1 }]) {
     assert.equal(KnowledgeQueryRequest.safeParse(bad).success, false, JSON.stringify(bad).slice(0, 40));
   }
 });
 
-test("knowledge query accepts all supported answer languages incl. English", () => {
-  for (const language of ["darija", "msa", "fr", "en"]) {
-    assert.equal(KnowledgeQueryRequest.safeParse({ question: "What is photosynthesis?", language }).success, true);
+test("knowledge query is English-only: 'en' accepted (and the default); every other language value rejected", () => {
+  assert.equal(KnowledgeQueryRequest.safeParse({ question: "What is photosynthesis?", language: "en" }).success, true);
+  for (const language of ["darija", "msa", "fr", "ar", "es"]) {
+    assert.equal(KnowledgeQueryRequest.safeParse({ question: "What is photosynthesis?", language }).success, false, language);
   }
 });
 

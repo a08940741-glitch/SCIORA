@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { ProviderError } from "./provider.ts";
+import { findNonEnglishOutput } from "../domain/english-only.ts";
 
 /**
  * Shared structured-output call used by every Anthropic-backed provider
@@ -69,6 +70,11 @@ export async function callStructured<T>(
     const checked = args.validate(res?.parsed_output);
     if (!checked.success) {
       if (attempt === 2) throw new ProviderError("bad_output", "The AI response did not match the expected format.");
+      continue;
+    }
+    // English-only policy: clearly non-English or mixed-language output is rejected (retried once).
+    if (findNonEnglishOutput(checked.data)) {
+      if (attempt === 2) throw new ProviderError("bad_output", "The AI response was not in English.");
       continue;
     }
     const iterations: any[] = Array.isArray(res?.usage?.iterations) ? res.usage.iterations : [];

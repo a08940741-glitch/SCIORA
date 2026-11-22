@@ -80,3 +80,7 @@ Issues found and fixed:
 - Owner: review Knowledge Explorer demo content; decide on a real source retriever (Wikipedia network approval or paid web search).
 - Owner: review Evidence Analyzer demo analyses.
 - Then: decide on real retrieval; deployment preparation; submission package.
+
+## 2026-11-21 — English-only policy
+- Decision (project owner): SCIORA is an English-only AI learning and knowledge platform designed for an international audience.
+- Removed the Arabic interface, language switcher and language selectors; migrated all demo content to English; English-only rule in every AI prompt; non-English input gets the notice “SCIORA currently supports English only. Please submit your question in English to continue.”; AI output is checked for non-English text (retry once, then error); retrieval limited to English Wikipedia; grading fixtures rewritten in English. Earlier entries in this log describe the previous multilingual design and are kept as history.

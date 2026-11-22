@@ -19,7 +19,7 @@ test("fixture set: ≥30 cases, ≥3 subjects, all required categories present",
   assert.ok(cases.length >= 30, `only ${cases.length} cases`);
   const subjects = new Set(cases.map((c) => resolveExercise(c.exerciseRef).subject));
   assert.ok(subjects.size >= 3, [...subjects].join(","));
-  for (const cat of ["darija_correct", "msa_correct", "paraphrase_correct", "math_equivalent", "partial", "incorrect", "unclear"]) {
+  for (const cat of ["english_correct", "formal_correct", "paraphrase_correct", "informal_correct", "math_equivalent", "partial", "incorrect", "unclear"]) {
     assert.ok(cases.some((c) => c.category === cat), `missing category ${cat}`);
   }
 });
@@ -68,7 +68,7 @@ test("demo keyword grader safety on fixtures: never 'incorrect', never a false '
   for (const c of cases) {
     const { exercise, subject } = resolveExercise(c.exerciseRef);
     if (exercise.type !== "short_text") continue;
-    const out = await demo.judgeWritten({ exercise: exercise as ShortTextExercise, answer: c.answer, language: "darija", subject: subject as any, level: "school" });
+    const out = await demo.judgeWritten({ exercise: exercise as ShortTextExercise, answer: c.answer, language: "en", subject: subject as any, level: "school" });
     const v = aggregate((exercise as ShortTextExercise).rubric, out.judgement, c.answer).verdict;
     report.push(`${c.id}: ${v}`);
     assert.notEqual(v, "incorrect", `demo grader said incorrect for ${c.id}`);
@@ -81,4 +81,12 @@ test("review status is reported honestly (owner review still pending)", () => {
   const unreviewed = cases.filter((c) => !c.reviewedByStudent).length;
   // Not a failure: this documents the current state. Update when the owner reviews labels.
   assert.equal(unreviewed, cases.length);
+});
+
+test("English-only: every written-answer fixture is English (passes the input check) — numbers are exempt", async () => {
+  const { looksNonEnglish } = await import("../../src/domain/english-only.ts");
+  for (const c of cases) {
+    const { exercise } = resolveExercise(c.exerciseRef);
+    if (exercise.type === "short_text") assert.equal(looksNonEnglish(c.answer), false, `${c.id}: ${c.answer}`);
+  }
 });

@@ -1,35 +1,27 @@
 /**
- * SCIORA interface strings.
- *
- * INTERFACE language (this file) is separate from LEARNING / AI RESPONSE language
- * (chosen per tool). English is the default interface language; an Arabic (Darija)
- * interface is available as an option. Both dictionaries must have identical keys
- * (enforced by test/unit/i18n.test.ts).
+ * SCIORA interface strings. SCIORA is an English-only platform for an international audience:
+ * there is one dictionary (English), no language switcher and no right-to-left layout.
  */
-const STORAGE_KEY = "sciora.ui.lang";
-export const UI_LANGUAGES = ["en", "ar"];
+export const UI_LANGUAGES = ["en"];
 
 const en = {
   ui: {
     title: "SCIORA · Global Knowledge & Learning Intelligence",
     skip: "Skip to content",
-    interfaceLabel: "Interface language",
-    interfaceNames: { en: "English", ar: "العربية" },
     heroTitle: "Learn, explore and verify knowledge — with honest AI.",
-    heroText: "SCIORA is an AI learning and knowledge platform for students. It explains school topics in Moroccan Darija, Arabic, French and English, organizes what you learn, and analyzes claims against evidence — always showing what is verified and what is not.",
+    heroText: "SCIORA is an AI learning and knowledge platform for students. It explains school topics in clear English, organizes what you learn, and analyzes claims against evidence — always showing what is verified and what is not.",
     pillars: {
       learn: { title: "Learning Assistant", text: "Explanations, worked examples and graded exercises with honest feedback." },
       explore: { title: "Knowledge Explorer", text: "Answers labelled as fact, explanation, assumption or uncertainty, with transparent sources." },
       evidence: { title: "Evidence Analyzer", text: "Claims are split into parts and judged only on quoted, retrieved evidence." },
     },
     open: "Open",
-    learnIntro: "Learning Assistant: explanations of Moroccan school topics in English, Darija, Arabic or French, with exercises and feedback.",
+    learnIntro: "Learning Assistant: clear English explanations of school topics, with exercises and feedback.",
     footer: "SCIORA · Global Knowledge & Learning Intelligence · WAICY 2026 · AI Showcase",
   },
   notices: {
     demo_content: "Demo content: pre-written, not generated live by AI.",
     demo_level_fixed: "Demo content is written at a single level; the selected level does not change it.",
-    demo_language_fixed: "Demo content is available in Darija only; the selected language does not change it.",
     content_unreviewed: "This demo content has not yet been reviewed by the project owner.",
     exercises_removed: "Some exercises were removed because they failed SCIORA's automatic checks.",
     citations_removed: "SCIORA removed references that did not match any retrieved source.",
@@ -60,23 +52,20 @@ const en = {
   },
   appTagline: "Global Knowledge & Learning Intelligence",
   modeDemo: "Demo mode: content is pre-written, not generated live by AI.",
-  modeLive: "Live AI (Claude). Answers may contain mistakes — check important information.",
+  modeLive: (provider) => `Live AI (${provider}). Answers may contain mistakes — check important information. What you type is sent to ${provider} to generate answers: do not include personal information (name, address, phone number).`,
   modeUnknown: "The server mode could not be determined.",
   demoTopicsTitle: "Topics available in demo mode:",
   askLabel: "Ask about a lesson or concept",
   askPlaceholder: "e.g. What is photosynthesis?",
   levelLabel: "Level",
-  languageLabel: "Explanation language",
   submit: "Explain",
   loading: "Preparing the explanation…",
   levels: { beginner: "Beginner", school: "School", intermediate: "Intermediate", advanced: "Advanced" },
-  languages: { en: "English", darija: "Darija + Modern Standard Arabic", msa: "Modern Standard Arabic", fr: "French" },
-  subjects: { math: "Mathematics", physics: "Physics", life_earth_sciences: "Life & Earth Sciences", arabic: "Arabic", french: "French", general_science: "General Science" },
+  subjects: { math: "Mathematics", physics: "Physics", life_earth_sciences: "Life & Earth Sciences", general_science: "General Science" },
   badgeDemo: "DEMO · pre-written sample, not live AI",
   badgeLive: (model) => `AI-generated (${model}) · may contain mistakes`,
   badgeFallback: " · fallback model used",
   understood: "What SCIORA understood",
-  explanationDarija: "Explanation in Darija",
   explanationSimple: "Simple explanation",
   explanationFormal: "Formal explanation",
   steps: "Steps",
@@ -89,7 +78,7 @@ const en = {
   exercise: (i) => `Exercise ${i}`,
   hint: "Hint",
   hideHint: "Hide hint",
-  answerPlaceholderText: "Write your answer in Darija, Arabic, French or English…",
+  answerPlaceholderText: "Write your answer in English…",
   answerPlaceholderNumeric: "e.g. 13, 0.5 or 1/2",
   answerPlaceholderExpression: "e.g. 2*x + 2",
   check: "Check answer",
@@ -130,7 +119,6 @@ const en = {
     intro: "Ask any school or research question. SCIORA separates facts, explanations, assumptions and uncertainty, and tells you whether the answer is backed by sources.",
     askLabel: "What would you like to know?",
     askPlaceholder: "e.g. What is the water cycle?",
-    languageLabel: "Response language",
     ask: "Explore",
     loading: "Looking for an answer…",
     loadingTransform: "Preparing…",
@@ -138,7 +126,6 @@ const en = {
     empty: "Ask a question to get started. The answer will appear here.",
     demoTopicsTitle: "Topics available in demo mode:",
     levels: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
-    languages: { darija: "Darija", msa: "Modern Standard Arabic", fr: "French", en: "English" },
     badgeDemo: "DEMO · pre-written sample, not live AI or research",
     badgeAi: (m) => `AI-generated (${m}) · may contain mistakes`,
     verification: {
@@ -215,7 +202,6 @@ const en = {
     title: "Evidence Analyzer",
     intro: "Enter a claim you have read or heard. SCIORA splits it into parts, separates checkable facts from opinions, and judges only on evidence quoted from retrieved sources.",
     claimLabel: "Claim to analyze",
-    languageLabel: "Analysis language",
     claimPlaceholder: "e.g. Water boils at 100 degrees everywhere",
     analyze: "Analyze claim",
     loading: "Analyzing…",
@@ -286,6 +272,7 @@ const en = {
     retryAfter: (s) => (s < 60 ? `Try again in ${s} seconds.` : `Try again in ${Math.ceil(s / 60)} minutes.`),
   },
   errorCodes: {
+    english_only: "SCIORA currently supports English only. Please submit your question in English to continue.",
     invalid_request: "The request is not valid. Check your input and try again.",
     not_in_demo: "Demo mode: this topic is not available without the AI connection. Try one of the listed demo topics.",
     capacity_exceeded: "SCIORA is busy right now. Your answer was not graded. Please try again shortly.",
@@ -304,338 +291,9 @@ const en = {
   },
 };
 
-const ar = {
-  ui: {
-    title: "SCIORA · ذكاء المعرفة والتعلّم",
-    skip: "تخطى للمحتوى",
-    interfaceLabel: "لغة الواجهة",
-    interfaceNames: { en: "English", ar: "العربية" },
-    heroTitle: "تعلّم، استكشف، وتحقق من المعرفة — بذكاء اصطناعي صريح.",
-    heroText: "SCIORA منصة تعلّم ومعرفة بالذكاء الاصطناعي للتلاميذ: كتشرح الدروس بالدارجة والعربية والفرنسية والإنجليزية، كتنظم المعرفة، وكتحلل الادعاءات على أساس الأدلة — وكتبين ديما شنو موثق وشنو لا.",
-    pillars: {
-      learn: { title: "مساعد التعلم", text: "شروحات، أمثلة محلولة وتمارين مصححة مع ملاحظات صريحة." },
-      explore: { title: "مستكشف المعرفة", text: "أجوبة مصنفة: معلومة، شرح، افتراض ولا غير مؤكد، مع مصادر واضحة." },
-      evidence: { title: "محلل الأدلة", text: "الادعاءات كتقسم لأجزاء وكيتحكم عليها غير بأدلة مقتبسة من مصادر مسترجعة." },
-    },
-    open: "افتح",
-    learnIntro: "مساعد التعلم: شروحات لدروس المدرسة المغربية بالدارجة والعربية والإنجليزية ولا بالفرنسية، مع تمارين وتصحيح.",
-    footer: "SCIORA · ذكاء المعرفة والتعلّم · WAICY 2026 · عرض الذكاء الاصطناعي",
-  },
-  notices: {
-    demo_content: "محتوى تجريبي (DEMO) مكتوب مسبقاً — ماشي مولّد مباشرة بالذكاء الاصطناعي.",
-    demo_level_fixed: "المحتوى التجريبي مكتوب بمستوى واحد؛ المستوى اللي اخترتي ما كيبدلوش.",
-    demo_language_fixed: "المحتوى التجريبي متوفر غير بالدارجة؛ اللغة اللي اخترتي ما كتبدلوش.",
-    content_unreviewed: "هاد المحتوى التجريبي مازال ما تراجعش من طرف صاحب المشروع.",
-    exercises_removed: "تحيدو بعض التمارين حيت ما دازوش الفحص الأوتوماتيكي ديال SCIORA.",
-    citations_removed: "SCIORA حيد إحالات ما كانتش مطابقة لشي مصدر مسترجع.",
-    quiz_questions_removed: "تحيدو بعض الأسئلة حيت ما دازوش الفحص الأوتوماتيكي.",
-    evidence_removed: "SCIORA حيد أدلة ما كانتش مقتبسة من مصدر مسترجع.",
-    related_reading_only: "المصادر المسترجعة معروضة للقراءة فقط؛ ما تستعملاتش فهاد الجواب التجريبي.",
-    wikipedia_only: "المصادر جاية غير من ويكيبيديا: مفيدة كبداية، ولكن ماشي دليل كافي بوحدها. تحقق من مصادر أقوى (كتاب مدرسي، مرجع رسمي).",
-  },
-  noticesTitle: "تنبيهات",
-  session: {
-    title: "ملخص الحصة",
-    gapsTitle: "شنو خاصك تخدم عليه",
-    noGaps: "ما تلقاتش ثغرات محددة فهاد السلسلة.",
-    uncertainNote: "الأجوبة اللي التصحيح ديالها غير مؤكد ما كتستعملش فالاقتراح.",
-    nextTitle: "الخطوة الجاية المقترحة",
-    next: {
-      next_level: "كل الأجوبة المصححة كانت صحيحة. نتا واجد تجرب المستوى الجاي.",
-      retry_same: "تقدم مزيان. تمرن على سلسلة جديدة فنفس المستوى باش تثبت.",
-      review_first: "عاود قرا الشرح والمثال المحلول، ومن بعد جرب سلسلة جديدة فنفس المستوى.",
-    },
-    nextLevelBtn: (lvl) => `جرب المستوى «${lvl}»`,
-    retryBtn: "تمارين جداد، نفس المستوى",
-    exploreBtn: "استكشف هاد الموضوع",
-  },
-  unreadable: {
-    numeric: "ما قدرتش نقرا الجواب بحال عدد. كتب غير العدد، مثلا: 0.5 ولا 1/2 ولا 13",
-    expression: "ما قدرتش نقرا التعبير. كتبو بحال: 2*x + 2 ولا 2(x+1)",
-  },
-  appTagline: "ذكاء المعرفة والتعلّم · قراية بالدارجة",
-  modeDemo: "وضع العرض التجريبي (DEMO): المحتوى مكتوب مسبقاً، ماشي مولّد مباشرة بالذكاء الاصطناعي.",
-  modeLive: "ذكاء اصطناعي حقيقي (Claude). الأجوبة ممكن يكون فيها غلط، تحقق من المعلومات المهمة.",
-  modeUnknown: "ما قدرناش نعرفو الوضع ديال الخادم.",
-  demoTopicsTitle: "المواضيع المتوفرة فالعرض التجريبي:",
-  askLabel: "سولني على درس ولا مفهوم",
-  askPlaceholder: "مثلا: شنو هو التركيب الضوئي؟",
-  levelLabel: "المستوى",
-  languageLabel: "لغة الشرح الرسمي",
-  submit: "شرح ليا",
-  loading: "كنحضر الشرح…",
-  levels: { beginner: "مبتدئ", school: "مدرسي", intermediate: "متوسط", advanced: "متقدم" },
-  languages: { en: "English", darija: "الدارجة + العربية الفصحى", msa: "العربية الفصحى", fr: "Français" },
-  subjects: { math: "الرياضيات", physics: "الفيزياء", life_earth_sciences: "علوم الحياة والأرض", arabic: "العربية", french: "الفرنسية", general_science: "علوم عامة" },
-  badgeDemo: "DEMO · محتوى تجريبي مكتوب مسبقاً، ماشي ذكاء اصطناعي مباشر",
-  badgeLive: (model) => `مولّد بالذكاء الاصطناعي (${model}) · ممكن يكون فيه غلط`,
-  badgeFallback: " · تم استعمال نموذج احتياطي",
-  understood: "شنو فهمت من السؤال",
-  explanationDarija: "الشرح بالدارجة",
-  explanationSimple: "شرح مبسط",
-  explanationFormal: "الشرح الرسمي",
-  steps: "الخطوات",
-  example: "مثال محلول",
-  showSolution: "بين الحل",
-  hideSolution: "خبي الحل",
-  caveats: "ملاحظات وحدود",
-  confidence: { high: "ثقة عالية", medium: "ثقة متوسطة", low: "ثقة ضعيفة" },
-  exercises: "تمارين",
-  exercise: (i) => `التمرين ${i}`,
-  hint: "تلميح",
-  hideHint: "خبي التلميح",
-  answerPlaceholderText: "كتب الجواب ديالك بالدارجة، بالعربية ولا بالفرنسية…",
-  answerPlaceholderNumeric: "مثلا: 13 ولا 0.5 ولا 1/2",
-  answerPlaceholderExpression: "مثلا: 2*x + 2",
-  check: "صحح الجواب",
-  checking: "كنصحح…",
-  oneAttempt: "عندك محاولة وحدة لكل تمرين.",
-  verdicts: { correct: "صحيح", partially_correct: "صحيح جزئياً", incorrect: "ماشي صحيح", uncertain: "التصحيح غير مؤكد" },
-  score: (s) => `النقطة: ${Math.round(s * 100)}%`,
-  correctAnswer: "الجواب الصحيح",
-  explanation: "الشرح",
-  criteria: "المعايير",
-  criterionState: { met: "متوفر", partial: "جزئياً", not_met: "ناقص", unclear: "ما واضحش" },
-  misconception: "فكرة خاطئة شائعة",
-  uncertainHelp: "SCIORA ما متأكدش من هاد التصحيح. قارن الجواب ديالك مع الجواب الصحيح، وسول الأستاذ ديالك إلا بقيتي شاك. هاد النتيجة ما كتحسبش فالتقدير ديال المستوى.",
-  gradedByRules: "تصحيح بالقواعد (بلا ذكاء اصطناعي)",
-  gradedByAi: (m) => `تصحيح بالذكاء الاصطناعي (${m})`,
-  gradedByDemo: "تصحيح تجريبي (DEMO): محدود، كيقلب غير على كلمات معينة",
-  replayed: "هاد التمرين تصحح من قبل. هادي هي النتيجة الأصلية.",
-  estimateTitle: "المستوى التقديري",
-  estimateNone: "مازال ما كاين حتى جواب مصحح. التقدير كيبان من بعد ما تجاوب على التمارين.",
-  estimateLine: (lvl, n, conf) => `${lvl} · مبني على ${n} ${n === 1 ? "جواب" : "أجوبة"} · ${conf}`,
-  estimateConfidence: { low: "ثقة ضعيفة", medium: "ثقة متوسطة", higher: "ثقة أحسن" },
-  estimateNote: "هذا تقدير أولي مبني غير على الأجوبة ديالك هنا. ماشي دليل على الإتقان، وما كيقيسش الذكاء. كيتخزن غير فهاد المتصفح.",
-  estimateSuggest: (lvl) => `SCIORA كيقترح المستوى: ${lvl}. نتا اللي كتختار.`,
-  clearData: "مسح المعطيات ديالي",
-  clearConfirm: "واش متأكد بغيتي تمسح التقدير ديال المستوى من هاد المتصفح؟",
-  cleared: "تمسحات المعطيات.",
-  responsibleTitle: "حدود SCIORA والاستعمال المسؤول",
-  responsible: [
-    "الذكاء الاصطناعي ممكن يغلط. تحقق من المعلومات المهمة مع الكتاب المدرسي ولا الأستاذ.",
-    "الهدف هو الفهم، ماشي النقل. حاول تجاوب بوحدك قبل ما تشوف الحل.",
-    "التصحيح ممكن يكون غير مؤكد. فهاد الحالة SCIORA كيقولها بوضوح.",
-    "ما كنطلبوش منك سمية ولا إيميل. التقدم كيتخزن غير فالمتصفح ديالك.",
-  ],
-  phaseNote: "متوفر دابا: مساعد التعلم، مستكشف المعرفة، محلل الأدلة وصفحة التقدم. البحث الحقيقي فالمصادر مازال ما مفعلش، لذلك ما كاين حتى جواب موثق بمصادر.",
-  tabs: { learn: "مساعد التعلم", explore: "مستكشف المعرفة", evidence: "محلل الأدلة", cards: "بطاقاتي", progress: "التقدم ديالي" },
-  k: {
-    title: "مستكشف المعرفة",
-    intro: "سول على أي موضوع دراسي ولا بحثي. SCIORA كيفرق بين المعلومات، الشروحات، الافتراضات والأشياء غير المؤكدة، وكيقول ليك واش الجواب موثق بمصادر ولا لا.",
-    askLabel: "شنو بغيتي تعرف؟",
-    askPlaceholder: "مثلا: شنو هي دورة الماء؟ / What is photosynthesis? / chno howa tarkib daw2i",
-    languageLabel: "لغة الجواب",
-    ask: "استكشف",
-    loading: "كنقلب على الجواب…",
-    loadingTransform: "كنحضر…",
-    tooShort: "السؤال قصير بزاف.",
-    empty: "اكتب سؤال باش تبدا. الجواب غادي يبان هنا.",
-    demoTopicsTitle: "المواضيع المتوفرة فالعرض التجريبي:",
-    levels: { beginner: "مبتدئ", intermediate: "متوسط", advanced: "متقدم" },
-    languages: { darija: "الدارجة", msa: "العربية الفصحى", fr: "Français", en: "English" },
-    badgeDemo: "DEMO · محتوى تجريبي مكتوب مسبقاً، ماشي ذكاء اصطناعي وماشي بحث حقيقي",
-    badgeAi: (m) => `مولّد بالذكاء الاصطناعي (${m}) · ممكن يكون فيه غلط`,
-    verification: {
-      demo: "محتوى تجريبي (DEMO) · ماشي موثق بمصادر",
-      not_source_verified: "هاد الجواب ماشي موثق بمصادر",
-      source_backed: "مدعوم بمصادر مسترجعة",
-    },
-    verificationDetail: {
-      demo: () => "هاد الجواب مكتوب مسبقاً للعرض التجريبي. ما تم حتى بحث فالمصادر، وماشي جواب مولّد مباشرة.",
-      not_source_verified: () => "ما تم استرجاع حتى مصدر حقيقي لهاد الجواب. تعامل معاه بحال شرح، وتحقق من المعلومات المهمة فالكتاب المدرسي ولا مع الأستاذ.",
-      source_backed: (n) => `بعض أجزاء الجواب مربوطة بـ ${n} ديال المصادر اللي استرجعها SCIORA. هادشي ما كيعنيش بالضرورة أن كل شي صحيح؛ راجع المصادر بنفسك.`,
-    },
-    retrievalNote: {
-      disabled: "البحث فالمصادر ما مفعلش فهاد النسخة.",
-      failed: "البحث فالمصادر فشل هاد المرة.",
-      timeout: "البحث فالمصادر طول بزاف وتوقف.",
-      no_results: "البحث فالمصادر ما لقى حتى نتيجة.",
-    },
-    uncitedFacts: (n) => `${n} ديال المعلومات فهاد الجواب ماشي مربوطة بحتى مصدر.`,
-    removedCitations: (n) => `SCIORA حيد ${n} ديال الإحالات اللي ما كانتش مطابقة لشي مصدر مسترجع.`,
-    segmentsTitle: "الجواب بالتفصيل",
-    segmentsHelp: "كل جزء عندو تصنيف: معلومة، شرح، افتراض، ولا غير مؤكد.",
-    kinds: { fact: "معلومة", explanation: "شرح", assumption: "افتراض", uncertainty: "غير مؤكد" },
-    keyConcepts: "المفاهيم الأساسية",
-    sourcesTitle: "المصادر",
-    retrievedAt: "تاريخ الاسترجاع:",
-    noSourcesDemo: "ما كاين حتى مصدر: هادا محتوى تجريبي.",
-    noSourcesLive: "ما كاين حتى مصدر مسترجع لهاد الجواب. SCIORA ما كيخترعش المراجع.",
-    relatedReadingTitle: "قراءات مرتبطة",
-    relatedReadingHelp: "مسترجعة مباشرة من ويكيبيديا. هاد المقالات ما تستعملاتش فكتابة هاد الجواب التجريبي.",
-    lastModified: "آخر تعديل:",
-    wikipediaCaution: "ويكيبيديا موسوعة مفتوحة كيعدلها أي واحد: مزيانة كبداية، ولكن ماشي دليل كافي بوحدها.",
-    connectionsTitle: "مفاهيم مرتبطة",
-    connectionsHelp: "هادو اقتراحات من الذكاء الاصطناعي، ماشي حقائق مؤكدة.",
-    connectionsHelpDemo: "هادو اقتراحات تجريبية مكتوبة مسبقاً، ماشي حقائق مؤكدة.",
-    suggestion: "اقتراح",
-    checkClaim: "تحقق من هاد الادعاء ←",
-    exploreConcept: "استكشف هاد المفهوم",
-    learningTitle: "وضع التعلم",
-    learningHelp: "حول هاد الجواب لشرح أبسط، لأمثلة، ولا لاختبار قصير.",
-    modes: { simplify: "بسط ليا", examples: "عطيني أمثلة", quiz: "اختبار قصير" },
-    selfCheckNote: "تمرين ذاتي: كتصححو بوحدك هنا فالمتصفح. ما كيتصيفطش للخادم، ما كيتسجلش، وما كيأثرش على التقدير ديال المستوى.",
-    checkSelf: "شوف الجواب",
-    selfRight: "صحيح!",
-    selfWrong: "ماشي هادا. قرا الشرح.",
-    saveTitle: "احفظ كبطاقة معرفة",
-    saveHelp: "البطاقة كتتخزن غير فهاد المتصفح، مع الحالة ديال التوثيق ديالها.",
-    collectionLabel: "المجموعة",
-    defaultCollection: "عام",
-    saveCard: "احفظ البطاقة",
-    saved: "تحفظات البطاقة فـ «بطاقاتي».",
-    saveErrors: { limit: "وصلتي للحد الأقصى ديال البطاقات (200). مسح شي بطاقات قديمة.", invalid: "ما قدرناش نحفظو هاد البطاقة.", storage: "التخزين فالمتصفح ما خدامش ولا عامر." },
-    cardsTitle: "بطاقات المعرفة ديالي",
-    cardsIntro: "البطاقات كتتخزن غير فهاد المتصفح. ما كتتصيفطش لحتى خادم، وممكن تمشي إلا مسحتي المعطيات ديال المتصفح.",
-    searchPlaceholder: "قلب فالبطاقات…",
-    allCollections: "كل المجموعات",
-    collection: "المجموعة",
-    exportCards: "صدّر البطاقات (JSON)",
-    cardCount: (n, max) => `${n} / ${max} بطاقة`,
-    noCards: "مازال ما عندك حتى بطاقة. احفظ جواب من مستكشف المعرفة.",
-    noMatches: "ما كاينة حتى بطاقة كتطابق البحث.",
-    cardStatus: { demo: "تجريبي · ماشي موثق", not_source_verified: "ماشي موثق بمصادر", sources_attached: "فيها مصادر مسترجعة" },
-    checkedBadge: "راجعتها بنفسي",
-    checkMine: "علم: راجعتها بنفسي",
-    uncheckMine: "حيد العلامة",
-    moveCard: "بدل المجموعة",
-    movePrompt: "سمية المجموعة الجديدة:",
-    deleteCard: "مسح",
-    deleteConfirm: "واش متأكد بغيتي تمسح هاد البطاقة؟",
-    cardNoSources: "ما فيهاش مصادر: الجواب ماشي موثق.",
-    cardNoSourcesDemo: "محتوى تجريبي بلا مصادر.",
-  },
-  e: {
-    title: "محلل الأدلة",
-    intro: "كتب ادعاء ولا معلومة سمعتيها. SCIORA كيقسمها لأجزاء، كيفرق بين المعلومات اللي كيتحقق منها والآراء، وكيحكم غير على أساس أدلة مقتبسة من مصادر مسترجعة.",
-    claimLabel: "الادعاء اللي بغيتي تحلل",
-    languageLabel: "لغة التحليل",
-    claimPlaceholder: "مثلا: الما كيغلي ف 100 درجة فكل بلاصة / Water boils at 100 degrees everywhere",
-    analyze: "حلل الادعاء",
-    loading: "كنحلل…",
-    tooShort: "الادعاء قصير بزاف.",
-    empty: "كتب ادعاء باش تبدا. التحليل غادي يبان هنا.",
-    demoClaimsTitle: "الادعاءات المتوفرة فالعرض التجريبي:",
-    badgeDemo: "DEMO · تحليل تجريبي مكتوب مسبقاً، بلا مصادر",
-    badgeAi: (m) => `تحليل بالذكاء الاصطناعي (${m}) · الحكم من SCIORA على أساس الأدلة`,
-    basisDemo: "تحليل تجريبي (DEMO) · ما تم استرجاع حتى مصدر",
-    basisNone: "ما كاين حتى دليل مسترجع",
-    basisSources: (n) => `الحكم مبني على ${n} ديال الأدلة المقتبسة من مصادر مسترجعة`,
-    basisNoneDetail: "SCIORA كيحكم غير على أساس نصوص مقتبسة من مصادر مسترجعة فعلا. ما كاينش هاد المصادر، لذلك المعلومات اللي كيتحقق منها كتاخد «أدلة غير كافية». المعرفة العامة ديال الذكاء الاصطناعي ماشي دليل.",
-    basisSourcesDetail: "كل دليل مقتبس حرفيا من مصدر مسترجع وتأكد SCIORA بلي الاقتباس كاين فالمصدر. هادشي ما كيعنيش بالضرورة أن المصدر صحيح؛ راجعو بنفسك.",
-    removed: (n) => `SCIORA حيد ${n} ديال الأدلة اللي ما كانتش مقتبسة من مصدر مسترجع.`,
-    overallTitle: "الحكم العام",
-    verdicts: { supported: "مدعوم بالأدلة", partially_supported: "مدعوم جزئياً", contradicted: "الأدلة كتناقضو", mixed: "أدلة متضاربة", insufficient_evidence: "أدلة غير كافية", not_checkable: "ما يمكنش يتحقق منو" },
-    overallHelp: {
-      supported: "الأدلة المسترجعة كتدعم كل الأجزاء اللي كيتحقق منها.",
-      partially_supported: "الأدلة المسترجعة كتدعم بعض الأجزاء؛ الأجزاء الأخرى ما عندهاش أدلة. الادعاء كامل ماشي متحقق منو.",
-      contradicted: "الأدلة المسترجعة كتناقض كل الأجزاء اللي كيتحقق منها.",
-      mixed: "كاينة أدلة كتدعم وأدلة كتناقض. شوف كل جزء بوحدو.",
-      insufficient_evidence: "ما كاينش أدلة كافية باش نحكمو على الادعاء كامل. هادشي ما كيعنيش أنه غالط ولا صحيح.",
-      not_checkable: "هاد الادعاء رأي، توقع، ولا حكم قيمي؛ ما كيتحكمش عليه بالأدلة.",
-    },
-    types: { factual: "معلومة قابلة للتحقق", opinion: "رأي", prediction: "توقع", value_judgment: "حكم قيمي", ambiguous: "غامض" },
-    stances: { supports: "كيدعم", contradicts: "كيناقض", context: "سياق" },
-    evidenceTitle: "الأدلة",
-    noEvidence: "ما كاين حتى دليل مقتبس من مصدر مسترجع لهاد الجزء.",
-    notCheckableHelp: {
-      opinion: "هادا رأي شخصي؛ ما كيتحكمش عليه بصحيح ولا غالط.",
-      prediction: "هادا توقع على المستقبل؛ ما يمكنش يتحقق منو دابا.",
-      value_judgment: "هادا حكم قيمي (مزيان/خايب)؛ ما كيتحسمش بالأدلة بوحدها.",
-      ambiguous: "هاد الجزء غامض؛ خاصو توضيح قبل ما يتحقق منو.",
-      factual: "ما كاين حتى دليل.",
-    },
-    missingTitle: "شنو الأدلة اللي خاصة باش نتحققو؟",
-    backgroundAi: "خلفية من الذكاء الاصطناعي · ماشي دليل",
-    backgroundDemo: "خلفية تجريبية مكتوبة مسبقاً · ماشي دليل",
-    passagesTitle: "مقاطع للمراجعة · تطابق كلمات، ماشي دليل",
-    passagesHelp: "جمل من المصادر المسترجعة فيها نفس الكلمات المفتاحية ديال هاد الجزء. قراها بنفسك — ما كتأثرش على الحكم.",
-    matchedTerms: (t) => `كلمات مشتركة: ${t}`,
-    relatedTitle: "مصادر مرتبطة",
-    relatedHelp: "تسترجعات مباشرة، ولكن ما تحللاتش فالوضع التجريبي — ماشي أدلة على هاد الحكم.",
-  },
-  p: {
-    title: "التقدم ديالي",
-    intro: "هنا كتشوف غير المعطيات الحقيقية المخزنة فهاد المتصفح: الأجوبة المصححة فمساعد التعلم والبطاقات اللي حفظتي.",
-    statTopics: "مواضيع",
-    statGraded: "أجوبة مصححة",
-    statCorrect: "أجوبة صحيحة",
-    statCards: "بطاقات محفوظة",
-    empty: "مازال ما كاين حتى تقدم مسجل. جاوب على تمارين فمساعد التعلم باش يبان التقدم ديالك هنا.",
-    needsReview: "خاصو مراجعة",
-    reviewTitle: "مواضيع خاصها مراجعة",
-    reviewHelp: "هاد الاقتراحات مبنية على قواعد بسيطة وعلى الأجوبة ديالك هنا فقط. نتا اللي كتقرر.",
-    recommendations: {
-      review: (lvl) => `اقتراح: راجع هاد الموضوع فالمستوى «${lvl}» وجرب تمارين جداد.`,
-      practice_more: (lvl) => `اقتراح: جاوب على تمارين أخرى باش يولي التقدير أوضح (المستوى الحالي: «${lvl}»).`,
-      level_up: (lvl) => `اقتراح: كتبان مزيان فهاد الموضوع. جرب المستوى «${lvl}».`,
-      keep: () => "اقتراح: مستوى متقدم. كمل التمرن باش تحافظ عليه.",
-    },
-    practiceButton: "تمرن على هاد الموضوع",
-  },
-  errors: {
-    network: "مشكل فالاتصال بالخادم. جرب مرة أخرى.",
-    generic: "وقع مشكل. جرب مرة أخرى.",
-    expired: "هاد التمارين سالاو. طلب شرح جديد باش تاخد تمارين جداد.",
-    retryAfter: (s) => (s < 60 ? `عاود من بعد ${s} ثانية.` : `عاود من بعد ${Math.ceil(s / 60)} دقيقة.`),
-  },
-  errorCodes: {
-    invalid_request: "الطلب ماشي صحيح. تأكد من السؤال وعاود.",
-    not_in_demo: "وضع DEMO: هاد الموضوع ما متوفرش بلا الاتصال بالذكاء الاصطناعي. جرب واحد من المواضيع المتوفرة فالعرض التجريبي.",
-    capacity_exceeded: "SCIORA مشغول دابا. الجواب ديالك ما تصححش. عاود من بعد شوية.",
-    daily_limit: "SCIORA وصل للحد اليومي ديال استعمال الذكاء الاصطناعي. عاود غدا.",
-    rate_limited: "بزاف ديال الطلبات فوقت قصير. تسنى شوية وعاود.",
-    refusal: "الذكاء الاصطناعي رفض هاد الطلب. جرب تكتب السؤال بطريقة أخرى.",
-    unavailable: "خدمة الذكاء الاصطناعي ما متوفراش دابا. الجواب ما تصححش؛ تقدر تعاود بنفس الجواب.",
-    misconfigured: "خدمة الذكاء الاصطناعي ما مضبوطاش مزيان. خبر المسؤول على SCIORA.",
-    bad_output: "الذكاء الاصطناعي رجع جواب ما صالحش. عاود مرة أخرى.",
-    invalid_token: "التمرين ماشي صالح. طلب شرح جديد.",
-    token_expired: "هاد التمارين سالاو. طلب شرح جديد باش تاخد تمارين جداد.",
-    unknown_exercise: "هاد التمرين ما كاينش.",
-    invalid_choice: "ختار واحد من الاقتراحات.",
-    answer_locked: "التصحيح فشل قبل. تقدر تعاود غير بنفس الجواب.",
-    payload_too_large: "النص طويل بزاف.",
-  },
-};
+export const DICTIONARIES = { en };
 
-export const DICTIONARIES = { en, ar };
-
-function storedLanguage() {
-  try {
-    const v = globalThis.localStorage?.getItem(STORAGE_KEY);
-    return UI_LANGUAGES.includes(v) ? v : "en";
-  } catch {
-    return "en";
-  }
-}
-
-/** Interface language for this page load (default English). */
-export const UI_LANG = storedLanguage();
-export const UI_DIR = UI_LANG === "ar" ? "rtl" : "ltr";
-export const T = DICTIONARIES[UI_LANG];
-
-/**
- * Default AI/content language, which follows the interface language: English interface → English
- * content; Arabic interface → Darija. Students can still pick any language in each form.
- */
-export function defaultContentLanguage(uiLang) {
-  return uiLang === "ar" ? "darija" : "en";
-}
-export const DEFAULT_CONTENT_LANGUAGE = defaultContentLanguage(UI_LANG);
-
-/** Title of a demo topic/claim for the current interface: English when available in the English UI. */
-export function demoTitle(original, english, uiLang = UI_LANG) {
-  return uiLang === "en" && english ? english : original;
-}
-
-/** Persists the interface language; the caller reloads the page to apply it. */
-export function setUiLanguage(lang) {
-  if (!UI_LANGUAGES.includes(lang)) return false;
-  try {
-    globalThis.localStorage?.setItem(STORAGE_KEY, lang);
-    return true;
-  } catch {
-    return false;
-  }
-}
+/** English-only: fixed interface language and left-to-right direction. */
+export const UI_LANG = "en";
+export const UI_DIR = "ltr";
+export const T = en;

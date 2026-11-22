@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { T, UI_LANG, UI_DIR, UI_LANGUAGES, DEFAULT_CONTENT_LANGUAGE, demoTitle, setUiLanguage } from "./i18n.js";
+import { T, UI_LANG, UI_DIR } from "./i18n.js";
 import { noticesBox } from "./notices.js";
 import { summarizeSession, nextLevel } from "./session.js";
 import { el, clear, paragraphs } from "./render.js";
@@ -46,7 +46,8 @@ async function loadHealth() {
   state.mode = r.data.mode;
   banner.className = `mode-banner ${r.data.simulated ? "mode-demo" : "mode-live"}`;
   banner.dataset.mode = r.data.mode;
-  banner.textContent = r.data.simulated ? T.modeDemo : T.modeLive;
+  // Provider label is a brand name (not translated). Older servers without "provider" were Claude-only.
+  banner.textContent = r.data.simulated ? T.modeDemo : T.modeLive(r.data.provider === "groq" ? "Groq" : "Claude");
 
   const topics = $("demo-topics");
   clear(topics);
@@ -61,14 +62,14 @@ async function loadHealth() {
             type: "button",
             class: "chip",
             onclick: () => {
-              $("question").value = demoTitle(t.topic, t.topicEn);
+              $("question").value = t.topic;
               $("question").focus();
             },
           },
           // Interface label (subject) and content (topic) are isolated so mixed scripts keep their order.
           el("span", { class: "chip-label", text: T.subjects[t.subject] ?? t.subject }),
           " · ",
-          el("bdi", { text: demoTitle(t.topic, t.topicEn) }),
+          el("bdi", { text: t.topic }),
         ),
       );
     }
@@ -83,7 +84,7 @@ async function onAsk(ev) {
   ev.preventDefault();
   const question = $("question").value.trim();
   const level = $("level").value;
-  const language = $("language").value;
+  const language = "en"; // SCIORA is English-only
   const out = $("lesson");
   if (question.length < 3) {
     showError(out, T.k.tooShort);
@@ -132,8 +133,7 @@ function renderLesson(lesson) {
     ),
   );
   if (!u.isEducational) return;
-  // This field is a simple explanation in Darija, except for English lessons (plain English).
-  out.append(card(state.language === "en" ? T.explanationSimple : T.explanationDarija, ...paragraphs(lesson.explanationDarija)));
+  out.append(card(T.explanationSimple, ...paragraphs(lesson.explanationSimple)));
   out.append(card(T.explanationFormal, ...paragraphs(lesson.explanationFormal)));
   out.append(card(T.steps, el("ol", { dir: "auto", class: "content-list" }, ...lesson.steps.map((s) => el("li", { text: s })))));
 
@@ -376,18 +376,13 @@ function onClearData() {
 
 // ------------------------------------------------------------------ init
 
-function initInterfaceLanguage() {
+/** English-only page setup (no language switcher; left-to-right). */
+function initPage() {
   document.documentElement.lang = UI_LANG;
   document.documentElement.dir = UI_DIR;
   document.title = T.ui.title;
   $("skip-link").textContent = T.ui.skip;
   $("footer").textContent = T.ui.footer;
-  $("ui-lang-label").textContent = T.ui.interfaceLabel;
-  const sel = $("ui-lang");
-  for (const l of UI_LANGUAGES) sel.append(el("option", { value: l, text: T.ui.interfaceNames[l], selected: l === UI_LANG, lang: l }));
-  sel.addEventListener("change", () => {
-    if (setUiLanguage(sel.value)) window.location.reload();
-  });
   $("hero-title").textContent = T.ui.heroTitle;
   $("hero-text").textContent = T.ui.heroText;
   for (const b of document.querySelectorAll(".pillar")) {
@@ -408,11 +403,8 @@ function initStatic() {
   $("ask-label").textContent = T.askLabel;
   $("question").placeholder = T.askPlaceholder;
   $("level-label").textContent = T.levelLabel;
-  $("language-label").textContent = T.languageLabel;
   $("ask-btn").textContent = T.submit;
   for (const [v, label] of Object.entries(T.levels)) $("level").append(el("option", { value: v, text: label, selected: v === "school" }));
-  for (const [v, label] of Object.entries(T.languages)) $("language").append(el("option", { value: v, text: label }));
-  $("language").value = DEFAULT_CONTENT_LANGUAGE;
   $("estimate-title").textContent = T.estimateTitle;
   $("clear-btn").textContent = T.clearData;
   $("responsible-title").textContent = T.responsibleTitle;
@@ -429,10 +421,9 @@ const explorer = createExplorer({
   cards: cardStore,
   onCardSaved: () => cardsPanel.render(),
   // Knowledge → Evidence: check an individual fact from an answer in the Evidence Analyzer.
-  onCheckClaim: (text, language) => {
+  onCheckClaim: (text) => {
     selectTab("evidence", true);
     $("e-claim").value = text.slice(0, 1000);
-    if ([...$("e-language").options].some((o) => o.value === language)) $("e-language").value = language;
     $("e-form").requestSubmit();
   },
 });
@@ -470,12 +461,9 @@ function initTabs() {
     tab.addEventListener("click", () => selectTab(t));
     tab.addEventListener("keydown", (ev) => {
       const i = TABS.indexOf(t);
-      // Direction-aware: the "next" arrow is ArrowRight in LTR and ArrowLeft in RTL.
-      const nextKey = UI_DIR === "rtl" ? "ArrowLeft" : "ArrowRight";
-      const prevKey = UI_DIR === "rtl" ? "ArrowRight" : "ArrowLeft";
-      // Vertical sidebar: ArrowDown / ArrowUp also move between tabs.
-      if (ev.key === nextKey || ev.key === "ArrowDown") selectTab(TABS[(i + 1) % TABS.length], true);
-      else if (ev.key === prevKey || ev.key === "ArrowUp") selectTab(TABS[(i + TABS.length - 1) % TABS.length], true);
+      // Left-to-right layout; vertical sidebar: ArrowDown / ArrowUp also move between tabs.
+      if (ev.key === "ArrowRight" || ev.key === "ArrowDown") selectTab(TABS[(i + 1) % TABS.length], true);
+      else if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") selectTab(TABS[(i + TABS.length - 1) % TABS.length], true);
       else if (ev.key === "Home") selectTab(TABS[0], true);
       else if (ev.key === "End") selectTab(TABS[TABS.length - 1], true);
       else return;
@@ -486,7 +474,7 @@ function initTabs() {
 }
 
 initStatic();
-initInterfaceLanguage();
+initPage();
 renderEstimate();
 $("ask-form").addEventListener("submit", onAsk);
 $("clear-btn").addEventListener("click", onClearData);

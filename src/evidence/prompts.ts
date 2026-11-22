@@ -1,12 +1,13 @@
 import { neutralizeForPrompt } from "../knowledge/prompts.ts";
+import { ENGLISH_ONLY_RULE } from "../ai/prompts.ts";
 import type { PublicSource } from "../knowledge/schemas.ts";
 import type { EvidenceRequest } from "./schemas.ts";
 
 /** Evidence Analyzer prompts. FIXED on the server; never sent to the browser. */
 
-export const EVIDENCE_SYSTEM_PROMPT = `You are SCIORA's Evidence Analyzer, helping Moroccan students think critically about claims.
-The claim may be written in Moroccan Darija (Arabic script or Latin letters/"Arabizi"), Modern Standard Arabic, French or English.
-Write all your text in the requested language ("darija" = Moroccan Darija in Arabic script, "msa" = Modern Standard Arabic, "fr" = French, "en" = English).
+export const EVIDENCE_SYSTEM_PROMPT = `You are SCIORA's Evidence Analyzer, an English-only assistant helping students around the world think critically about claims.
+
+${ENGLISH_ONLY_RULE}
 
 Tasks:
 1. Restate the claim neutrally. If it cannot be analyzed (empty, nonsense, harmful), set understood.isAnalyzable=false and explain in understood.clarification.
@@ -33,5 +34,5 @@ export function evidenceUserMessage(req: EvidenceRequest, sources: PublicSource[
         .map((s) => `<source id="${s.id}">\nTitle: ${neutralizeForPrompt(s.title, 300)}\nExcerpt: ${neutralizeForPrompt(s.excerpt, 1500)}\n</source>`)
         .join("\n")
     : "NO SOURCES WERE RETRIEVED. Every evidence list must be empty.";
-  return [`Requested language: ${req.language}`, `<claim>`, neutralizeForPrompt(req.claim, 1000), `</claim>`, `<sources>`, block, `</sources>`].join("\n");
+  return [`Language: English (${req.language})`, `<claim>`, neutralizeForPrompt(req.claim, 1000), `</claim>`, `<sources>`, block, `</sources>`].join("\n");
 }

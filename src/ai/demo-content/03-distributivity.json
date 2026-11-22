@@ -2,133 +2,18 @@
   "id": "distributivity",
   "reviewed": false,
   "matchKeywords": [
-    "النشر",
-    "ننشر",
-    "نشر",
-    "التوزيعية",
-    "خاصية التوزيع",
-    "نشر تعبير",
-    "développer",
-    "developper",
-    "développement",
-    "distributivité",
-    "distributivite",
     "distributive",
-    "expand"
+    "expand",
+    "distributive property"
   ],
   "lesson": {
-    "understood": {
-      "subject": "math",
-      "topic": "النشر والخاصية التوزيعية (La distributivité)",
-      "isEducational": true,
-      "clarification": null
-    },
-    "explanationDarija": "النشر (développer) معناه نحيدو القوسين. القاعدة سهلة: العدد اللي برا القوس كنضربوه فكل حد داخل القوس. مثلا: 3(x + 2) = 3×x + 3×2 = 3x + 6. وإلا كان العدد سالب، رد البال للإشارات: −2(x − 5) = −2x + 10، حيت ناقص ضرب ناقص كيعطي زائد. وإلا كانو جوج قوسين: (a + b)(c + d) = ac + ad + bc + bd، يعني كل حد من القوس الأول كيضرب فكل حد من القوس الثاني.",
-    "explanationFormal": "الخاصية التوزيعية لعملية الضرب بالنسبة للجمع: لكل أعداد k وa وb لدينا k(a + b) = ka + kb وk(a − b) = ka − kb. نشر تعبير جبري يعني كتابته على شكل مجموع بإزالة الأقواس. كما أن (a + b)(c + d) = ac + ad + bc + bd. العملية العكسية للنشر هي التعميل (la factorisation).",
-    "steps": [
-      "حدد العدد (أو التعبير) اللي برا القوس.",
-      "ضربو فالحد الأول داخل القوس.",
-      "ضربو فالحد الثاني داخل القوس، ورد البال للإشارة.",
-      "جمع الحدود المتشابهة إلا كانت."
-    ],
-    "example": {
-      "problem": "نشر وبسط: 4(2x − 3) + 5",
-      "solution": "4(2x − 3) + 5 = 4×2x − 4×3 + 5 = 8x − 12 + 5 = 8x − 7."
-    },
-    "exercises": [
-      {
-        "id": "q1",
-        "type": "mcq",
-        "prompt": "شنو هي النتيجة ديال نشر 5(x + 3)؟",
-        "hint": "ضرب 5 فـ x، ومن بعد ضرب 5 فـ 3.",
-        "explanation": "5(x + 3) = 5x + 15، حيت 5 كتضرب فكل حد داخل القوس.",
-        "choices": [
-          {
-            "id": "a",
-            "text": "5x + 3"
-          },
-          {
-            "id": "b",
-            "text": "5x + 15"
-          },
-          {
-            "id": "c",
-            "text": "x + 15"
-          },
-          {
-            "id": "d",
-            "text": "8x"
-          }
-        ],
-        "correctChoiceId": "b"
-      },
-      {
-        "id": "q2",
-        "type": "expression",
-        "prompt": "نشر وبسط: 2(x + 3) − x",
-        "hint": "نشر 2(x + 3) أولا، ومن بعد نقص x.",
-        "explanation": "2(x + 3) − x = 2x + 6 − x = x + 6.",
-        "answer": "x + 6",
-        "variables": [
-          "x"
-        ]
-      },
-      {
-        "id": "q3",
-        "type": "short_text",
-        "prompt": "شرح بالهضرة ديالك كيفاش كننشرو تعبير بحال k(a + b).",
-        "hint": "شنو كندير بالعدد اللي برا القوس؟",
-        "explanation": "كنضربو العدد اللي برا القوس فكل حد داخل القوس: k(a + b) = ka + kb.",
-        "rubric": {
-          "criteria": [
-            {
-              "id": "multiply_each",
-              "description": "العدد اللي برا القوس كيضرب فكل حد داخل القوس",
-              "weight": 1,
-              "required": true
-            }
-          ],
-          "acceptedExamples": [
-            "كنضربو العدد اللي برا فكل واحد من اللي داخل القوس",
-            "نضرب العامل الموجود خارج القوس في كل حد من حدود القوس",
-            "On multiplie le facteur par chaque terme de la parenthèse"
-          ],
-          "misconceptions": [
-            {
-              "id": "first_term_only",
-              "description": "الضرب غير فالحد الأول داخل القوس"
-            }
-          ],
-          "languageSensitive": false
-        },
-        "modelAnswer": "كنضربو العدد اللي برا القوس فكل حد من الحدود اللي داخل القوس، وكنجمعو النتائج: k(a + b) = ka + kb."
-      }
-    ],
-    "confidence": "high",
-    "caveats": []
-  },
-  "demoKeywords": {
-    "q3": {
-      "multiply_each": [
-        "فكل",
-        "في كل",
-        "كل حد",
-        "chaque",
-        "each",
-        "every",
-        "f kol",
-        "fkol"
-      ]
-    }
-  },
-  "lessonEn": {
     "understood": {
       "subject": "math",
       "topic": "Expanding and the distributive property",
       "isEducational": true,
       "clarification": null
     },
-    "explanationDarija": "Expanding means removing the brackets. The rule is simple: the number outside the brackets multiplies every term inside. For example: 3(x + 2) = 3×x + 3×2 = 3x + 6. If the number is negative, watch the signs: −2(x − 5) = −2x + 10, because minus times minus gives plus. With two brackets: (a + b)(c + d) = ac + ad + bc + bd — every term of the first bracket multiplies every term of the second.",
+    "explanationSimple": "Expanding means removing the brackets. The rule is simple: the number outside the brackets multiplies every term inside. For example: 3(x + 2) = 3×x + 3×2 = 3x + 6. If the number is negative, watch the signs: −2(x − 5) = −2x + 10, because minus times minus gives plus. With two brackets: (a + b)(c + d) = ac + ad + bc + bd — every term of the first bracket multiplies every term of the second.",
     "explanationFormal": "Distributive property of multiplication over addition: for all numbers k, a and b, k(a + b) = ka + kb and k(a − b) = ka − kb. Expanding an algebraic expression means writing it as a sum by removing the brackets. Also, (a + b)(c + d) = ac + ad + bc + bd. The reverse operation of expanding is factorising.",
     "steps": [
       "Identify the number (or expression) outside the brackets.",
@@ -195,8 +80,7 @@
           ],
           "acceptedExamples": [
             "You multiply the number outside by each term inside the brackets",
-            "نضرب العامل الموجود خارج القوس في كل حد من حدود القوس",
-            "On multiplie le facteur par chaque terme de la parenthèse"
+            "The number in front of the brackets is multiplied by every term inside them, then the products are added"
           ],
           "misconceptions": [
             {
@@ -212,17 +96,13 @@
     "confidence": "high",
     "caveats": []
   },
-  "demoKeywordsEn": {
+  "demoKeywords": {
     "q3": {
       "multiply_each": [
         "each",
         "every",
         "all the terms",
-        "both terms",
-        "فكل",
-        "في كل",
-        "كل حد",
-        "chaque"
+        "both terms"
       ]
     }
   }

@@ -18,7 +18,7 @@ import { gradeExpression, gradeMcq, gradeNumeric, isValidChoice, type Determinis
 import { normalizeAnswer } from "./domain/normalize.ts";
 import { aggregate } from "./domain/rubric-aggregate.ts";
 import { correctAnswerText, ruleFeedback, uncertaintyText, UNREADABLE_HINT } from "./domain/feedback.ts";
-import { DailyBudget, sendError } from "./http.ts";
+import { DailyBudget, rejectNonEnglish, sendError } from "./http.ts";
 import type { KnowledgeProvider } from "./knowledge/provider.ts";
 import type { SourceRetriever } from "./knowledge/retriever.ts";
 import { DemoKnowledgeProvider } from "./knowledge/demo-provider.ts";
@@ -60,7 +60,11 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
       level: deps.logLevel ?? (config.nodeEnv === "test" ? "warn" : "info"),
       // Defence in depth: bodies are not logged by default; redact anything sensitive anyway.
       redact: {
-        paths: ["req.headers.authorization", "req.headers.cookie", "req.headers['x-api-key']", "token", "answer", "apiKey", "*.token", "*.answer", "*.apiKey"],
+        paths: [
+          "req.headers.authorization", "req.headers.cookie", "req.headers['x-api-key']",
+          "token", "answer", "apiKey", "anthropicApiKey", "groqApiKey",
+          "*.token", "*.answer", "*.apiKey", "*.anthropicApiKey", "*.groqApiKey",
+        ],
         censor: "[REDACTED]",
       },
       ...(deps.logStream ? { stream: deps.logStream } : {}),
@@ -141,6 +145,8 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
     status: "ok",
     phase: "2B",
     mode: isLive ? "live" : "demo",
+    /** Live provider name ("anthropic" | "groq"); null in demo mode. Never includes keys. */
+    provider: isLive ? provider.name : null,
     simulated: provider.simulated,
     models: provider.models,
     demoTopics: provider instanceof DemoProvider ? provider.topics() : null,
@@ -166,6 +172,7 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
   // ------------------------------------------------------------------ evidence (Phase 2B)
   app.post("/api/evidence/analyze", async (req, reply) => {
     const body = EvidenceRequest.parse(req.body);
+    if (rejectNonEnglish(reply, body.claim)) return reply;
     if (!takeEvidenceBudget()) return sendError(reply, 503, "daily_limit", "SCIORA reached its daily AI usage limit. Please try again tomorrow.");
     try {
       return await evidence.analyze(body);
@@ -184,6 +191,7 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
   // ------------------------------------------------------------------ learn
   app.post("/api/learn", async (req, reply) => {
     const body = LessonRequest.parse(req.body);
+    if (rejectNonEnglish(reply, body.question)) return reply;
 
     const issue = replay.canIssueNewSet();
     if (!issue.ok) {
@@ -244,6 +252,8 @@ export async function buildApp(deps: AppDeps): Promise<{ app: FastifyInstance; r
 
     const ex = payload.exercises.find((e) => e.id === body.exerciseId);
     if (!ex) return sendError(reply, 400, "unknown_exercise", "This exercise is not part of the exercise set.");
+    // English-only: a written answer that is clearly not English is not graded (attempt not consumed).
+    if (ex.type === "short_text" && rejectNonEnglish(reply, body.answer)) return reply;
 
     // Pre-checks that do NOT consume the attempt and reveal nothing about correctness.
     let deterministic: DeterministicOutcome | null = null;

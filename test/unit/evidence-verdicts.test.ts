@@ -18,15 +18,15 @@ const SOURCES = sanitizeSources(
 // ---------------------------------------------------------------- schemas
 
 test("request: limits, default language, strict", () => {
-  assert.equal(EvidenceRequest.parse({ claim: "  الأرض كتدور على الشمس " }).language, "darija");
-  for (const bad of [{}, { claim: "abc" }, { claim: "x".repeat(1001) }, { claim: "valid claim", language: "de" }, { claim: "valid claim", x: 1 }]) {
+  assert.equal(EvidenceRequest.parse({ claim: "  The Earth orbits the Sun " }).language, "en");
+  for (const bad of [{}, { claim: "abc" }, { claim: "x".repeat(1001) }, { claim: "valid claim", language: "de" }, { claim: "valid claim", language: "darija" }, { claim: "valid claim", x: 1 }]) {
     assert.equal(EvidenceRequest.safeParse(bad).success, false, JSON.stringify(bad).slice(0, 30));
   }
 });
 
 test("AI output cannot carry URLs, titles or a verdict field", () => {
   const base = {
-    understood: { claimRestated: "c", detectedLanguage: "darija", isAnalyzable: true, clarification: null },
+    understood: { claimRestated: "c", detectedLanguage: "en", isAnalyzable: true, clarification: null },
     subClaims: [{ id: "c1", text: "t", type: "factual", evidence: [{ sourceId: "https://evil.example", stance: "supports", quote: "q" }], missingEvidence: "m", backgroundNote: null }],
     caveats: [],
   };

@@ -4,7 +4,7 @@
  *   SCIORA_ALLOW_LIVE_TESTS=1 SCIORA_AI_MODE=live ANTHROPIC_API_KEY=... npm run eval:grading
  *
  * Sends every short_text fixture to the FAST model (default Haiku 5.5) through the real
- * AnthropicProvider, applies SCIORA's server-side aggregation, and compares with the labels.
+ * live provider (Anthropic or Groq, per SCIORA_AI_PROVIDER), applies SCIORA's server-side aggregation, and compares with the labels.
  * Writes eval-results/grading-<timestamp>.json (git-ignored).
  *
  * Proposed passing bar (Revision 3):
@@ -29,7 +29,7 @@ for (const c of loadGradingCases()) {
   if (exercise.type !== "short_text") continue;
   try {
     const out = await provider.judgeWritten(
-      { exercise: exercise as ShortTextExercise, answer: c.answer, language: "darija", subject: subject as any, level: "school" },
+      { exercise: exercise as ShortTextExercise, answer: c.answer, language: "en", subject: subject as any, level: "school" },
       tier,
     );
     const v = aggregate((exercise as ShortTextExercise).rubric, out.judgement, c.answer).verdict;

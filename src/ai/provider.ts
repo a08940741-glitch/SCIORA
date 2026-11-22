@@ -13,6 +13,7 @@ import type {
 /**
  * Provider abstraction. The rest of SCIORA never talks to an AI vendor directly.
  *  - AnthropicProvider: real Claude models (live mode only).
+ *  - GroqProvider: open models on Groq's free tier (live mode only).
  *  - DemoProvider: pre-written, clearly labelled SIMULATED content. No network.
  */
 
@@ -36,7 +37,7 @@ export type ModelTier = "learn" | "fast";
 
 export interface JudgeOutput {
   judgement: WrittenJudgement;
-  source: "anthropic" | "demo";
+  source: "anthropic" | "groq" | "demo";
   simulated: boolean;
   model: string | null;
   fallbackUsed: boolean;
@@ -44,7 +45,7 @@ export interface JudgeOutput {
 }
 
 export interface AIProvider {
-  readonly name: "anthropic" | "demo";
+  readonly name: "anthropic" | "groq" | "demo";
   readonly simulated: boolean;
   /** Models this provider would use (for /api/health). Null in demo mode. */
   readonly models: { learn: string; fast: string } | null;

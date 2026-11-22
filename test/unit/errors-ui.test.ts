@@ -22,9 +22,12 @@ test("Retry-After is shown in seconds/minutes for rate limit and capacity only (
   assert.doesNotMatch(errorMessage({ status: 503, data: { error: "unavailable" }, retryAfter: 30 }), /Try again in/);
 });
 
-test("Arabic interface dictionary formats wait times in Darija", () => {
-  assert.match(DICTIONARIES.ar.errors.retryAfter(12), /12 ثانية/);
-  assert.match(DICTIONARIES.ar.errors.retryAfter(361), /7 دقيقة/);
+test("English-only: one interface dictionary; the english_only code maps to the exact English notice", () => {
+  assert.deepEqual(Object.keys(DICTIONARIES), ["en"]);
+  assert.equal(
+    errorMessage({ status: 422, data: { error: "english_only", message: "x" } }),
+    "SCIORA currently supports English only. Please submit your question in English to continue.",
+  );
 });
 
 test("unreadable answer → interface-language hint chosen by exercise type", () => {

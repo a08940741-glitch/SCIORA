@@ -5,7 +5,7 @@ _Status: describes the code as implemented on 2026-11-20 (Phase 1 and Phase 2A).
 ## 1. Overview
 
 ```
-┌──────────── Browser (vanilla JS, Arabic RTL) ────────────────┐
+┌──────────── Browser (vanilla JS, English, LTR) ──────────────┐
 │ index.html · app.js · render.js (textContent only)           │
 │ learner-model.js: preliminary level estimate (localStorage)  │
 │ Holds only public exercise text + an opaque encrypted token  │
@@ -18,11 +18,12 @@ _Status: describes the code as implemented on 2026-11-20 (Phase 1 and Phase 2A).
 │ domain/  schemas · exercise-token (AES-256-GCM) · replay-store│
 │          normalize · grading (rules) · rubric-aggregate       │
 │          lesson-integrity · feedback                          │
-│ ai/      AIProvider ──► AnthropicProvider | DemoProvider      │
-│ config   demo unless SCIORA_AI_MODE=live + API key            │
+│ ai/      AIProvider ──► Anthropic | Groq | DemoProvider       │
+│ config   demo unless SCIORA_AI_MODE=live + provider's API key │
 └──────────────┬───────────────────────────────────────────────┘
                │ server only (key never leaves the server)
-        Anthropic Messages API — live mode only
+   Anthropic Messages API  or  Groq Chat Completions (OpenAI-
+   compatible, built-in fetch) — live mode only, one at a time
 ```
 
 | Folder | Responsibility |
@@ -30,7 +31,7 @@ _Status: describes the code as implemented on 2026-11-20 (Phase 1 and Phase 2A).
 | `src/config.ts` | Reads and validates environment variables; chooses demo/live; secret rules. |
 | `src/app.ts` | Builds the HTTP server, security plugins and the three routes. |
 | `src/domain/` | Pure logic: schemas, encryption, replay protection, grading, aggregation. No AI vendor code. |
-| `src/ai/` | Provider abstraction, prompts, Anthropic provider, demo provider and its content. |
+| `src/ai/` | Provider abstraction, prompts, Anthropic provider, Groq provider (client, strict-schema adapter), demo provider and its content. |
 | `public/` | Browser application (no build step). |
 | `test/` | Unit, API and browser (Playwright) tests; grading fixtures. |
 | `scripts/` | Secret scan; gated live smoke test and grading evaluation. |
@@ -85,8 +86,27 @@ zod validation with length limits; 32 KB body limit; helmet CSP (`default-src 's
 
 ## 4. AI design
 
+### 4.0 Language policy (English-only)
+SCIORA is an English-only AI learning and knowledge platform designed for an international audience. Enforcement points (`src/domain/english-only.ts`):
+- **Input:** `/api/learn`, `/api/knowledge/query`, `/api/knowledge/transform`, `/api/evidence/analyze` and written answers in `/api/grade` reply `422 english_only` with “SCIORA currently supports English only. Please submit your question in English to continue.” when the text is *clearly* not English (heuristic: mostly non-Latin script, or several French/Spanish/Arabizi function words and no English ones). Numbers, expressions and multiple-choice answers are never language-checked. The check runs before the daily cap and before an answer is reserved, so it costs nothing and never consumes an attempt.
+- **Prompts:** every system prompt includes the same mandatory `ENGLISH_ONLY_RULE` (`src/ai/prompts.ts`).
+- **Output:** both live structured-call paths (Anthropic and Groq) run `findNonEnglishOutput` after schema validation; clearly non-English or mixed-language output is retried once, then rejected (`bad_output`, "The AI response was not in English."). Source quotes are exempt.
+- **Content and retrieval:** demo content is English-only; Wikipedia retrieval uses English Wikipedia only (no fallback to other wikis).
+- **Limit:** these are heuristics; they catch clearly non-English text but do not guarantee perfect English.
+
 ### 4.1 Provider abstraction
-`AIProvider` (`generateLesson`, `judgeWritten`) is implemented by `AnthropicProvider` and `DemoProvider`. The rest of the code never calls a vendor SDK directly.
+`AIProvider` (`generateLesson`, `judgeWritten`) is implemented by `AnthropicProvider`, `GroqProvider` and `DemoProvider`. The rest of the code never calls a vendor SDK directly. `SCIORA_AI_PROVIDER` selects the live provider (`anthropic` by default, or `groq`); demo stays the default mode, and a live failure is never replaced by demo content.
+
+**Groq provider** (`src/ai/groq-client.ts`, `groq-schema.ts`, `groq-provider.ts`, plus `src/knowledge/groq-provider.ts` and `src/evidence/groq-provider.ts`):
+- Uses Groq's OpenAI-compatible Chat Completions API through Node's built-in `fetch` (no extra package), with strict structured outputs (`response_format.json_schema`, `strict: true`).
+- The same zod schemas are converted with zod 4's `z.toJSONSchema`, then adapted to the keywords Groq documents for strict mode: discriminated unions become `anyOf`, literals become one-value `enum`s, exact single-character patterns (e.g. quiz choice ids `^[a-d]$`) become `enum`s, and other length/pattern/range constraints move into descriptions. **Every response is still validated locally with the full zod schema**, so no validation is weakened.
+- Conversion happens **at request time** (on the first request that uses a schema, then cached), not at startup. A schema Groq cannot represent (optional fields, records) makes that request fail with a generic server error; nothing is sent to Groq. All seven current schemas convert (covered by tests).
+- Conservative retries (free-tier friendly): 429, 5xx, timeouts, network errors and **cut-off output** (`finish_reason: "length"`, since the identical request would be cut off again) are not retried; only malformed JSON or a schema mismatch is retried once. At most 2 requests per call.
+- Response bodies are capped at 1 MiB (checked against `Content-Length` and while streaming; oversized bodies are cancelled). One timeout covers waiting for headers and reading the body.
+- The key is read only from `GROQ_API_KEY`, kept in a private field, and sent only in the `Authorization` header. Provider error bodies are never read into messages or logs.
+- Same prompts, integrity checks, server-side source/evidence checks, verdicts, rate limit and daily cap as the Anthropic path. On 2026-11-21 a **first controlled live test with Groq** (`openai/gpt-oss-120b`, free tier) completed all 6 AI calls (lesson, grading of a correct and a wrong answer, knowledge answer with Wikipedia sources, simplify, evidence analysis) and passed SCIORA's automatic checks; the first run hit Groq's free-tier rate limit at call 5, and the last two calls passed after a pause. Tested in English only; content not yet reviewed by a teacher. **Anthropic has still never been run against the real API.**
+
+**Prompt-injection hygiene (all providers):** every piece of untrusted text (lesson questions, written answers, Knowledge questions and sources, claims, transform content) passes through `src/domain/prompt-safety.ts` before it is placed between the prompt's delimiter tags: `<`/`>` become look-alike guillemets so the text cannot close a tag, invisible control/bidi characters are removed, and length is capped (question 1,000, answer 2,000 characters). The written-answer quote check applies the same transformation to both sides, so genuine quotes still match.
 
 ### 4.2 Model routing (configurable)
 | Tier | Default | Phase 1 use |
@@ -98,8 +118,8 @@ zod validation with length limits; 32 KB body limit; helmet CSP (`default-src 's
 Server-side refusal fallback (`fallbacks: "default"`) is requested on models that support it (not Haiku). **Not yet verified against the live API.**
 
 ### 4.3 Written-answer grading (three layers)
-1. **Rules first:** normalization (Arabic diacritics, alef forms, Eastern Arabic digits, decimal separators), numeric equivalence, sandboxed algebraic equivalence (mathjs with a strict node whitelist, evaluated at random points).
-2. **Rubric judgement by the AI:** per criterion `met | partial | not_met | unclear` with an exact quote as evidence. The prompt instructs it to judge meaning, accept Darija/MSA/French/Arabizi, ignore spelling unless language-sensitive, and use `unclear` when unsure.
+1. **Rules first:** normalization (number formats incl. Eastern Arabic digits and decimal separators, kept for robust number parsing), numeric equivalence, sandboxed algebraic equivalence (mathjs with a strict node whitelist, evaluated at random points).
+2. **Rubric judgement by the AI:** per criterion `met | partial | not_met | unclear` with an exact quote as evidence. The prompt instructs it to judge meaning (English answers), ignore spelling, and use `unclear` when unsure. Written answers that are clearly not English are refused before grading (English-only policy).
 3. **Server decides:** quotes not found in the answer → `unclear`; any required criterion unclear or low confidence → **uncertain**; all required met → correct; all clearly not met → incorrect; otherwise partially correct.
 
 ### 4.4 Preliminary level estimate (`public/js/learner-model.js`)
@@ -113,7 +133,7 @@ Elo-style rating per topic: start 1000, exercise difficulty by level (900–1200
 | Perception | **Not implemented.** (Photo input of homework is a stretch goal.) |
 | Representation & Reasoning | Structured lesson/rubric schemas; rule-based maths reasoning; server-side rubric aggregation; Knowledge Explorer answers represented as typed segments (fact / explanation / assumption / uncertainty) with server-checked source links and concept connections. |
 | Learning | SCIORA does **not** train a model. The language models are pre-trained by Anthropic. SCIORA's own adaptive component is the Elo-style learner estimate that updates from the student's graded answers. |
-| Natural Interaction | Questions and answers in Moroccan Darija, Arabic, French (and English/Arabizi in the Knowledge Explorer); explanations generated in natural language (live mode). |
+| Natural Interaction | Questions, answers and claims in English; explanations generated in natural, student-friendly English (live mode). |
 | Societal Impact | Transparency labels, uncertainty handling, privacy-by-design, ethics documentation (`AI_ETHICS.md`). |
 
 ## 5. Knowledge Explorer (Phase 2A)
@@ -183,11 +203,11 @@ Answers: LEARN (Sonnet 5.5, effort medium). Transforms: FAST (Haiku 5.5, effort 
 ## 8. Interface languages
 - `public/js/i18n.js`: `en` (default) and `ar` dictionaries with identical keys (unit-tested). The interface language is stored in `localStorage` (`sciora.ui.lang`), applied on load (`<html lang dir>`), and switched from the header (page reload).
 - Interface language ≠ learning / AI response language (selected per tool).
-- `render.js` gives text elements `dir="auto"`, so Arabic content is RTL inside the English UI; mixed interface/content strings are isolated (`<bdi>`, separate spans).
+- The page is English and left-to-right (`<html lang="en" dir="ltr">`); there is no language switcher and no right-to-left layout.
 - Server system notices are codes (`src/notices.ts`) translated by `public/js/notices.js`.
 
 ## 9. Wikipedia retrieval
 `src/knowledge/wikipedia-retriever.ts` implements `SourceRetriever` with the MediaWiki Action API (`generator=search`, intro plain-text extracts, `inprop=url`, latest revision timestamp, `ppprop=disambiguation`, `maxlag=5`). Fixed hosts `{ar,fr,en}.wikipedia.org` chosen by query script and answer language (max 2, with fallback on errors). Throttle (min interval), 1 h cache, ≤ 2 retries per wiki with exponential backoff honouring `Retry-After` (capped), abort-aware waits, response size cap, schema validation, https + exact-host URL check. `publishedAt` is always null (no publication date exists); `lastModified` comes from the API. Results then pass `sanitizeSources()`. Demo mode shows results as related reading only; `wikipedia_only` notice when an answer/verdict rests only on Wikipedia.
 
 ## 10. Planned (not implemented)
-Retrieval sources beyond Wikipedia, French interface, landing page and settings, French interface, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.
+Retrieval sources beyond Wikipedia, landing page and settings, optional Google Sign-In ([design](docs/planned/GOOGLE_SIGN_IN.md)), persistent (SQLite) replay store. There is **no database and no accounts**.

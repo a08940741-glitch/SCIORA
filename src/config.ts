@@ -6,8 +6,10 @@ import { DEFAULT_WIKI_USER_AGENT } from "./knowledge/wikipedia-agent.ts";
  * SCIORA configuration.
  *
  * Safety rules enforced here:
- *  - Live AI is used ONLY when SCIORA_AI_MODE=live AND an API key is present.
- *    A key on its own never enables live mode.
+ *  - Live AI is used ONLY when SCIORA_AI_MODE=live AND the selected provider's API key is
+ *    present. A key on its own never enables live mode.
+ *  - SCIORA_AI_PROVIDER selects the live provider: "anthropic" (default) or "groq".
+ *    Only the selected provider's key is kept; the other is never read into the config.
  *  - In production the exercise-token secret is mandatory (>= 32 bytes).
  *    In development a random ephemeral secret is generated (tokens die on restart).
  */
@@ -20,6 +22,7 @@ export class ConfigError extends Error {
 }
 
 export type AiMode = "demo" | "live";
+export type AiProviderName = "anthropic" | "groq";
 
 export interface ModelConfig {
   /** Lessons: understanding, explanations, examples, exercises. */
@@ -35,9 +38,16 @@ export interface Config {
   port: number;
   host: string;
   aiMode: AiMode;
-  /** Only set when aiMode === "live". Never logged, never sent to the browser. */
+  /** Live provider (used only when aiMode === "live"). */
+  aiProvider: AiProviderName;
+  /** Only set when aiMode === "live" and aiProvider === "anthropic". Never logged, never sent to the browser. */
   anthropicApiKey: string | undefined;
+  /** Only set when aiMode === "live" and aiProvider === "groq". Never logged, never sent to the browser. */
+  groqApiKey: string | undefined;
+  /** Anthropic model routing. */
   models: ModelConfig;
+  /** Groq model routing (same three tiers). */
+  groqModels: ModelConfig;
   gradeEscalation: boolean;
   tokenSecret: Buffer;
   tokenSecretEphemeral: boolean;
@@ -71,7 +81,16 @@ const EnvSchema = z.object({
     .optional()
     .transform((v) => (v ?? "demo").trim().toLowerCase())
     .pipe(z.enum(["demo", "live"])),
+  SCIORA_AI_PROVIDER: z
+    .string()
+    .optional()
+    .transform((v) => (v ?? "anthropic").trim().toLowerCase() || "anthropic")
+    .pipe(z.enum(["anthropic", "groq"])),
   ANTHROPIC_API_KEY: z.string().optional(),
+  GROQ_API_KEY: z.string().optional(),
+  SCIORA_GROQ_MODEL_LEARN: z.string().optional(),
+  SCIORA_GROQ_MODEL_FAST: z.string().optional(),
+  SCIORA_GROQ_MODEL_REASON: z.string().optional(),
   SCIORA_MODEL_LEARN: z.string().optional(),
   SCIORA_MODEL_FAST: z.string().optional(),
   SCIORA_MODEL_REASON: z.string().optional(),
@@ -96,11 +115,23 @@ const EnvSchema = z.object({
 });
 
 const MODEL_ID = /^[a-z0-9][a-z0-9.\-]{2,63}$/;
+/** Plausible API key shape: visible ASCII only, no whitespace. Provider-specific prefixes are not assumed. */
+const API_KEY_SHAPE = /^[\x21-\x7E]{20,256}$/;
 
-function pickModel(value: string | undefined, fallback: string, name: string): string {
+/** Groq model ids may carry an owner prefix, e.g. "openai/gpt-oss-120b". */
+const GROQ_MODEL_ID = /^[a-z0-9][a-z0-9._\-]{0,63}(\/[a-z0-9][a-z0-9._\-]{0,63})?$/;
+
+/**
+ * Default Groq model. Chosen because Groq's documentation (checked 2026-11-21) lists it as a
+ * production model that supports strict structured outputs, with no deprecation notice.
+ * Re-check https://console.groq.com/docs/models and /docs/deprecations before relying on it.
+ */
+export const DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b";
+
+function pickModel(value: string | undefined, fallback: string, name: string, pattern = MODEL_ID): string {
   const v = value?.trim();
   if (!v) return fallback;
-  if (!MODEL_ID.test(v)) throw new ConfigError(`${name} is not a valid model id`);
+  if (!pattern.test(v)) throw new ConfigError(`${name} is not a valid model id`);
   return v;
 }
 
@@ -125,9 +156,19 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   }
   const e = parsed.data;
 
+  const live = e.SCIORA_AI_MODE === "live";
   const key = e.ANTHROPIC_API_KEY?.trim() || undefined;
-  if (e.SCIORA_AI_MODE === "live" && !key) {
+  const groqKey = e.GROQ_API_KEY?.trim() || undefined;
+  if (live && e.SCIORA_AI_PROVIDER === "anthropic" && !key) {
     throw new ConfigError("SCIORA_AI_MODE=live requires ANTHROPIC_API_KEY");
+  }
+  if (live && e.SCIORA_AI_PROVIDER === "groq" && !groqKey) {
+    throw new ConfigError("SCIORA_AI_MODE=live with SCIORA_AI_PROVIDER=groq requires GROQ_API_KEY");
+  }
+  // Shape check only (never the value in the message): a key with spaces, line breaks or
+  // non-ASCII characters would otherwise fail later as a confusing network error.
+  if (live && e.SCIORA_AI_PROVIDER === "groq" && groqKey && !API_KEY_SHAPE.test(groqKey)) {
+    throw new ConfigError("GROQ_API_KEY does not look like an API key (expected 20–256 visible ASCII characters, no spaces)");
   }
 
   let tokenSecret = decodeSecret(e.SCIORA_TOKEN_SECRET);
@@ -148,11 +189,18 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     port: e.PORT,
     host: e.HOST,
     aiMode: e.SCIORA_AI_MODE,
-    anthropicApiKey: e.SCIORA_AI_MODE === "live" ? key : undefined,
+    aiProvider: e.SCIORA_AI_PROVIDER,
+    anthropicApiKey: live && e.SCIORA_AI_PROVIDER === "anthropic" ? key : undefined,
+    groqApiKey: live && e.SCIORA_AI_PROVIDER === "groq" ? groqKey : undefined,
     models: {
       learn: pickModel(e.SCIORA_MODEL_LEARN, "claude-sonnet-5-5", "SCIORA_MODEL_LEARN"),
       fast: pickModel(e.SCIORA_MODEL_FAST, "claude-haiku-5-5", "SCIORA_MODEL_FAST"),
       reason: pickModel(e.SCIORA_MODEL_REASON, "claude-opus-5-5", "SCIORA_MODEL_REASON"),
+    },
+    groqModels: {
+      learn: pickModel(e.SCIORA_GROQ_MODEL_LEARN, DEFAULT_GROQ_MODEL, "SCIORA_GROQ_MODEL_LEARN", GROQ_MODEL_ID),
+      fast: pickModel(e.SCIORA_GROQ_MODEL_FAST, DEFAULT_GROQ_MODEL, "SCIORA_GROQ_MODEL_FAST", GROQ_MODEL_ID),
+      reason: pickModel(e.SCIORA_GROQ_MODEL_REASON, DEFAULT_GROQ_MODEL, "SCIORA_GROQ_MODEL_REASON", GROQ_MODEL_ID),
     },
     gradeEscalation: isOn(e.SCIORA_GRADE_ESCALATION),
     tokenSecret,

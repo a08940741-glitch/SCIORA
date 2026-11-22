@@ -27,7 +27,7 @@ async function main() {
   if (provider.simulated) {
     app.log.warn("DEMO MODE: responses are pre-written simulated content. No AI calls will be made.");
   } else {
-    app.log.warn({ models: provider.models }, "LIVE MODE: real AI calls will be made and billed.");
+    app.log.warn({ provider: provider.name, models: provider.models }, "LIVE MODE: real AI calls will be made (Anthropic: billed; Groq: free-tier limits apply).");
   }
   if (config.tokenSecretEphemeral) {
     app.log.warn("SCIORA_TOKEN_SECRET not set: using a temporary key. Exercise tokens become invalid on restart.");

@@ -19,10 +19,6 @@ export interface RelatedPassage {
 const STOPWORDS = new Set([
   // English
   "the", "and", "for", "are", "was", "were", "that", "this", "with", "from", "into", "its", "has", "have", "had", "not", "but", "all", "any", "can", "his", "her", "they", "their", "which", "what", "when", "where", "who", "how", "than", "then", "also", "such", "used", "use", "one", "two", "more", "most", "other", "some", "about", "every", "everywhere", "always",
-  // French
-  "les", "des", "une", "dans", "est", "sont", "pour", "par", "sur", "avec", "qui", "que", "pas", "plus", "ses", "son", "aux", "ont", "été", "elle", "il", "ils", "elles", "cette", "ces", "tout", "tous",
-  // Arabic / Darija
-  "في", "من", "على", "الى", "إلى", "عن", "مع", "هذا", "هذه", "التي", "الذي", "ديال", "اللي", "فكل", "كل", "ولا", "او", "أو", "هو", "هي", "كان", "كانت", "ف", "بلاصة",
 ]);
 
 const MIN_SHARED = 2;
@@ -32,14 +28,13 @@ export function keyTerms(text: string): Set<string> {
   return new Set(
     normalizeForMatch(text)
       .split(" ")
-      .map((w) => w.replace(/^(ال|وال|بال|فال|لل)/, "")) // light Arabic article stripping
       .filter((w) => w.length >= 3 && !STOPWORDS.has(w) && !/^\d+$/.test(w)),
   );
 }
 
 export function splitSentences(text: string): string[] {
   return text
-    .split(/(?<=[.!?؟])\s+/)
+    .split(/(?<=[.!?])\s+/)
     .map((s) => s.trim())
     .filter((s) => s.length >= 20);
 }

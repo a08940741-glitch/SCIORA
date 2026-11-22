@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test \"test/unit/**/*.test.ts\" \"test/api/**/*.test.ts\"",
     "test:e2e": "tsx --test \"test/e2e/**/*.test.ts\"",
+    "live:check": "tsx scripts/live-check.ts",
     "test:live": "tsx scripts/live-smoke.ts",
     "eval:grading": "tsx scripts/eval-grading.ts",
     "secret-scan": "bash scripts/secret-scan.sh"

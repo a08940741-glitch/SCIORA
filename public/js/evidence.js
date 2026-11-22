@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { T, DEFAULT_CONTENT_LANGUAGE, demoTitle } from "./i18n.js";
+import { T } from "./i18n.js";
 import { el, clear, paragraphs } from "./render.js";
 import { errorMessage } from "./errors.js";
 import { noticesBox } from "./notices.js";
@@ -103,9 +103,9 @@ export function createEvidencePanel() {
           el("button", {
             type: "button",
             class: "chip",
-            text: demoTitle(c.claim, c.claimEn),
+            text: c.claim,
             onclick: () => {
-              $("e-claim").value = demoTitle(c.claim, c.claimEn);
+              $("e-claim").value = c.claim;
               $("e-claim").focus();
             },
           }),
@@ -168,7 +168,7 @@ export function createEvidencePanel() {
     btn.textContent = E.loading;
     clear(out);
     out.append(el("p", { class: "muted", role: "status", text: E.loading }));
-    const r = await api.analyze(claim, $("e-language").value);
+    const r = await api.analyze(claim, "en"); // SCIORA is English-only
     btn.disabled = false;
     btn.textContent = E.analyze;
     if (!r.ok) {
@@ -184,9 +184,6 @@ export function createEvidencePanel() {
     $("e-intro").textContent = E.intro;
     $("e-claim-label").textContent = E.claimLabel;
     $("e-claim").placeholder = E.claimPlaceholder;
-    $("e-language-label").textContent = E.languageLabel;
-    for (const [v, label] of Object.entries(T.k.languages)) $("e-language").append(el("option", { value: v, text: label }));
-    $("e-language").value = DEFAULT_CONTENT_LANGUAGE;
     $("e-analyze").textContent = E.analyze;
     $("e-empty").textContent = E.empty;
     $("e-form").addEventListener("submit", onAnalyze);

@@ -16,12 +16,12 @@ const SOURCES = sanitizeSources(
   "fake",
 );
 
-test("key terms: normalized, stopwords and short words removed, Arabic article stripped", () => {
+test("key terms: normalized, English stopwords and short words removed", () => {
   const t = keyTerms("Water boils at 100 degrees everywhere");
   assert.ok(t.has("water") && t.has("boils") && t.has("degrees"));
   assert.equal(t.has("everywhere"), false);
   assert.equal(t.has("100"), false, "numbers are not key terms");
-  assert.ok(keyTerms("الماء يغلي").has("ماء"));
+  assert.equal(keyTerms("The water and the heat").has("the"), false);
 });
 
 test("sentence splitting keeps meaningful sentences", () => {

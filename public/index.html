@@ -27,12 +27,6 @@
         <button type="button" role="tab" id="tab-cards" aria-controls="panel-cards" aria-selected="false" tabindex="-1"><svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5" width="13" height="15" rx="2"/><path d="M8 3h10a2 2 0 0 1 2 2v12"/></svg><span class="tab-label"></span></button>
         <button type="button" role="tab" id="tab-progress" aria-controls="panel-progress" aria-selected="false" tabindex="-1"><svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg><span class="tab-label"></span></button>
       </nav>
-      <div class="sidebar-foot">
-        <div class="ui-lang">
-          <label id="ui-lang-label" for="ui-lang" class="ui-lang-label"></label>
-          <select id="ui-lang"></select>
-        </div>
-      </div>
     </aside>
 
     <div class="main-area">
@@ -58,15 +52,11 @@
         <p id="learn-intro" class="muted"></p>
         <form id="ask-form" novalidate>
           <label id="ask-label" for="question" class="label"></label>
-          <textarea id="question" rows="3" maxlength="1000" required dir="auto"></textarea>
+          <textarea id="question" rows="3" maxlength="1000" required></textarea>
           <div class="row">
             <div class="field">
               <label id="level-label" for="level" class="label"></label>
               <select id="level"></select>
-            </div>
-            <div class="field">
-              <label id="language-label" for="language" class="label"></label>
-              <select id="language"></select>
             </div>
             <button id="ask-btn" type="submit" class="btn btn-primary"></button>
           </div>
@@ -84,15 +74,11 @@
         <p id="k-intro" class="muted"></p>
         <form id="k-form" novalidate>
           <label id="k-ask-label" for="k-question" class="label"></label>
-          <textarea id="k-question" rows="3" maxlength="1000" required dir="auto"></textarea>
+          <textarea id="k-question" rows="3" maxlength="1000" required></textarea>
           <div class="row">
             <div class="field">
               <label id="k-level-label" for="k-level" class="label"></label>
               <select id="k-level"></select>
-            </div>
-            <div class="field">
-              <label id="k-language-label" for="k-language" class="label"></label>
-              <select id="k-language"></select>
             </div>
             <button id="k-ask" type="submit" class="btn btn-primary"></button>
           </div>
@@ -108,12 +94,8 @@
         <p id="e-intro" class="muted"></p>
         <form id="e-form" novalidate>
           <label id="e-claim-label" for="e-claim" class="label"></label>
-          <textarea id="e-claim" rows="3" maxlength="1000" required dir="auto"></textarea>
+          <textarea id="e-claim" rows="3" maxlength="1000" required></textarea>
           <div class="row">
-            <div class="field">
-              <label id="e-language-label" for="e-language" class="label"></label>
-              <select id="e-language"></select>
-            </div>
             <button id="e-analyze" type="submit" class="btn btn-primary"></button>
           </div>
         </form>
@@ -127,7 +109,7 @@
         <h2 id="c-title"></h2>
         <p id="c-intro" class="muted"></p>
         <div class="row">
-          <div class="field"><input id="c-search" type="search" maxlength="100" dir="auto"></div>
+          <div class="field"><input id="c-search" type="search" maxlength="100"></div>
           <div class="field"><select id="c-collection"></select></div>
           <button id="c-export" type="button" class="btn btn-secondary"></button>
         </div>

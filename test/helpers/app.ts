@@ -73,15 +73,15 @@ export class StubLiveProvider implements AIProvider {
 }
 
 /** Judgement for the sample short_text exercise (q4) with evidence taken from STUDENT_ANSWER. */
-export const STUDENT_ANSWER = "النبتة كتستعمل الضو ديال الشمس باش تحول الما وثاني أكسيد الكربون لسكر";
+export const STUDENT_ANSWER = "The plant uses light from the sun to turn water and carbon dioxide into sugar";
 export function allMet(): WrittenJudgement {
   return {
     criteria: [
-      { criterionId: "light", judgement: "met", evidence: "الضو ديال الشمس" },
-      { criterionId: "inputs", judgement: "met", evidence: "الما وثاني أكسيد الكربون" },
+      { criterionId: "light", judgement: "met", evidence: "light from the sun" },
+      { criterionId: "inputs", judgement: "met", evidence: "water and carbon dioxide" },
     ],
     misconceptionId: null,
-    feedback: "مزيان",
+    feedback: "Well done.",
     confidence: "high",
   };
 }
@@ -89,15 +89,15 @@ export function unclear(): WrittenJudgement {
   return {
     criteria: [
       { criterionId: "light", judgement: "unclear", evidence: null },
-      { criterionId: "inputs", judgement: "met", evidence: "الما" },
+      { criterionId: "inputs", judgement: "met", evidence: "water" },
     ],
     misconceptionId: null,
-    feedback: "ما متأكدش",
+    feedback: "I am not sure.",
     confidence: "medium",
   };
 }
 
-export async function learn(app: Awaited<ReturnType<typeof makeApp>>["app"], question = "شنو هو التركيب الضوئي؟") {
+export async function learn(app: Awaited<ReturnType<typeof makeApp>>["app"], question = "What is photosynthesis?") {
   const res = await app.inject({ method: "POST", url: "/api/learn", payload: { question } });
   return { res, body: res.json() as any };
 }

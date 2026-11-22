@@ -47,19 +47,17 @@ const make = (fetchFn: typeof fetch, extra = {}) =>
 
 // ---------------------------------------------------------------- query building
 
-test("question words are removed from the search text (Darija, MSA, French, English, Arabizi)", () => {
-  assert.equal(cleanSearchQuery("شنو هو التركيب الضوئي؟"), "التركيب الضوئي");
+test("English question words are removed from the search text", () => {
   assert.equal(cleanSearchQuery("What is photosynthesis?"), "photosynthesis");
-  assert.equal(cleanSearchQuery("C'est quoi la photosynthèse ?"), "la photosynthèse");
-  assert.equal(cleanSearchQuery("chno howa tarkib daw2i"), "tarkib daw2i");
+  assert.equal(cleanSearchQuery("Explain the water cycle"), "the water cycle");
+  assert.equal(cleanSearchQuery("Why does ice float?"), "does ice float");
   assert.equal(cleanSearchQuery("?"), "?", "never empty");
 });
 
-test("wiki choice follows the query script and answer language (max 2 wikis)", () => {
-  assert.deepEqual(chooseWikis("التركيب الضوئي", "darija"), ["ar", "en"]);
-  assert.deepEqual(chooseWikis("التركيب الضوئي", "fr"), ["ar", "fr"]);
-  assert.deepEqual(chooseWikis("photosynthèse", "fr"), ["fr", "en"]);
-  assert.deepEqual(chooseWikis("photosynthesis", "darija"), ["en", "fr"]);
+test("English-only: always English Wikipedia, whatever the query (no other-language wikis)", () => {
+  for (const [q, lang] of [["Photosynthesis", "en"], ["photosynthèse", "en"], ["anything", "fr"], ["علم", "en"]] as const) {
+    assert.deepEqual(chooseWikis(q, lang), ["en"]);
+  }
 });
 
 test("request URL: fixed Wikipedia host, MediaWiki params, query only in the search parameter (no SSRF)", () => {
@@ -121,14 +119,13 @@ test("long extracts are capped; results then pass sanitizeSources with server id
   assert.equal(pub[0]!.publishedAt, null);
 });
 
-test("no results on the first wiki → second wiki is tried; none → empty list", async () => {
-  const { fn, calls } = fakeFetch([response(200, { batchcomplete: true }), response(200, apiBody([page({ fullurl: "https://fr.wikipedia.org/wiki/Photosynth%C3%A8se" })]))]);
-  const out = await make(fn).search("photosynthèse", { ...opts(), language: "fr" });
-  assert.equal(new URL(calls[0]!.url).hostname, "fr.wikipedia.org");
-  assert.equal(new URL(calls[1]!.url).hostname, "en.wikipedia.org");
-  assert.equal(out.length, 0, "fr URL is not valid for the en wiki → dropped");
+test("no results → empty list after ONE request to English Wikipedia; a non-English article URL is dropped", async () => {
   const empty = fakeFetch([response(200, { batchcomplete: true })]);
   assert.deepEqual(await make(empty.fn).search("zzzz", opts()), []);
+  assert.equal(empty.calls.length, 1);
+  assert.equal(new URL(empty.calls[0]!.url).hostname, "en.wikipedia.org");
+  const foreign = fakeFetch([response(200, apiBody([page({ fullurl: "https://fr.wikipedia.org/wiki/Photosynth%C3%A8se" })]))]);
+  assert.equal((await make(foreign.fn).search("photosynthesis", opts())).length, 0, "fr URL is not valid for the en wiki → dropped");
 });
 
 test("malformed JSON, API error object, unexpected shape and oversized body → errors (degrade upstream)", async () => {
@@ -148,13 +145,11 @@ test("429 / 503 / network errors are retried with backoff (max 2 retries), then 
   assert.equal(out.length, 1);
 });
 
-test("retries are bounded: persistent 429 → 1 + maxRetries attempts per wiki, at most 2 wikis (6 requests)", async () => {
+test("retries are bounded: persistent 429 → 1 + maxRetries attempts on English Wikipedia only (3 requests)", async () => {
   const { fn, calls } = fakeFetch([response(429, "too many")]);
   await assert.rejects(make(fn).search("q", opts()), (e: unknown) => e instanceof WikipediaHttpError && e.status === 429);
-  assert.equal(calls.length, 6);
-  const hosts = calls.map((c) => new URL(c.url).hostname);
-  assert.equal(hosts.filter((h) => h === "en.wikipedia.org").length, 3);
-  assert.equal(hosts.filter((h) => h === "fr.wikipedia.org").length, 3);
+  assert.equal(calls.length, 3);
+  assert.ok(calls.every((c) => new URL(c.url).hostname === "en.wikipedia.org"));
 });
 
 test("maxlag API response is retried", async () => {
@@ -248,15 +243,11 @@ test("factory: wikipedia by default, none when disabled; custom User-Agent from 
   assert.throws(() => loadConfig({ SCIORA_RETRIEVER: "google" }));
 });
 
-test("a failing first wiki (e.g. 429 on ar) falls back to the next wiki", async () => {
-  const { fn, calls } = fakeFetch([
-    response(429, "too many"), response(429, "too many"), response(429, "too many"), // ar: 1 + 2 retries
-    response(200, apiBody([page()])), // en
-  ]);
-  const out = await make(fn).search("شنو هو التركيب الضوئي؟", { ...opts(), language: "darija" });
-  assert.equal(new URL(calls[0]!.url).hostname, "ar.wikipedia.org");
-  assert.equal(new URL(calls[3]!.url).hostname, "en.wikipedia.org");
-  assert.equal(out.length, 1);
+test("English-only: a rate-limited English Wikipedia never falls back to another-language wiki", async () => {
+  const { fn, calls } = fakeFetch([response(429, "too many"), response(429, "too many"), response(429, "too many"), response(200, apiBody([page()]))]);
+  await assert.rejects(make(fn).search("What is photosynthesis?", opts()), (e: unknown) => e instanceof WikipediaHttpError && e.status === 429);
+  assert.equal(calls.length, 3, "no fourth request to any other wiki");
+  assert.ok(calls.every((c) => new URL(c.url).hostname === "en.wikipedia.org"));
 });
 
 test("all wikis failing → error is raised (service reports retrieval 'failed')", async () => {

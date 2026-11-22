@@ -1,5 +1,6 @@
 import type { CriterionJudgement, Rubric, Verdict, WrittenJudgement } from "./schemas.ts";
 import { normalizeForMatch } from "./normalize.ts";
+import { promptSafeText } from "./prompt-safety.ts";
 
 /**
  * Layer C: the SERVER decides the final verdict from per-criterion judgements.
@@ -37,11 +38,16 @@ export interface AggregateResult {
 
 const VALUE: Record<CriterionJudgement["judgement"], number> = { met: 1, partial: 0.5, not_met: 0, unclear: 0 };
 
+/**
+ * The AI grader sees the prompt-safe version of the answer (see domain/prompt-safety.ts), so a
+ * quote may contain "‹" where the student typed "<". Both sides get the same transformation
+ * before matching: a genuine quote still matches, and nothing new can match.
+ */
 export function evidenceAppearsInAnswer(evidence: string | null, answer: string): boolean {
   if (!evidence) return false;
-  const e = normalizeForMatch(evidence);
+  const e = normalizeForMatch(promptSafeText(evidence));
   if (e.length === 0) return false;
-  return normalizeForMatch(answer).includes(e);
+  return normalizeForMatch(promptSafeText(answer)).includes(e);
 }
 
 export function aggregate(rubric: Rubric, judgement: WrittenJudgement, studentAnswer: string): AggregateResult {

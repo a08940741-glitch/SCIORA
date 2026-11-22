@@ -7,7 +7,7 @@ import { NoopRetriever, type SourceRetriever } from "./retriever.ts";
  * Wikipedia retriever (free public MediaWiki Action API, no key).
  *
  * Safety & respectful use:
- *  - Fixed hosts only ({ar,fr,en}.wikipedia.org); user text never controls the URL (no SSRF).
+ *  - Fixed host only (en.wikipedia.org: SCIORA is English-only); user text never controls the URL (no SSRF).
  *  - Descriptive, configurable User-Agent; `maxlag=5`; minimum interval between requests;
  *    in-memory cache (TTL); at most `maxRetries` retries with exponential backoff that honours
  *    Retry-After (capped); every wait is cancelled when the caller's AbortSignal fires.
@@ -18,12 +18,12 @@ import { NoopRetriever, type SourceRetriever } from "./retriever.ts";
  *    null; lastModified is the real timestamp of the latest revision reported by the API.
  */
 
-export const WIKIS = ["ar", "fr", "en"] as const;
+/** SCIORA is English-only, so only English Wikipedia is searched. */
+export const WIKIS = ["en"] as const;
 export type Wiki = (typeof WIKIS)[number];
 
 const MAX_BODY_CHARS = 1_000_000;
 const MAX_EXCERPT = 1500;
-const ARABIC = /[؀-ۿ]/;
 
 const ApiResponse = z.object({
   error: z.object({ code: z.string(), info: z.string().optional() }).optional(),
@@ -49,26 +49,18 @@ const ApiResponse = z.object({
 });
 
 /** Common question words removed from the search text (Darija, MSA, French, English, Arabizi). */
-const QUESTION_WORDS = [
-  "شنو هو", "شنو هي", "شنو هما", "اشنو هو", "شنو", "اشنو", "علاش", "كيفاش", "واش", "شرح ليا", "شرح",
-  "ما هو", "ما هي", "ما هما", "ماذا", "لماذا", "كيف", "هل", "عرف",
-  "qu'est-ce que", "qu'est ce que", "c'est quoi", "explique", "pourquoi", "comment",
-  "what is", "what are", "how does", "how do", "why", "explain",
-  "chno howa", "chno hiya", "chnou", "chno", "kifach", "3lach", "wach",
-];
+const QUESTION_WORDS = ["what is", "what are", "how does", "how do", "why", "explain"];
 
 export function cleanSearchQuery(raw: string): string {
-  let q = ` ${raw.toLowerCase().replace(/[?؟!.,،:;"«»()]/g, " ")} `;
+  let q = ` ${raw.toLowerCase().replace(/[?!.,:;"«»()]/g, " ")} `;
   for (const w of QUESTION_WORDS) q = q.split(` ${w} `).join(" ");
   q = q.replace(/\s+/g, " ").trim().slice(0, 200);
   return q || raw.trim().slice(0, 200);
 }
 
-/** Which wikis to try, in order (max 2), based on the query's script and the answer language. */
-export function chooseWikis(query: string, language: string): Wiki[] {
-  if (ARABIC.test(query)) return language === "fr" ? ["ar", "fr"] : ["ar", "en"];
-  if (language === "fr") return ["fr", "en"];
-  return ["en", "fr"];
+/** English-only: always English Wikipedia (no fallback to other-language wikis). */
+export function chooseWikis(_query: string, _language: string): Wiki[] {
+  return ["en"];
 }
 
 export class WikipediaHttpError extends Error {

@@ -8,20 +8,20 @@ import type { KnowledgeProvider } from "../../src/knowledge/provider.ts";
 import type { QuizOutput } from "../../src/knowledge/schemas.ts";
 import { sampleKnowledgeAnswer } from "../helpers/knowledge.ts";
 
-const CONTENT = { topic: "التركيب الضوئي", summary: "النباتات كتصاوب الماكلة بالضو", points: [] as string[] };
+const CONTENT = { topic: "Photosynthesis", summary: "Plants make food using light", points: [] as string[] };
 
 test("connections: duplicates, the topic itself and overflow are removed", () => {
   const a = sampleKnowledgeAnswer();
   a.connections = [
-    { concept: "التنفس الخلوي", relation: "r" },
-    { concept: "التنفّس الخلوي", relation: "duplicate (diacritic)" },
-    { concept: "التركيب الضوئي", relation: "same as topic" },
-    ...["أ", "ب", "ج", "د", "هـ", "و"].map((x) => ({ concept: `مفهوم ${x}`, relation: "r" })),
+    { concept: "Cellular respiration", relation: "r" },
+    { concept: "Cellular  RESPIRATION", relation: "duplicate (case and spacing)" },
+    { concept: "Photosynthesis", relation: "same as topic" },
+    ...["A", "B", "C", "D", "E", "F"].map((x) => ({ concept: `Concept ${x}`, relation: "r" })),
   ];
   const out = cleanConnections(a);
   assert.equal(out.length, 5);
-  assert.equal(out.filter((c) => c.concept.includes("التنف")).length, 1);
-  assert.equal(out.some((c) => c.concept === "التركيب الضوئي"), false);
+  assert.equal(out.filter((c) => /respiration/i.test(c.concept)).length, 1);
+  assert.equal(out.some((c) => c.concept === "Photosynthesis"), false);
 });
 
 test("quiz cleaning: questions with a missing correct choice or duplicate ids are dropped", () => {
@@ -54,24 +54,24 @@ test("quiz with no valid question → bad_output from the service", async () => 
       meta: { source: "anthropic", simulated: false, model: "b", fallbackUsed: false, generatedAt: "t" },
     }),
   };
-  await assert.rejects(new KnowledgeService({ provider }).transform({ mode: "quiz", level: "beginner", language: "darija", content: CONTENT }), (e: unknown) => e instanceof ProviderError && e.code === "bad_output");
+  await assert.rejects(new KnowledgeService({ provider }).transform({ mode: "quiz", level: "beginner", language: "en", content: CONTENT }), (e: unknown) => e instanceof ProviderError && e.code === "bad_output");
 });
 
 test("learning mode via service (demo): simplify, examples, quiz; quiz flagged self-check only", async () => {
   const svc = new KnowledgeService({ provider: new DemoKnowledgeProvider() });
-  const s = await svc.transform({ mode: "simplify", level: "beginner", language: "darija", content: CONTENT });
+  const s = await svc.transform({ mode: "simplify", level: "beginner", language: "en", content: CONTENT });
   assert.equal(s.mode, "simplify");
   assert.equal(s.selfCheckOnly, false);
-  const e = await svc.transform({ mode: "examples", level: "beginner", language: "darija", content: CONTENT });
+  const e = await svc.transform({ mode: "examples", level: "beginner", language: "en", content: CONTENT });
   assert.equal(e.mode, "examples");
-  const q = await svc.transform({ mode: "quiz", level: "beginner", language: "darija", content: CONTENT });
+  const q = await svc.transform({ mode: "quiz", level: "beginner", language: "en", content: CONTENT });
   assert.equal(q.mode, "quiz");
   assert.equal(q.selfCheckOnly, true);
   assert.equal(q.meta.simulated, true);
 });
 
 test("learning mode is independent of Phase 1 grading (no token, no exercise set in the response)", async () => {
-  const q = await new KnowledgeService({ provider: new DemoKnowledgeProvider() }).transform({ mode: "quiz", level: "beginner", language: "darija", content: CONTENT });
+  const q = await new KnowledgeService({ provider: new DemoKnowledgeProvider() }).transform({ mode: "quiz", level: "beginner", language: "en", content: CONTENT });
   const raw = JSON.stringify(q);
   assert.equal(raw.includes("exerciseSet"), false);
   assert.equal(raw.includes("token"), false);
@@ -79,8 +79,8 @@ test("learning mode is independent of Phase 1 grading (no token, no exercise set
 
 test("demo query returns cleaned suggestions for every topic", async () => {
   const svc = new KnowledgeService({ provider: new DemoKnowledgeProvider() });
-  for (const question of ["التركيب الضوئي", "فيثاغورس", "ننشر", "مبدأ القصور", "دورة الماء"]) {
-    const r = await svc.query({ question, level: "intermediate", language: "darija" });
+  for (const question of ["Photosynthesis", "Pythagoras", "expand", "The principle of inertia", "The water cycle"]) {
+    const r = await svc.query({ question, level: "intermediate", language: "en" });
     assert.equal(r.verification.status, "demo");
     assert.ok(r.connections.length >= 1 && r.connections.length <= 5, question);
     assert.ok(r.connections.every((c) => c.suggested));

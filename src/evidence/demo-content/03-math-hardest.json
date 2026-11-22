@@ -2,38 +2,11 @@
   "id": "math-hardest",
   "reviewed": false,
   "matchKeywords": [
-    "أصعب مادة",
-    "اصعب مادة",
-    "الرياضيات صعيبة",
-    "الرياضيات أصعب",
-    "maths est la plus difficile",
     "math is the hardest",
-    "riyadiyat s3iba",
     "mathematics is the hardest",
     "hardest school subject"
   ],
   "analysis": {
-    "understood": {
-      "claimRestated": "الرياضيات هي أصعب مادة فالمدرسة.",
-      "detectedLanguage": "darija",
-      "isAnalyzable": true,
-      "clarification": null
-    },
-    "subClaims": [
-      {
-        "id": "c1",
-        "text": "الرياضيات هي أصعب مادة.",
-        "type": "opinion",
-        "evidence": [],
-        "missingEvidence": "ما كاينش دليل كيقدر يحسم هاد الرأي؛ الصعوبة كتختلف من تلميذ لتلميذ. ممكن غير نقارنو معطيات بحال نتائج الامتحانات، وحتى هي ما كتقيسش \"الصعوبة\" مباشرة.",
-        "backgroundNote": null
-      }
-    ],
-    "caveats": [
-      "هادا رأي شخصي، لذلك ما كيتحكمش عليه بصحيح ولا غالط."
-    ]
-  },
-  "analysisEn": {
     "understood": {
       "claimRestated": "Mathematics is the hardest school subject.",
       "detectedLanguage": "en",

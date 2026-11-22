@@ -20,14 +20,14 @@ Because without retrieved evidence SCIORA cannot know. Showing "insufficient evi
 **Is Wikipedia reliable enough?**
 Not on its own, and SCIORA says so: a notice appears whenever an answer or verdict rests only on Wikipedia, with advice to check a textbook or official source.
 
-**How do you grade answers written in Darija or Arabizi fairly?**
-The rubric prompt asks the AI to judge meaning, not wording; spelling and dialect do not lower the grade. Doubtful cases become "uncertain" (never "incorrect") and do not affect the level estimate. 37 test cases cover Darija, MSA, Arabizi, French, paraphrases and misspellings (labels still to be reviewed by me).
+**Why is SCIORA English-only, and how do you grade written answers fairly?**
+SCIORA is English-only for an international audience: it avoids mixed-language answers and translation errors, and a question in another language gets a clear English-only notice. The rubric prompt asks the AI to judge meaning, not wording; spelling does not lower the grade. Doubtful cases become "uncertain" (never "incorrect") and do not affect the level estimate. 38 English test cases cover formal, informal, paraphrased and misspelled answers, partial and wrong answers, and maths.
 
 **What about privacy?**
 No accounts, names or emails. Progress and knowledge cards are stored only in the browser. Logs exclude answers and questions.
 
 **What would you improve next?**
-Live AI testing and evaluation (especially Darija quality), my own review of all demo content, more reliable sources beyond Wikipedia, and optional accounts for synced progress with protections for minors.
+Broader live AI testing and evaluation, my own review of all demo content, more reliable sources beyond Wikipedia, and optional accounts for synced progress with protections for minors.
 
 **Who built it?**
 I directed the project, made the decisions and tested it. The code was written with the help of Claude (Anthropic) via Claude Code, as disclosed in `AI_USAGE_DISCLOSURE.md`.

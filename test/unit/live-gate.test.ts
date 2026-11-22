@@ -28,3 +28,25 @@ for (const script of ["scripts/eval-grading.ts", "scripts/live-smoke.ts"]) {
     assert.match(r.stderr, /REFUSED/);
   });
 }
+
+// Groq provider: the same three switches are required; no switch is loosened.
+for (const script of ["scripts/eval-grading.ts", "scripts/live-smoke.ts"]) {
+  test(`${script} refuses with a Groq key but no SCIORA_ALLOW_LIVE_TESTS`, () => {
+    const r = run(script, { SCIORA_AI_MODE: "live", SCIORA_AI_PROVIDER: "groq", GROQ_API_KEY: "fake-groq-key-for-tests-0000000000" });
+    assert.equal(r.status, 2, r.stderr);
+    assert.match(r.stderr, /REFUSED/);
+  });
+
+  test(`${script} refuses with approval switch and Groq key but demo mode`, () => {
+    const r = run(script, { SCIORA_ALLOW_LIVE_TESTS: "1", SCIORA_AI_PROVIDER: "groq", GROQ_API_KEY: "fake-groq-key-for-tests-0000000000" });
+    assert.equal(r.status, 2, r.stderr);
+    assert.match(r.stderr, /REFUSED/);
+  });
+
+  test(`${script} refuses Groq live mode without GROQ_API_KEY (an Anthropic key does not count)`, () => {
+    const r = run(script, { SCIORA_ALLOW_LIVE_TESTS: "1", SCIORA_AI_MODE: "live", SCIORA_AI_PROVIDER: "groq", ANTHROPIC_API_KEY: "test-key-not-real" });
+    assert.equal(r.status, 2, r.stderr);
+    assert.match(r.stderr, /GROQ_API_KEY/);
+    assert.equal(r.stderr.includes("test-key-not-real"), false);
+  });
+}

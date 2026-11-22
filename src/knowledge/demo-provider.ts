@@ -24,25 +24,14 @@ import {
 
 const DemoTransforms = z.strictObject({ simplify: SimplifyOutput, examples: ExamplesOutput, quiz: QuizOutput });
 
-/**
- * `answer`/`transforms` are the Darija version. `answerEn`/`transformsEn` are the English version
- * (default English experience); optional, fully validated, and must be provided together.
- */
-export const DemoKnowledgeFile = z
-  .strictObject({
-    id: z.string().regex(/^[a-z0-9-]+$/),
-    reviewed: z.boolean(),
-    matchKeywords: z.array(z.string().min(2)).min(1),
-    answer: GeneratedKnowledgeAnswer,
-    transforms: DemoTransforms,
-    answerEn: GeneratedKnowledgeAnswer.optional(),
-    transformsEn: DemoTransforms.optional(),
-  })
-  .superRefine((f, ctx) => {
-    if (!!f.answerEn !== !!f.transformsEn) {
-      ctx.addIssue({ code: "custom", message: "answerEn and transformsEn must be provided together" });
-    }
-  });
+/** One demo knowledge topic (English-only, like the rest of SCIORA). */
+export const DemoKnowledgeFile = z.strictObject({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  reviewed: z.boolean(),
+  matchKeywords: z.array(z.string().min(2)).min(1),
+  answer: GeneratedKnowledgeAnswer,
+  transforms: DemoTransforms,
+});
 export type DemoKnowledgeFile = z.infer<typeof DemoKnowledgeFile>;
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -71,8 +60,8 @@ export class DemoKnowledgeProvider implements KnowledgeProvider {
     this.files = files;
   }
 
-  topics(): { id: string; topic: string; topicEn: string | null; reviewed: boolean }[] {
-    return this.files.map((f) => ({ id: f.id, topic: f.answer.understood.topic, topicEn: f.answerEn?.understood.topic ?? null, reviewed: f.reviewed }));
+  topics(): { id: string; topic: string; reviewed: boolean }[] {
+    return this.files.map((f) => ({ id: f.id, topic: f.answer.understood.topic, reviewed: f.reviewed }));
   }
 
   private meta(): KnowledgeMeta {
@@ -92,11 +81,8 @@ export class DemoKnowledgeProvider implements KnowledgeProvider {
   async answer(input: KnowledgeAnswerInput) {
     const f = this.find(input.request.question);
     if (!f) throw new ProviderError("not_in_demo", NOT_IN_DEMO);
-    // English request → English version when available; otherwise the Darija version.
-    const english = input.request.language === "en" && !!f.answerEn;
-    const base = english ? f.answerEn! : f.answer;
+    const base = f.answer;
     const notices: NoticeCode[] = ["demo_content"];
-    if (input.request.language !== "darija" && !english) notices.push("demo_language_fixed");
     if (input.request.level !== "intermediate") notices.push("demo_level_fixed");
     if (!f.reviewed) notices.push("content_unreviewed");
     // D1: strip any source ids defensively (demo content must never carry citations).
@@ -110,7 +96,7 @@ export class DemoKnowledgeProvider implements KnowledgeProvider {
   async transform(req: TransformRequest): Promise<{ output: TransformOutput; meta: KnowledgeMeta; notices: NoticeCode[] }> {
     const f = this.find(`${req.content.topic} ${req.content.summary}`);
     if (!f) throw new ProviderError("not_in_demo", NOT_IN_DEMO);
-    const t = req.language === "en" && f.transformsEn ? f.transformsEn : f.transforms;
+    const t = f.transforms;
     const output: TransformOutput =
       req.mode === "simplify" ? { mode: "simplify", data: t.simplify } : req.mode === "examples" ? { mode: "examples", data: t.examples } : { mode: "quiz", data: t.quiz };
     const notices: NoticeCode[] = ["demo_content"];

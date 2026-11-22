@@ -9,7 +9,7 @@ import { StubLiveProvider, makeApp, TEST_SECRET_B64 } from "../helpers/app.ts";
 import { fakeClient, okResponse } from "../helpers/fake-client.ts";
 import { fakeSource, sampleKnowledgeAnswer } from "../helpers/knowledge.ts";
 
-const CONTENT = { topic: "التركيب الضوئي", summary: "النباتات كتصاوب الماكلة بالضو", points: ["اليخضور كيشد الضو"] };
+const CONTENT = { topic: "Photosynthesis", summary: "Plants make food using light", points: ["Chlorophyll captures light"] };
 const query = (app: any, payload: object) => app.inject({ method: "POST", url: "/api/knowledge/query", payload });
 const transform = (app: any, payload: object) => app.inject({ method: "POST", url: "/api/knowledge/transform", payload });
 
@@ -42,7 +42,7 @@ test("health reports the knowledge module: demo, no retrieval, demo topics; Expl
 
 test("demo query: 200, status demo, no sources, DEMO caveat, suggestions labelled", async () => {
   const { app } = await makeApp();
-  const res = await query(app, { question: "شنو هو التركيب الضوئي؟" });
+  const res = await query(app, { question: "What is photosynthesis?" });
   const b = res.json();
   assert.equal(res.statusCode, 200);
   assert.equal(b.meta.simulated, true);
@@ -53,15 +53,17 @@ test("demo query: 200, status demo, no sources, DEMO caveat, suggestions labelle
   assert.ok(b.answer.segments.every((s: any) => ["fact", "explanation", "assumption", "uncertainty"].includes(s.kind)));
 });
 
-test("demo query in Arabizi and English is understood", async () => {
+test("English-only: an English question is answered; Arabizi gets the English-only notice (422)", async () => {
   const { app } = await makeApp();
-  assert.equal((await query(app, { question: "chno howa tarkib daw2i", language: "darija" })).statusCode, 200);
   assert.equal((await query(app, { question: "What is the water cycle?", language: "en" })).statusCode, 200);
+  const r = await query(app, { question: "chno howa tarkib daw2i" });
+  assert.equal(r.statusCode, 422);
+  assert.equal(r.json().error, "english_only");
 });
 
 test("demo unknown topic → 404 not_in_demo", async () => {
   const { app } = await makeApp();
-  const res = await query(app, { question: "شكون ربح كاس العالم؟" });
+  const res = await query(app, { question: "Who won the World Cup?" });
   assert.equal(res.statusCode, 404);
   assert.equal(res.json().error, "not_in_demo");
 });
@@ -104,7 +106,7 @@ test("live failure is an error, never replaced by demo content", async () => {
     },
   };
   const { app } = await makeApp({ knowledgeProvider: p });
-  const r1 = await query(app, { question: "شنو هو التركيب الضوئي؟" });
+  const r1 = await query(app, { question: "What is photosynthesis?" });
   assert.equal(r1.statusCode, 503);
   assert.equal(r1.json().error, "unavailable");
   assert.equal(r1.json().answer, undefined);
@@ -178,24 +180,24 @@ test("shared daily budget: live knowledge calls count against SCIORA_DAILY_LIMIT
   const { provider } = fakeLiveKnowledge([okResponse(sampleKnowledgeAnswer(), "claude-sonnet-5-5")]);
   const live = await makeApp({ provider: new StubLiveProvider(), knowledgeProvider: provider, env: { SCIORA_DAILY_LIMIT: "1" } });
   assert.equal((await query(live.app, { question: "q??" })).statusCode, 200);
-  const second = await live.app.inject({ method: "POST", url: "/api/learn", payload: { question: "شنو هو التركيب الضوئي؟" } });
+  const second = await live.app.inject({ method: "POST", url: "/api/learn", payload: { question: "What is photosynthesis?" } });
   assert.equal(second.statusCode, 503, "Phase 1 lesson blocked by the shared limit");
   assert.equal(second.json().error, "daily_limit");
   const demo = await makeApp({ env: { SCIORA_DAILY_LIMIT: "1" } });
-  assert.equal((await query(demo.app, { question: "التركيب الضوئي" })).statusCode, 200);
-  assert.equal((await query(demo.app, { question: "التركيب الضوئي" })).statusCode, 200);
+  assert.equal((await query(demo.app, { question: "Photosynthesis" })).statusCode, 200);
+  assert.equal((await query(demo.app, { question: "Photosynthesis" })).statusCode, 200);
 });
 
 test("rate limit applies to knowledge routes", async () => {
   const { app } = await makeApp({ env: { SCIORA_RATE_LIMIT_PER_MINUTE: "2" } });
   const codes = [];
-  for (let i = 0; i < 3; i++) codes.push((await query(app, { question: "التركيب الضوئي" })).statusCode);
+  for (let i = 0; i < 3; i++) codes.push((await query(app, { question: "Photosynthesis" })).statusCode);
   assert.deepEqual(codes, [200, 200, 429]);
 });
 
 test("security headers present on knowledge routes; no CORS", async () => {
   const { app } = await makeApp();
-  const r = await query(app, { question: "التركيب الضوئي" });
+  const r = await query(app, { question: "Photosynthesis" });
   assert.match(String(r.headers["content-security-policy"]), /default-src 'self'/);
   assert.equal(r.headers["access-control-allow-origin"], undefined);
 });

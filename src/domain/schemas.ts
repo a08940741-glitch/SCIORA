@@ -11,8 +11,9 @@ import { z } from "zod";
  */
 
 export const LEVELS = ["beginner", "school", "intermediate", "advanced"] as const;
-export const LANGUAGES = ["darija", "msa", "fr", "en"] as const;
-export const SUBJECTS = ["math", "physics", "life_earth_sciences", "arabic", "french", "general_science"] as const;
+/** SCIORA is English-only: every lesson, exercise, grading message and AI answer is in English. */
+export const LANGUAGES = ["en"] as const;
+export const SUBJECTS = ["math", "physics", "life_earth_sciences", "general_science"] as const;
 export const VERDICTS = ["correct", "partially_correct", "incorrect", "uncertain"] as const;
 
 export const Level = z.enum(LEVELS);
@@ -32,7 +33,7 @@ const Text = (max: number) => z.string().min(1).max(max);
 export const LessonRequest = z.strictObject({
   question: z.string().trim().min(3).max(1000),
   level: Level.default("school"),
-  language: Language.default("darija"),
+  language: Language.default("en"),
 });
 export type LessonRequest = z.infer<typeof LessonRequest>;
 
@@ -121,8 +122,8 @@ export const GeneratedLesson = z.object({
     /** Set when the question is unclear or off-topic. */
     clarification: z.string().max(500).nullable(),
   }),
-  /** Simple explanation: Moroccan Darija, or plain English when the lesson language is "en". */
-  explanationDarija: Text(6000),
+  /** Simple, student-friendly explanation in plain English. */
+  explanationSimple: Text(6000),
   explanationFormal: Text(6000),
   steps: z.array(Text(600)).min(1).max(8),
   example: z.object({ problem: Text(1000), solution: Text(2000) }),
@@ -153,7 +154,7 @@ export type WrittenJudgement = z.infer<typeof WrittenJudgement>;
 // ---------------------------------------------------------------- provenance
 
 export const Meta = z.object({
-  source: z.enum(["anthropic", "demo"]),
+  source: z.enum(["anthropic", "groq", "demo"]),
   simulated: z.boolean(),
   model: z.string().nullable(),
   fallbackUsed: z.boolean(),
@@ -185,7 +186,7 @@ export function toPublicExercise(ex: SealedExercise): PublicExercise {
 
 export interface PublicLesson {
   understood: GeneratedLesson["understood"];
-  explanationDarija: string;
+  explanationSimple: string;
   explanationFormal: string;
   steps: string[];
   example: GeneratedLesson["example"];
@@ -197,7 +198,7 @@ export interface PublicLesson {
 export function toPublicLesson(l: GeneratedLesson): PublicLesson {
   return {
     understood: { ...l.understood },
-    explanationDarija: l.explanationDarija,
+    explanationSimple: l.explanationSimple,
     explanationFormal: l.explanationFormal,
     steps: [...l.steps],
     example: { ...l.example },
@@ -236,7 +237,7 @@ export interface GradeResult {
   /** Revealed only after this (final) graded attempt. */
   correctAnswer: string;
   explanation: string;
-  gradedBy: { source: "anthropic" | "demo" | "rules"; simulated: boolean; model: string | null };
+  gradedBy: { source: "anthropic" | "groq" | "demo" | "rules"; simulated: boolean; model: string | null };
   /** Learner model must ignore uncertain results. */
   countsTowardEstimate: boolean;
 }

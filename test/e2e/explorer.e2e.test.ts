@@ -123,7 +123,7 @@ test("explorer demo flow: labelled answer, no sources, suggestions, learning mod
   assert.equal(await page.locator(".estimate-line").count(), 0, "quiz does not touch the level estimate");
 
   // Save as a card in a named collection.
-  await page.fill("#k-collection", "بيولوجيا");
+  await page.fill("#k-collection", "Biology");
   await page.click("#k-save");
   assert.match(await page.textContent("#k-save-msg"), /Saved to My Cards/);
   assert.equal(await page.isDisabled("#k-save"), true);
@@ -144,7 +144,7 @@ test("explorer demo flow: labelled answer, no sources, suggestions, learning mod
   await page.fill("#c-search", "zzzz-no-match");
   assert.equal(await page.locator("[data-card-id]").count(), 0);
   await page.fill("#c-search", "");
-  await page.selectOption("#c-collection", "بيولوجيا");
+  await page.selectOption("#c-collection", "Biology");
   assert.equal(await page.locator("[data-card-id]").count(), 1);
 
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/explorer-cards.png`, fullPage: true });
@@ -163,7 +163,7 @@ test("explorer: unknown topic in demo shows a localized error, no invented conte
   const { page, ctx } = await newPage();
   await page.goto(demoBase + "/");
   await page.click("#tab-explore");
-  await page.fill("#k-question", "شكون ربح كاس العالم؟");
+  await page.fill("#k-question", "Who won the World Cup?");
   await page.click("#k-ask");
   await page.waitForSelector("#k-result .alert-error");
   assert.match(await page.textContent("#k-result"), /Demo mode/);
@@ -173,7 +173,7 @@ test("explorer: unknown topic in demo shows a localized error, no invented conte
 
 test("English interface: no Arabic script in explorer and cards interface text (content excluded)", async () => {
   const { page, ctx } = await newPage();
-  await askExplorer(page, demoBase, "دورة الماء");
+  await askExplorer(page, demoBase, "The water cycle");
   await page.click('[data-mode="quiz"]');
   await page.waitForSelector('[data-transform="quiz"]');
   await page.click("#k-save");
@@ -236,7 +236,7 @@ test("tampered cards in localStorage render safely (no javascript: links, status
 
 test("mobile: explorer renders in RTL without horizontal overflow", async () => {
   const { page, problems, ctx } = await newPage({ width: 390, height: 844 });
-  await askExplorer(page, demoBase, "فيثاغورس");
+  await askExplorer(page, demoBase, "Pythagoras");
   await page.click('[data-mode="examples"]');
   await page.waitForSelector('[data-transform="examples"]');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);

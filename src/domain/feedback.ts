@@ -1,26 +1,11 @@
 import type { Language, SealedExercise, Verdict } from "./schemas.ts";
 
-/** Short fixed feedback for rule-graded answers, in the student's language. */
+/** Short fixed feedback for rule-graded answers. SCIORA is English-only. */
 const MESSAGES: Record<Language, Record<Exclude<Verdict, "partially_correct">, string>> = {
-  darija: {
-    correct: "جواب صحيح! مزيان، كمل هكا.",
-    incorrect: "الجواب ماشي صحيح هاد المرة. قرا الشرح باش تفهم فين كاين الغلط، ومن بعد جرب تمرين جديد.",
-    uncertain: "SCIORA ما متأكدش من التصحيح ديال هاد الجواب.",
-  },
-  msa: {
-    correct: "إجابة صحيحة! أحسنت.",
-    incorrect: "الإجابة غير صحيحة هذه المرة. اقرأ الشرح لتفهم موضع الخطأ، ثم جرّب تمرينا جديدا.",
-    uncertain: "SCIORA غير متأكد من تصحيح هذه الإجابة.",
-  },
   en: {
     correct: "Correct! Well done.",
     incorrect: "Not correct this time. Read the explanation to see where the mistake is, then try a new exercise.",
     uncertain: "SCIORA is not sure about the grading of this answer.",
-  },
-  fr: {
-    correct: "Bonne réponse ! Bravo.",
-    incorrect: "La réponse n'est pas correcte cette fois. Lis l'explication pour comprendre l'erreur, puis essaie un nouvel exercice.",
-    uncertain: "SCIORA n'est pas sûr de la correction de cette réponse.",
   },
 };
 
@@ -28,22 +13,11 @@ export function ruleFeedback(language: Language, verdict: "correct" | "incorrect
   return MESSAGES[language][verdict];
 }
 
+/** Hint when a numeric/expression answer cannot be parsed (does not consume the attempt). */
 export const UNREADABLE_HINT: Record<Language, Record<"numeric" | "expression", string>> = {
-  darija: {
-    numeric: "ما قدرتش نقرا الجواب بحال عدد. كتب غير العدد، مثلا: 0.5 ولا 1/2 ولا 13",
-    expression: "ما قدرتش نقرا التعبير. كتبو بحال: 2*x + 2 ولا 2(x+1)",
-  },
-  msa: {
-    numeric: "تعذّرت قراءة الإجابة كعدد. اكتب العدد فقط، مثلا: 0.5 أو 1/2 أو 13",
-    expression: "تعذّرت قراءة التعبير. اكتبه مثل: 2*x + 2 أو 2(x+1)",
-  },
   en: {
     numeric: "Your answer could not be read as a number. Write only the number, for example 0.5, 1/2 or 13.",
     expression: "Your expression could not be read. Write it like 2*x + 2 or 2(x+1).",
-  },
-  fr: {
-    numeric: "Je n'ai pas pu lire un nombre. Écris seulement le nombre, par exemple : 0.5 ou 1/2 ou 13",
-    expression: "Je n'ai pas pu lire l'expression. Écris-la comme : 2*x + 2 ou 2(x+1)",
   },
 };
 
@@ -61,17 +35,8 @@ export function correctAnswerText(ex: SealedExercise): string {
   }
 }
 
-/** Localized explanation of WHY a grade is uncertain. */
-export function uncertaintyText(language: Language, unclearRequired: string[]): string {
-  if (unclearRequired.length > 0) {
-    const list = unclearRequired.join(language === "en" ? "; " : " ؛ ");
-    if (language === "fr") return `SCIORA n'a pas pu déterminer : ${list}`;
-    if (language === "en") return `SCIORA could not determine: ${list}`;
-    if (language === "msa") return `لم يتمكن SCIORA من التحقق من: ${list}`;
-    return `SCIORA ما قدرش يتأكد من: ${list}`;
-  }
-  if (language === "fr") return "Le correcteur automatique n'était pas sûr de son jugement.";
-  if (language === "en") return "The automatic grader was not sure about its judgement.";
-  if (language === "msa") return "لم يكن المصحح الآلي متأكدا من حكمه.";
-  return "المصحح الآلي ما كانش متأكد من الحكم ديالو.";
+/** Explanation of WHY a grade is uncertain. */
+export function uncertaintyText(_language: Language, unclearRequired: string[]): string {
+  if (unclearRequired.length > 0) return `SCIORA could not determine: ${unclearRequired.join("; ")}`;
+  return "The automatic grader was not sure about its judgement.";
 }

@@ -31,7 +31,7 @@ test("health reports the evidence module (demo, no retrieval, 5 demo claims)", a
 
 test("demo analysis: insufficient_evidence, basis none, no sources, DEMO caveat", async () => {
   const { app } = await makeApp();
-  const r = await analyze(app, { claim: "الشمس كتدور على الأرض" });
+  const r = await analyze(app, { claim: "The Sun orbits the Earth" });
   const b = r.json();
   assert.equal(r.statusCode, 200);
   assert.equal(b.meta.simulated, true);
@@ -73,7 +73,7 @@ test("live (fake) + FAKE retriever: verified quote → contradicted with https s
 test("live failure → error, never demo content", async () => {
   const p: EvidenceProvider = { name: "anthropic", simulated: false, model: "m", analyze: async () => { throw new ProviderError("unavailable", "down"); } };
   const { app } = await makeApp({ evidenceProvider: p });
-  const r = await analyze(app, { claim: "الشمس كتدور على الأرض" });
+  const r = await analyze(app, { claim: "The Sun orbits the Earth" });
   assert.equal(r.statusCode, 503);
   assert.equal(r.json().overall, undefined);
 });
@@ -98,18 +98,18 @@ test("shared daily limit covers evidence calls (live); demo calls are free", asy
   const { provider } = liveEvidence([]);
   const live = await makeApp({ provider: new StubLiveProvider(), evidenceProvider: provider, env: { SCIORA_DAILY_LIMIT: "1" } });
   assert.equal((await analyze(live.app, { claim: "The Sun orbits the Earth" })).statusCode, 200);
-  const blocked = await live.app.inject({ method: "POST", url: "/api/learn", payload: { question: "شنو هو التركيب الضوئي؟" } });
+  const blocked = await live.app.inject({ method: "POST", url: "/api/learn", payload: { question: "What is photosynthesis?" } });
   assert.equal(blocked.json().error, "daily_limit");
   const demo = await makeApp({ env: { SCIORA_DAILY_LIMIT: "1" } });
-  assert.equal((await analyze(demo.app, { claim: "الشمس كتدور على الأرض" })).statusCode, 200);
-  assert.equal((await analyze(demo.app, { claim: "الشمس كتدور على الأرض" })).statusCode, 200);
+  assert.equal((await analyze(demo.app, { claim: "The Sun orbits the Earth" })).statusCode, 200);
+  assert.equal((await analyze(demo.app, { claim: "The Sun orbits the Earth" })).statusCode, 200);
 });
 
 test("rate limit and security headers apply", async () => {
   const { app } = await makeApp({ env: { SCIORA_RATE_LIMIT_PER_MINUTE: "2" } });
   const codes = [];
-  for (let i = 0; i < 3; i++) codes.push((await analyze(app, { claim: "الشمس كتدور على الأرض" })).statusCode);
+  for (let i = 0; i < 3; i++) codes.push((await analyze(app, { claim: "The Sun orbits the Earth" })).statusCode);
   assert.deepEqual(codes, [200, 200, 429]);
-  const r = await analyze((await makeApp()).app, { claim: "الشمس كتدور على الأرض" });
+  const r = await analyze((await makeApp()).app, { claim: "The Sun orbits the Earth" });
   assert.match(String(r.headers["content-security-policy"]), /default-src 'self'/);
 });

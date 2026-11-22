@@ -1,4 +1,5 @@
 import type { FastifyReply } from "fastify";
+import { ENGLISH_ONLY_MESSAGE, looksNonEnglish } from "./domain/english-only.ts";
 
 /**
  * Shared HTTP helpers. Moved verbatim from app.ts (behaviour-preserving) so that the
@@ -27,4 +28,12 @@ export class DailyBudget {
 export function sendError(reply: FastifyReply, status: number, error: string, message: string, retryAfterSec?: number, extra: Record<string, unknown> = {}) {
   if (retryAfterSec !== undefined) reply.header("Retry-After", String(Math.max(1, Math.ceil(retryAfterSec))));
   return reply.code(status).send({ error, message, ...extra });
+}
+
+
+/** Sends the English-only notice (422) if any of the texts is clearly not English. Returns true if sent. */
+export function rejectNonEnglish(reply: FastifyReply, ...texts: string[]): boolean {
+  if (!texts.some((t) => looksNonEnglish(t))) return false;
+  sendError(reply, 422, "english_only", ENGLISH_ONLY_MESSAGE);
+  return true;
 }

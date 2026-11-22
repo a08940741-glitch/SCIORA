@@ -41,10 +41,11 @@ test("public view ignores extra fields injected into sealed objects (whitelist)"
 });
 
 test("LessonRequest: defaults, trimming and limits", () => {
-  const ok = LessonRequest.parse({ question: "  شنو هو التركيب الضوئي؟  " });
+  const ok = LessonRequest.parse({ question: "  What is photosynthesis?  " });
   assert.equal(ok.level, "school");
-  assert.equal(ok.language, "darija");
-  assert.equal(ok.question, "شنو هو التركيب الضوئي؟");
+  assert.equal(ok.language, "en");
+  assert.equal(ok.question, "What is photosynthesis?");
+  for (const language of ["darija", "msa", "fr"]) assert.equal(LessonRequest.safeParse({ question: "valid?", language }).success, false, `English-only: ${language} rejected`);
   assert.equal(LessonRequest.safeParse({ question: "ab" }).success, false);
   assert.equal(LessonRequest.safeParse({ question: "x".repeat(1001) }).success, false);
   assert.equal(LessonRequest.safeParse({ question: "valid?", level: "genius" }).success, false);

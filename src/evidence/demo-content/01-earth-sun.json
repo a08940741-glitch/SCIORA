@@ -2,37 +2,11 @@
   "id": "earth-sun",
   "reviewed": false,
   "matchKeywords": [
-    "الأرض كتدور",
-    "الارض كتدور",
-    "الشمس كتدور",
-    "تدور الأرض",
     "earth orbits",
-    "la terre tourne",
-    "l2ard katdor",
-    "lard katdor",
     "sun orbits the earth",
     "orbits the earth"
   ],
   "analysis": {
-    "understood": {
-      "claimRestated": "الشمس هي اللي كتدور على الأرض.",
-      "detectedLanguage": "darija",
-      "isAnalyzable": true,
-      "clarification": null
-    },
-    "subClaims": [
-      {
-        "id": "c1",
-        "text": "الشمس كتدور على الأرض.",
-        "type": "factual",
-        "evidence": [],
-        "missingEvidence": "مصدر علمي موثوق: كتاب الفيزياء ولا علوم الأرض المدرسي، ولا مرجع فلكي رسمي.",
-        "backgroundNote": "حسب الفهم العلمي المتعارف عليه، الأرض هي اللي كتدور حول الشمس مرة فالعام، وكتدور على راسها مرة فاليوم. هادي معلومة عامة من الذكاء الاصطناعي، ماشي دليل؛ تحقق منها فالكتاب المدرسي."
-      }
-    ],
-    "caveats": []
-  },
-  "analysisEn": {
     "understood": {
       "claimRestated": "The Sun orbits the Earth.",
       "detectedLanguage": "en",

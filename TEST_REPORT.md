@@ -1,5 +1,23 @@
 # SCIORA — Test Report
 
+## Current results — 2026-11-22 (English-only version, branch `feature/groq-free-provider`)
+
+All commands below were actually executed on 2026-11-22; every test uses fake AI clients / fake fetch (no AI API calls).
+
+| Command | Result |
+|---|---|
+| `npx tsc --noEmit` | passes |
+| `npm test` (unit + API) | **402 / 402 pass**, 0 skipped |
+| `npm run test:e2e` (Playwright, desktop + mobile) | **37 / 37 pass**, 0 skipped |
+| `npm run secret-scan` | OK (154 files) |
+| `npm audit` | 0 vulnerabilities |
+
+Coverage highlights: English-only interface, prompts, input notice (422) and AI-output check; demo content is English-only; rule-based grading; rubric aggregation and quote checks; encrypted exercise tokens and replay protection; Knowledge Explorer source validation; Evidence Analyzer quote checks and server-side verdicts; Groq and Anthropic providers (errors, timeouts, 429, truncation, response-size cap, key redaction); live-AI failure messages in the browser; mobile layout at 360 px.
+
+**Live AI (separate, gated, not part of the automated suites):** on 2026-11-21 a first controlled test with Groq (`openai/gpt-oss-120b`, free tier) completed all 6 AI calls (lesson, grading of a correct and a wrong answer, knowledge answer with 4 Wikipedia sources, simplify, evidence analysis) and passed every automatic check. The first run hit the free-tier rate limit (HTTP 429) at call 5; the remaining calls passed after a pause. That run predates the English-only output check. Anthropic has never been run against the real API.
+
+> **Below: historical report** of the earlier multilingual version (before the English-only policy, 2026-11-21). Kept unchanged as a record; its test names and totals are outdated.
+
 _Only executed tests are listed; every row was produced by running the test file. History: Phase 1 154/154, Phase 2A 235/235, Phase 2B + Progress 284/284, English UI + Wikipedia 321/321._
 
 ## Run summary (development sprint: redesign, evidence and learning workflows)

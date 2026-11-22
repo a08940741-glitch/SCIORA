@@ -12,8 +12,8 @@ import { fakeClient, okResponse } from "../helpers/fake-client.ts";
 import { sampleKnowledgeAnswer } from "../helpers/knowledge.ts";
 
 const MODELS = { learn: "claude-sonnet-5-5", fast: "claude-haiku-5-5" };
-const REQ = { question: "شنو هو التركيب الضوئي؟", level: "intermediate" as const, language: "darija" as const };
-const CONTENT = { topic: "التركيب الضوئي", summary: "النباتات كتصاوب الماكلة بالضو", points: [] as string[] };
+const REQ = { question: "What is photosynthesis?", level: "intermediate" as const, language: "en" as const };
+const CONTENT = { topic: "Photosynthesis", summary: "Plants make food using light", points: [] as string[] };
 
 // ================================================================= demo
 
@@ -31,20 +31,17 @@ test("demo knowledge content: 5 valid files, unreviewed, ZERO sources/citations 
   }
 });
 
-test("demo matches Darija, MSA, French, English and Arabizi questions", async () => {
+test("demo matches English questions (English-only: French/Arabizi phrasings no longer match)", async () => {
   const p = new DemoKnowledgeProvider();
   const cases: [string, string][] = [
-    ["شنو هو التركيب الضوئي؟", "photosynthesis"],
-    ["explique la photosynthèse", "photosynthesis"],
     ["What is photosynthesis?", "photosynthesis"],
-    ["chno howa tarkib daw2i", "photosynthesis"],
-    ["kifach n7seb b fitagors", "pythagoras"],
+    ["How do I use the Pythagorean theorem?", "pythagoras"],
     ["What is the water cycle", "water-cycle"],
-    ["dawrat lma kifach katkhdem", "water-cycle"],
-    ["c'est quoi le principe d'inertie", "inertia"],
-    ["كيفاش ننشر تعبير", "distributivity"],
+    ["Explain Newton's first law of inertia", "inertia"],
+    ["How do I expand an expression", "distributivity"],
   ];
   for (const [q, id] of cases) assert.equal(p.find(q)?.id, id, q);
+  for (const q of ["chno howa tarkib daw2i", "kifach n7seb b fitagors", "dawrat lma kifach katkhdem"]) assert.equal(p.find(q), null, q);
 });
 
 test("demo answer: labelled demo, DEMO caveat first, no sources even if a citation sneaks into content", async () => {
@@ -59,25 +56,24 @@ test("demo answer: labelled demo, DEMO caveat first, no sources even if a citati
   assert.ok(out.answer.segments.every((s) => s.sourceIds.length === 0));
 });
 
-test("demo answer: other language / level → honest caveats in Darija", async () => {
-  // French has no demo version → served in Darija with an honest notice.
-  const out = await new DemoKnowledgeProvider().answer({ request: { ...REQ, language: "fr", level: "advanced" }, sources: [] });
-  assert.ok(out.notices?.includes("demo_language_fixed"));
+test("demo answer: other level → honest caveat; English-only, so no language notice exists", async () => {
+  const out = await new DemoKnowledgeProvider().answer({ request: { ...REQ, language: "en", level: "advanced" }, sources: [] });
   assert.ok(out.notices?.includes("demo_level_fixed"));
+  assert.equal(out.answer.understood.detectedLanguage, "en");
 });
 
 test("demo: unknown topic → not_in_demo (404), never invented content", async () => {
-  await assert.rejects(new DemoKnowledgeProvider().answer({ request: { ...REQ, question: "شكون ربح كاس العالم؟" }, sources: [] }), (e: unknown) => e instanceof ProviderError && e.code === "not_in_demo" && e.httpStatus === 404);
+  await assert.rejects(new DemoKnowledgeProvider().answer({ request: { ...REQ, question: "Who won the World Cup?" }, sources: [] }), (e: unknown) => e instanceof ProviderError && e.code === "not_in_demo" && e.httpStatus === 404);
 });
 
 test("demo transforms: simplify / examples / quiz for a known topic", async () => {
   const p = new DemoKnowledgeProvider();
   for (const mode of ["simplify", "examples", "quiz"] as const) {
-    const out = await p.transform({ mode, level: "intermediate", language: "darija", content: CONTENT });
+    const out = await p.transform({ mode, level: "intermediate", language: "en", content: CONTENT });
     assert.equal(out.output.mode, mode);
     assert.equal(out.meta.simulated, true);
   }
-  await assert.rejects(p.transform({ mode: "quiz", level: "intermediate", language: "darija", content: { topic: "zzz", summary: "qqq", points: [] } }), ProviderError);
+  await assert.rejects(p.transform({ mode: "quiz", level: "intermediate", language: "en", content: { topic: "zzz", summary: "qqq", points: [] } }), ProviderError);
 });
 
 // ================================================================= live provider (fake client)
@@ -90,7 +86,7 @@ test("live answer: LEARN model, medium effort, fallback, fixed system prompt, qu
   assert.equal(p.output_config.effort, "medium");
   assert.deepEqual(p.betas, [FALLBACK_BETA]);
   assert.equal(p.system, KNOWLEDGE_SYSTEM_PROMPT);
-  assert.match(p.messages[0].content, /<student_question>\nشنو هو التركيب الضوئي؟\n<\/student_question>/);
+  assert.match(p.messages[0].content, /<student_question>\nWhat is photosynthesis\?\n<\/student_question>/);
   assert.match(p.messages[0].content, /NO SOURCES WERE RETRIEVED/);
   assert.equal(out.meta.source, "anthropic");
   assert.equal(out.meta.simulated, false);
@@ -99,7 +95,7 @@ test("live answer: LEARN model, medium effort, fallback, fixed system prompt, qu
 test("live transform: FAST model (Haiku), low effort, mode-specific schema", async () => {
   const quiz = { title: "t", questions: [{ question: "q", choices: [{ id: "a", text: "x" }, { id: "b", text: "y" }], correctChoiceId: "a", explanation: "e" }], caveats: [] };
   const { client, calls } = fakeClient([okResponse(quiz, "claude-haiku-5-5")]);
-  const out = await new AnthropicKnowledgeProvider({ client, models: MODELS }).transform({ mode: "quiz", level: "beginner", language: "fr", content: CONTENT });
+  const out = await new AnthropicKnowledgeProvider({ client, models: MODELS }).transform({ mode: "quiz", level: "beginner", language: "en", content: CONTENT });
   assert.equal(calls[0]!.params.model, "claude-haiku-5-5");
   assert.equal(calls[0]!.params.output_config.effort, "low");
   assert.equal(calls[0]!.params.fallbacks, undefined);

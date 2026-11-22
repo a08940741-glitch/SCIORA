@@ -1,6 +1,19 @@
 # SCIORA — Feature Status & Roadmap
 
-_Last updated: 2026-11-20 (after Phase 2B — Evidence Analyzer) · Deadline (reported from the WAICY 2026 Guidebook): 2026-11-29, 5:00 PM ET (to be re-verified on the official portal)._
+_Last updated: 2026-11-21 (English-only policy) · Deadline (reported from the WAICY 2026 Guidebook): 2026-11-29, 5:00 PM ET (to be re-verified on the official portal)._
+
+## Language policy (2026-11-21)
+SCIORA is an English-only AI learning and knowledge platform designed for an international audience.
+
+| Feature | Status |
+|---|---|
+| English-only interface: one English dictionary, left-to-right, no language switcher or language selectors | **Implemented & tested** (unit + Playwright) |
+| English-only demo content (5 lessons, 5 knowledge answers, 5 claim analyses) | **Implemented & tested** (every file passes the English output check) |
+| Non-English input → 422 with “SCIORA currently supports English only. Please submit your question in English to continue.” (questions, claims, transform content, written answers; never numbers/expressions/choices) | **Implemented & tested** (conservative heuristic; cannot catch every case) |
+| English-only rule in every AI system prompt | **Implemented & tested** |
+| AI output English check on both live paths (retry once, then English error) | **Implemented & tested with fake clients** |
+| English Wikipedia only (no other-language fallback) | **Implemented & tested** (fake fetch) |
+| Arabic, Darija, French and Arabizi support (interface, content, prompts, retrieval) | **Removed** by the English-only policy |
 
 Status labels used in this file:
 
@@ -17,7 +30,7 @@ Status labels used in this file:
 
 ## Phase 1 — Core learning loop
 
-Scope: Question → Understanding → Explanation (Darija + formal) → Example → Exercises → Grading → Feedback.
+Scope: Question → Understanding → Explanation (simple + formal, in English) → Example → Exercises → Grading → Feedback.
 
 | Feature | Status |
 |---|---|
@@ -25,21 +38,26 @@ Scope: Question → Understanding → Explanation (Darija + formal) → Example 
 | `DemoProvider`: 5 pre-written lessons, labelled simulated, honest "not in demo" message | **Implemented & tested** (content unreviewed) |
 | `AnthropicProvider`: structured outputs, refusal / cut-off / invalid-output handling, error mapping | **Implemented & tested with a fake client only** — not yet run against the live API |
 | Model routing: Sonnet 5.5 (lessons), Haiku 5.5 (grading), Opus 5.5 (reserved) — configurable | **Implemented & tested** (routing verified with fake client) |
+| `GroqProvider` (free tier, `SCIORA_AI_PROVIDER=groq`) for all four AI features: strict structured outputs, error/timeout/429/truncation handling, 1 MiB response cap, key redaction | **Implemented; tested with a fake transport; first controlled live test passed (2026-11-21, English)** — Groq accepted all strict schemas; free-tier rate limit hit after 4 back-to-back calls; teacher review of live content pending |
+| Prompt-injection hygiene for every untrusted text (lesson questions, written answers, Knowledge, Evidence) | **Implemented & tested** (unit tests; protects the prompt structure, cannot guarantee model behaviour) |
+| Full live wiring (config → factories → app) for all four AI features with Groq | **Tested with a fake transport** (`test/api/live-wiring.test.ts`); not run against the real API |
+| Offline live readiness check (`npm run live:check`) and controlled live test with PASS/FAIL checks (`npm run test:live`) | **Implemented & tested offline**; first live run 2026-11-21 with Groq: 15/15 checks passed before a free-tier 429 at call 5; the remaining calls passed after a pause (now paced 20 s apart) |
+| Live-mode banner warns students not to type personal information | **Implemented & tested** (unit) |
 | Server-side refusal fallback (`fallbacks: "default"`) | **Implemented, unverified live** |
 | AES-256-GCM encrypted exercise tokens with expiry and key id | **Implemented & tested** |
 | Replay store: atomic reservation, original result on repeat, fail-closed capacity, answer lock after failure | **Implemented & tested** (in-memory; single process) |
-| Rule-based grading: MCQ, numeric (Arabic numerals, fractions, percent, units), algebraic expressions | **Implemented & tested** |
+| Rule-based grading: MCQ, numeric (fractions, percent, units; Eastern Arabic digits still parsed as numbers), algebraic expressions | **Implemented & tested** |
 | Rubric-based written grading with evidence check and server-side verdict (correct / partial / incorrect / uncertain) | **Implemented & tested offline**; real Haiku behaviour **untested** |
 | Optional escalation of uncertain grades to the LEARN model | **Implemented & tested** (fake provider) |
 | Daily AI-call limit (live mode) | **Implemented & tested** |
-| Arabic RTL workspace with per-card "AI-generated" / "DEMO" labels, hints, solutions, one attempt per exercise | **Implemented & tested** (Playwright, desktop + mobile) |
+| Workspace (English, LTR) with per-card "AI-generated" / "DEMO" labels, hints, solutions, one attempt per exercise | **Implemented & tested** (Playwright, desktop + mobile) |
 | Preliminary level estimate (Elo-style, localStorage, uncertain ignored, Clear my data) | **Implemented & tested** |
 | Responsible-use notes in the interface | **Implemented** (short panel; full page planned) |
-| Grading fixtures: 37 cases (Darija, MSA, paraphrase, Arabizi/French, misspelled, maths, partial, incorrect, unclear) | **Implemented** — labels **unreviewed** |
+| Grading fixtures: 38 English cases (formal, informal, paraphrase, misspelled, maths, partial, incorrect, unclear) | **Implemented** — labels **unreviewed** |
 | Live smoke test and grading evaluation scripts | **Written, gated, NOT run** (require owner approval) |
 | 8 project documents | **Written** |
 
-Phase 1 explicitly does **not** include: accounts or authentication, a database, Knowledge Explorer, Evidence Analyzer, a Progress screen, or a French interface.
+Phase 1 explicitly does **not** include: accounts or authentication, a database, Knowledge Explorer, Evidence Analyzer, or a Progress screen.
 
 ---
 
@@ -47,7 +65,7 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 
 | Feature | Status |
 |---|---|
-| Knowledge query (Darija / MSA / French / English / Arabizi questions; answer in darija, msa, fr or en; 3 levels) | **Implemented & tested** (demo; live provider with fake client only) |
+| Knowledge query (English questions; English answers; 3 levels) | **Implemented & tested** (demo; live provider with fake client; first live Groq test passed) |
 | Answer segments labelled fact / explanation / assumption / uncertainty | **Implemented & tested** |
 | Source transparency: AI cannot output titles/URLs; only server-retrieved source ids; invented citations removed and disclosed | **Implemented & tested** |
 | Verification status decided by the server: demo / not_source_verified / source_backed | **Implemented & tested** |
@@ -59,21 +77,21 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 | Learning mode: simplify / examples / self-check quiz (independent of Phase 1 grading) | **Implemented & tested** |
 | Knowledge cards: save, collections, search, "checked by me", move, delete, export (browser-only) | **Implemented & tested** |
 | API: `POST /api/knowledge/query`, `POST /api/knowledge/transform` (shared daily limit, rate limit, CSP) | **Implemented & tested** |
-| UI: tabs (learning / explorer / cards), Arabic RTL, mobile, no English leakage in interface text | **Implemented & tested** (Playwright) |
+| UI: tabs (learning / explorer / cards), English, mobile | **Implemented & tested** (Playwright) |
 | Demo knowledge content (5 topics, no sources) | **Implemented** — **unreviewed** |
 
 ## Phase 2B — Evidence Analyzer
 
 | Feature | Status |
 |---|---|
-| Claim input in Darija / MSA / French / English / Arabizi; analysis language darija, msa, fr, en | **Implemented & tested** (demo; live provider with fake client only, REASON tier) |
+| Claim input and analysis in English | **Implemented & tested** (demo; live provider with fake client, REASON tier; first live Groq test passed) |
 | Claim split into up to 6 sub-claims, classified factual / opinion / prediction / value judgment / ambiguous | **Implemented & tested** (server re-assigns ids) |
 | Evidence items must quote a server-retrieved source excerpt (verified by the server); others removed and disclosed | **Implemented & tested** |
 | Server-side verdicts: Supported / Contradicted / Mixed / Insufficient Evidence / Not checkable | **Implemented & tested** |
 | Missing-evidence guidance per sub-claim | **Implemented & tested** |
 | AI background note, displayed separately as "not evidence", never affects verdicts | **Implemented & tested** |
 | `POST /api/evidence/analyze` (shared daily limit, rate limit, CSP) | **Implemented & tested** |
-| Evidence tab (Arabic RTL, mobile, no English leakage) | **Implemented & tested** (Playwright) |
+| Evidence tab (English, mobile) | **Implemented & tested** (Playwright) |
 | Demo analyses (5 claims, no sources/evidence) | **Implemented** — **unreviewed** |
 | Real evidence retrieval | **Not implemented** (D1) — factual claims receive *Insufficient Evidence* outside tests |
 
@@ -91,14 +109,13 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 | Feature | Status |
 |---|---|
 | English default interface (LTR), international landing section, interface-language switcher | **Implemented & tested** |
-| Optional Arabic (Darija) interface (RTL), identical keys to English (unit-tested) | **Implemented & tested** |
+| Optional Arabic (Darija) interface (RTL) | **Removed** (English-only policy, 2026-11-21) |
 | Interface language independent from learning / AI response language | **Implemented & tested** |
 | Server system notices as neutral codes translated by the interface | **Implemented & tested** |
-| Wikipedia retrieval (free MediaWiki API) for Knowledge Explorer and Evidence Analyzer | **Implemented & tested** (fake fetch); **real API checked manually** (English OK; Arabic rate-limited from this cloud address) |
+| Wikipedia retrieval (free MediaWiki API) for Knowledge Explorer and Evidence Analyzer | **Implemented & tested** (fake fetch); **real API checked manually** (English Wikipedia only) |
 | Rate limiting, cache, bounded retries with backoff, timeout/abort, per-wiki fallback | **Implemented & tested** |
 | Real source metadata (URL, excerpt, last edited, retrieved); no invented publication dates | **Implemented & tested** |
 | Wikipedia-only notice; demo related reading never used as citations/evidence | **Implemented & tested** |
-| French interface | **Not implemented** |
 
 ## Development sprint (redesign, evidence and learning workflows)
 
@@ -108,14 +125,14 @@ Phase 1 explicitly does **not** include: accounts or authentication, a database,
 | Evidence: "Partially supported" overall verdict | **Implemented & tested** |
 | Evidence: keyword-matched passages to inspect (not evidence) | **Implemented & tested** |
 | Learning: session summary with gaps and next step (learn → practise → evaluate → improve) | **Implemented & tested** |
-| Knowledge → Evidence: "Check this claim" on facts | **Implemented & tested** (demo: works only for the five demo claims) |
+| Knowledge → Evidence: "Check this claim" on facts | **Implemented & tested** in live mode (browser test with fake offline AI); hidden on demo answers, because demo mode has analyses for the five demo claims only |
 | WAICY documentation package (`docs/waicy/`) | **Written** |
 
 ## Phase 2 — Remaining planned features (NOT implemented)
 
 | Priority | Feature | Status | Notes |
 |---|---|---|---|
-| P1 | Landing page, Settings, full Responsible-AI / limitations page, French interface | **Planned — Phase 2** | Phase 1 has a short responsible-use panel only. |
+| P1 | Landing page, Settings, full Responsible-AI / limitations page | **Planned — Phase 2** | Phase 1 has a short responsible-use panel only. |
 | P2 | **Optional Google Sign-In + progress sync** | **Planned — Phase 2** | Full design: [`docs/planned/GOOGLE_SIGN_IN.md`](docs/planned/GOOGLE_SIGN_IN.md). Requires a database and an owner decision on hosting. |
 | P2 | Persistent replay store (SQLite) | **Planned — Phase 2** | Would remove the Phase 1 "server restart" replay limitation. Shares the database introduced for sign-in. |
 | P3 | Photo input of a homework question (Perception) | **Planned — stretch** | Only if time allows. |

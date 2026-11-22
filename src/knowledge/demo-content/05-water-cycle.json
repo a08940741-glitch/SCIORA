@@ -2,156 +2,10 @@
   "id": "water-cycle",
   "reviewed": false,
   "matchKeywords": [
-    "دورة الماء",
-    "دورة الما",
-    "الدورة المائية",
-    "cycle de l'eau",
     "water cycle",
-    "dawrat lma",
-    "dawra dyal lma",
-    "التبخر",
-    "évaporation",
     "evaporation"
   ],
   "answer": {
-    "understood": {
-      "topic": "دورة الماء في الطبيعة (Le cycle de l'eau)",
-      "isEducational": true,
-      "clarification": null,
-      "detectedLanguage": "darija"
-    },
-    "title": "دورة الماء فالطبيعة",
-    "summary": "الما كيدور بين البحور والجو والأرض: تبخر، تكاثف، تساقطات، ومن بعد جريان وتسرب. والشمس هي اللي كتعطي الطاقة لهاد الدورة.",
-    "segments": [
-      {
-        "kind": "fact",
-        "text": "حرارة الشمس كتبخر الما ديال البحور والوديان.",
-        "sourceIds": []
-      },
-      {
-        "kind": "fact",
-        "text": "البخار كيبرد فالجو وكيتكاثف ويكون السحاب، ومن بعد كيطيح بحال شتا ولا ثلج.",
-        "sourceIds": []
-      },
-      {
-        "kind": "explanation",
-        "text": "الما اللي كيطيح جزء منو كيجري للوديان والبحر، وجزء كيدخل للأرض ويعطي الفرشة المائية.",
-        "sourceIds": []
-      },
-      {
-        "kind": "uncertainty",
-        "text": "كمية الشتا كتختلف بزاف من عام لعام ومن منطقة لمنطقة فالمغرب، وهاد الدرس ما كيعطيش أرقام.",
-        "sourceIds": []
-      }
-    ],
-    "keyConcepts": [
-      "التبخر",
-      "التكاثف",
-      "التساقطات",
-      "الفرشة المائية"
-    ],
-    "connections": [
-      {
-        "concept": "الطقس والمناخ",
-        "relation": "دورة الماء كتأثر على الشتا والجفاف."
-      },
-      {
-        "concept": "الفرشة المائية",
-        "relation": "التسرب كيعاود يعمر الما اللي تحت الأرض اللي كنستعملوه."
-      },
-      {
-        "concept": "حالات المادة",
-        "relation": "الدورة كتبين التحول ديال الما بين السائل والغاز والصلب."
-      }
-    ],
-    "confidence": "high",
-    "caveats": []
-  },
-  "transforms": {
-    "simplify": {
-      "title": "دورة الماء بكلمات ساهلة",
-      "text": "الشمس كتسخن الما فيطلع للسما بحال بخار، فوق كيبرد ويولي سحاب، ومن بعد كيطيح شتا، ويرجع للوديان والبحر، وكتعاود الدورة.",
-      "caveats": []
-    },
-    "examples": {
-      "title": "أمثلة من الحياة",
-      "examples": [
-        {
-          "title": "الكاس البارد",
-          "body": "القطرات اللي كتبان على كاس بارد هي بخار الما اللي تكاثف."
-        },
-        {
-          "title": "التصبين",
-          "body": "الحوايج المنشورة كتنشف حيت الما اللي فيها كيتبخر."
-        }
-      ],
-      "caveats": []
-    },
-    "quiz": {
-      "title": "اختبر راسك: دورة الماء",
-      "questions": [
-        {
-          "question": "شنو هي المرحلة اللي كيتكون فيها السحاب؟",
-          "choices": [
-            {
-              "id": "a",
-              "text": "التبخر"
-            },
-            {
-              "id": "b",
-              "text": "التكاثف"
-            },
-            {
-              "id": "c",
-              "text": "التسرب"
-            }
-          ],
-          "correctChoiceId": "b",
-          "explanation": "البخار كيبرد وكيتكاثف ويكون السحاب."
-        },
-        {
-          "question": "شنو اللي كيعطي الطاقة لدورة الماء؟",
-          "choices": [
-            {
-              "id": "a",
-              "text": "الشمس"
-            },
-            {
-              "id": "b",
-              "text": "القمر"
-            },
-            {
-              "id": "c",
-              "text": "الريح بوحدو"
-            }
-          ],
-          "correctChoiceId": "a",
-          "explanation": "حرارة الشمس هي اللي كتبخر الما."
-        },
-        {
-          "question": "فين كيمشي الما اللي كيتسرب للأرض؟",
-          "choices": [
-            {
-              "id": "a",
-              "text": "للسحاب نيشان"
-            },
-            {
-              "id": "b",
-              "text": "للفرشة المائية"
-            },
-            {
-              "id": "c",
-              "text": "كيختفي"
-            }
-          ],
-          "correctChoiceId": "b",
-          "explanation": "التسرب كيعمر الفرشة المائية."
-        }
-      ],
-      "caveats": []
-    }
-  },
-  "answerEn": {
     "understood": {
       "topic": "The water cycle",
       "isEducational": true,
@@ -205,7 +59,7 @@
     "confidence": "high",
     "caveats": []
   },
-  "transformsEn": {
+  "transforms": {
     "simplify": {
       "title": "The water cycle in simple words",
       "text": "The Sun heats water and it rises into the sky as vapour; up high it cools and becomes clouds; then it falls as rain, goes back to rivers and the sea, and the cycle starts again.",

@@ -47,7 +47,7 @@ async function analyzePage(base: string, claim: string, viewport = { width: 1280
 }
 
 test("demo: factual claim → insufficient evidence, honest basis banner, background labelled not evidence", async () => {
-  const { page, problems, ctx } = await analyzePage(demoBase, "الشمس كتدور على الأرض");
+  const { page, problems, ctx } = await analyzePage(demoBase, "The Sun orbits the Earth");
   await page.waitForSelector("#e-basis");
   assert.equal(await page.getAttribute("#e-basis", "data-basis"), "none");
   assert.match(await page.textContent("#e-basis"), /not evidence/i);
@@ -64,12 +64,12 @@ test("demo: factual claim → insufficient evidence, honest basis banner, backgr
 });
 
 test("demo: opinion → not checkable; compound claim → two sub-claims", async () => {
-  const a = await analyzePage(demoBase, "الرياضيات أصعب مادة");
+  const a = await analyzePage(demoBase, "Mathematics is the hardest school subject");
   await a.page.waitForSelector("#e-overall");
   assert.equal(await a.page.locator("#e-overall [data-verdict]").getAttribute("data-verdict"), "not_checkable");
   assert.equal(await a.page.locator("[data-type='opinion']").count(), 1);
   await a.ctx.close();
-  const b = await analyzePage(demoBase, "فيثاغورس كتخدم فكل مثلث");
+  const b = await analyzePage(demoBase, "Pythagoras works for every triangle");
   await b.page.waitForSelector("#e-overall");
   assert.equal(await b.page.locator("[data-subclaim]").count(), 2);
   await b.ctx.close();
@@ -86,7 +86,7 @@ test("demo claim chips fill the claim box; unknown claim shows a localized error
 });
 
 test("English interface: no Arabic script in evidence interface text (content excluded)", async () => {
-  const { page, ctx } = await analyzePage(demoBase, "الما كيغلي ف 100 درجة فكل بلاصة");
+  const { page, ctx } = await analyzePage(demoBase, "Water boils at 100 degrees everywhere");
   await page.waitForSelector("#e-overall");
   const texts = await page
     .locator("#panel-evidence h2, #panel-evidence label, #panel-evidence .badge, #panel-evidence .verdict-chip, #panel-evidence .verification, #panel-evidence .label, #panel-evidence .empty-state, #e-analyze, #tab-evidence")
@@ -120,7 +120,7 @@ test("FAKE live provider + FAKE retriever: verified quote shown with source link
 });
 
 test("mobile: evidence panel without horizontal overflow", async () => {
-  const { page, problems, ctx } = await analyzePage(demoBase, "الما كيغلي ف 100 درجة فكل بلاصة", { width: 390, height: 844 });
+  const { page, problems, ctx } = await analyzePage(demoBase, "Water boils at 100 degrees everywhere", { width: 390, height: 844 });
   await page.waitForSelector("#e-overall");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   assert.ok(overflow <= 1, `overflow ${overflow}px`);

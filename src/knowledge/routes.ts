@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { sendError } from "../http.ts";
+import { rejectNonEnglish, sendError } from "../http.ts";
 import { ProviderError } from "../ai/provider.ts";
 import { KnowledgeQueryRequest, TransformRequest } from "./schemas.ts";
 import type { KnowledgeService } from "./service.ts";
@@ -17,6 +17,7 @@ export function registerKnowledgeRoutes(app: FastifyInstance, opts: { service: K
 
   app.post("/api/knowledge/query", async (req, reply) => {
     const body = KnowledgeQueryRequest.parse(req.body);
+    if (rejectNonEnglish(reply, body.question)) return reply;
     if (!takeBudget()) return sendError(reply, 503, "daily_limit", "SCIORA reached its daily AI usage limit. Please try again tomorrow.");
     try {
       return await service.query(body);
@@ -31,6 +32,7 @@ export function registerKnowledgeRoutes(app: FastifyInstance, opts: { service: K
 
   app.post("/api/knowledge/transform", async (req, reply) => {
     const body = TransformRequest.parse(req.body);
+    if (rejectNonEnglish(reply, body.content.topic, body.content.summary, ...body.content.points)) return reply;
     if (!takeBudget()) return sendError(reply, 503, "daily_limit", "SCIORA reached its daily AI usage limit. Please try again tomorrow.");
     try {
       return await service.transform(body);

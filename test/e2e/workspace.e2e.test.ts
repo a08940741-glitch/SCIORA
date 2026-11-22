@@ -62,7 +62,7 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   await chips.first().click();
   assert.ok((await page.inputValue("#question")).length > 3);
 
-  await page.fill("#question", "شنو هو التركيب الضوئي؟");
+  await page.fill("#question", "What is photosynthesis?");
   await page.click("#ask-btn");
   await page.waitForSelector("#lesson .card");
 
@@ -94,7 +94,7 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   assert.equal(await q3.locator(".hint").isVisible(), true);
 
   // Written answer in Darija with the key ideas → demo keyword grading → correct, labelled DEMO.
-  await q3.locator("textarea").fill("النبتة كتاخد الضو ديال الشمس والماء وثاني أكسيد الكربون وكتصاوب السكر");
+  await q3.locator("textarea").fill("The plant takes light from the sun, water and carbon dioxide and makes sugar");
   await q3.locator('button[type="submit"]').click();
   await q3.locator('[data-verdict="correct"]').waitFor();
   assert.equal(await q3.locator('[data-graded-by="demo"]').count(), 1);
@@ -109,7 +109,7 @@ test("demo flow: question → labelled lesson → exercises → feedback → pre
   // (Explorer — Phase 2A — and Evidence Analyzer — Phase 2B — are now implemented, so the
   //  check targets the remaining planned feature: optional Google Sign-In.)
   const navTexts = await page.locator("a, button").allTextContents();
-  assert.equal(navTexts.some((t: string) => /Google|تسجيل الدخول|sign in/i.test(t)), false);
+  assert.equal(navTexts.some((t: string) => /Google|sign in/i.test(t)), false);
 
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/desktop-demo-flow.png`, fullPage: true });
   assert.deepEqual(problems, [], "no console errors / CSP violations");
@@ -120,11 +120,11 @@ test("uncertain written answer is explained and not counted in the estimate", as
   const { page, problems, ctx } = await newPage();
   await page.goto(base + "/");
   await page.waitForSelector("#mode-banner.mode-demo");
-  await page.fill("#question", "مبدأ القصور");
+  await page.fill("#question", "The principle of inertia");
   await page.click("#ask-btn");
   await page.waitForSelector('form[data-exercise-id="q3"]');
   const q3 = page.locator('form[data-exercise-id="q3"]');
-  await q3.locator("textarea").fill("ما عرفتش");
+  await q3.locator("textarea").fill("I don't know");
   await q3.locator('button[type="submit"]').click();
   await q3.locator('[data-verdict="uncertain"]').waitFor();
   assert.match(await q3.textContent(), /not sure about this grade/);
@@ -136,7 +136,7 @@ test("uncertain written answer is explained and not counted in the estimate", as
 test("unknown topic in demo mode shows an honest message, not invented content", async () => {
   const { page, ctx } = await newPage();
   await page.goto(base + "/");
-  await page.fill("#question", "شكون ربح كاس العالم؟");
+  await page.fill("#question", "Who won the World Cup?");
   await page.click("#ask-btn");
   await page.waitForSelector("#lesson .alert-error");
   assert.match(await page.textContent("#lesson"), /Demo mode/);
@@ -147,7 +147,7 @@ test("unknown topic in demo mode shows an honest message, not invented content",
 test("mobile layout renders the workspace in RTL without horizontal overflow", async () => {
   const { page, problems, ctx } = await newPage({ width: 390, height: 844 });
   await page.goto(base + "/");
-  await page.fill("#question", "دورة الماء");
+  await page.fill("#question", "The water cycle");
   await page.click("#ask-btn");
   await page.waitForSelector("#exercises .card");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -160,7 +160,7 @@ test("mobile layout renders the workspace in RTL without horizontal overflow", a
 test("clear my data removes the stored estimate", async () => {
   const { page, ctx } = await newPage();
   await page.goto(base + "/");
-  await page.fill("#question", "فيثاغورس");
+  await page.fill("#question", "Pythagoras");
   await page.click("#ask-btn");
   const q1 = page.locator('form[data-exercise-id="q1"]');
   await q1.locator('input[value="b"]').check();

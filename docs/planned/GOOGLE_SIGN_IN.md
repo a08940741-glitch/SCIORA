@@ -88,10 +88,10 @@ Planned protections:
 - **Accounts are optional and off by default.** Nobody needs an account to learn.
 - **Data minimisation:** store only Google `sub`, a display name (first name only, or none), and the learning events listed in §5. No profile photo, no birth date, no location, no answer text. Whether to store the email address at all will be decided at implementation; the default is **not to store it**.
 - **No advertising, no third-party analytics or tracking, no data sharing or selling.**
-- **Guardian notice** shown before sign-in: "If you are under 18, ask a parent or guardian before signing in." Plain language, in Arabic, Darija and French.
+- **Guardian notice** shown before sign-in: "If you are under 18, ask a parent or guardian before signing in." Plain English (SCIORA is English-only).
 - **Easy control:** download, logout and delete account are always one click away from Settings.
 - **Retention:** accounts inactive for a fixed period (e.g. 12 months) are deleted automatically — period to be confirmed.
-- **Privacy policy** written in plain language (Arabic, Darija, French) before sign-in is enabled.
+- **Privacy policy** written in plain English before sign-in is enabled.
 
 **To verify before launch (not yet checked):**
 - Google's minimum account age for Morocco and how supervised (Family Link) accounts behave with third-party sign-in.

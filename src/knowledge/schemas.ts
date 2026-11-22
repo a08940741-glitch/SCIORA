@@ -10,7 +10,8 @@ import { z } from "zod";
  */
 
 export const K_LEVELS = ["beginner", "intermediate", "advanced"] as const;
-export const K_LANGUAGES = ["darija", "msa", "fr", "en"] as const;
+/** SCIORA is English-only. */
+export const K_LANGUAGES = ["en"] as const;
 export const SEGMENT_KINDS = ["fact", "explanation", "assumption", "uncertainty"] as const;
 export const TRANSFORM_MODES = ["simplify", "examples", "quiz"] as const;
 export const VERIFICATION_STATUSES = ["source_backed", "not_source_verified", "demo"] as const;
@@ -33,7 +34,7 @@ export const SourceId = z.string().regex(/^S[1-9][0-9]?$/);
 export const KnowledgeQueryRequest = z.strictObject({
   question: z.string().trim().min(3).max(1000),
   level: KLevel.default("intermediate"),
-  language: KLanguage.default("darija"),
+  language: KLanguage.default("en"),
 });
 export type KnowledgeQueryRequest = z.infer<typeof KnowledgeQueryRequest>;
 
@@ -47,7 +48,7 @@ export const TransformContent = z.strictObject({
 export const TransformRequest = z.strictObject({
   mode: TransformMode,
   level: KLevel.default("intermediate"),
-  language: KLanguage.default("darija"),
+  language: KLanguage.default("en"),
   content: TransformContent,
 });
 export type TransformRequest = z.infer<typeof TransformRequest>;
@@ -71,7 +72,7 @@ export const GeneratedKnowledgeAnswer = z.object({
     topic: Text(120),
     isEducational: z.boolean(),
     clarification: z.string().max(500).nullable(),
-    detectedLanguage: z.enum(["darija", "msa", "fr", "en", "arabizi", "mixed", "other"]),
+    detectedLanguage: z.enum(["en", "mixed", "other"]),
   }),
   title: Text(160),
   summary: Text(1200),
@@ -140,7 +141,7 @@ export interface PublicSource {
 // ------------------------------------------------------------------ response shapes
 
 export interface KnowledgeMeta {
-  source: "anthropic" | "demo";
+  source: "anthropic" | "groq" | "demo";
   simulated: boolean;
   model: string | null;
   fallbackUsed: boolean;

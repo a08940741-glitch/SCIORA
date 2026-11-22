@@ -38,7 +38,7 @@ function fakeRetriever(impl: SourceRetriever["search"]) {
   return { r, calls };
 }
 
-const REQ = { question: "شنو هو التركيب الضوئي؟", level: "intermediate" as const, language: "darija" as const };
+const REQ = { question: "What is photosynthesis?", level: "intermediate" as const, language: "en" as const };
 
 test("demo provider + no retriever: nothing retrieved; note = demo", async () => {
   const { p } = stubProvider(true);

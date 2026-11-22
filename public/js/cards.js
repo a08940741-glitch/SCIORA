@@ -54,7 +54,7 @@ export function createCardsPanel(cards) {
       "article",
       { class: "card kcard", "data-card-id": c.id },
       el("header", { class: "card-head" }, el("h3", { text: c.title }), el("div", { class: "badges" }, statusBadge(c), c.checkedByMe ? el("span", { class: "badge badge-checked", "data-checked": "true", text: K.checkedBadge }) : null)),
-      el("p", { class: "muted", text: `${K.collection}: ${c.collection} · ${isNaN(date) ? "" : date.toLocaleDateString("ar-MA")} · ${K.languages[c.language] ?? c.language}` }),
+      el("p", { class: "muted", text: `${K.collection}: ${c.collection} · ${isNaN(date) ? "" : date.toLocaleDateString("en-GB")}` }),
       el("p", { text: c.summary }),
       c.keyConcepts.length ? el("div", { class: "chips" }, ...c.keyConcepts.map((k) => el("span", { class: "chip chip-static", text: k }))) : null,
       c.sources.length

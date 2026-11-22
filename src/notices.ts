@@ -5,7 +5,6 @@
 export const NOTICE_CODES = [
   "demo_content",
   "demo_level_fixed",
-  "demo_language_fixed",
   "content_unreviewed",
   "exercises_removed",
   "citations_removed",

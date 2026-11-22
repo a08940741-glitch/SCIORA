@@ -61,7 +61,7 @@ test("progress reflects real graded answers; weak topic flagged; practice button
   await q2.locator("[data-verdict]").waitFor();
   // An "uncertain" written answer must NOT be counted.
   const q3 = page.locator('form[data-exercise-id="q3"]');
-  await q3.locator("textarea").fill("ما عرفتش");
+  await q3.locator("textarea").fill("I don't know");
   await q3.locator('button[type="submit"]').click();
   await q3.locator('[data-verdict="uncertain"]').waitFor();
 
@@ -87,14 +87,14 @@ test("saved cards are counted; clearing my data empties progress", async () => {
   const { page, ctx } = await page0();
   await page.goto(base + "/");
   await page.click("#tab-explore");
-  await page.fill("#k-question", "دورة الماء");
+  await page.fill("#k-question", "The water cycle");
   await page.click("#k-ask");
   await page.waitForSelector("#k-save");
   await page.click("#k-save");
   await page.click("#tab-progress");
   assert.equal(await page.textContent("#p-stat-cards .stat-value"), "1");
   await page.click("#tab-learn");
-  await page.fill("#question", "دورة الماء");
+  await page.fill("#question", "The water cycle");
   await page.click("#ask-btn");
   const q1 = page.locator('form[data-exercise-id="q1"]');
   await q1.locator('input[value="b"]').check();

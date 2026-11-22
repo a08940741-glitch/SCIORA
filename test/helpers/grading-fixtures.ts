@@ -5,11 +5,12 @@ import { z } from "zod";
 import { loadDemoContent } from "../../src/ai/demo-provider.ts";
 import { WrittenJudgement, type SealedExercise } from "../../src/domain/schemas.ts";
 
+/** English-only answer categories (SCIORA is English-only). */
 export const CATEGORIES = [
-  "darija_correct",
-  "msa_correct",
+  "english_correct",
+  "formal_correct",
   "paraphrase_correct",
-  "arabizi_or_french_correct",
+  "informal_correct",
   "misspelled_correct",
   "math_equivalent",
   "partial",
@@ -20,10 +21,10 @@ export const CATEGORIES = [
 
 /** Categories whose answers are CORRECT: grading them "incorrect" is the key safety failure. */
 export const CORRECT_CATEGORIES = new Set<string>([
-  "darija_correct",
-  "msa_correct",
+  "english_correct",
+  "formal_correct",
   "paraphrase_correct",
-  "arabizi_or_french_correct",
+  "informal_correct",
   "misspelled_correct",
   "math_equivalent",
 ]);

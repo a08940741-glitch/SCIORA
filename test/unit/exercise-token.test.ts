@@ -11,7 +11,7 @@ function makeCodec(now = () => 1_800_000_000_000, secrets = [SECRET]) {
   return new ExerciseTokenCodec({ secrets, ttlSeconds: 7200, now });
 }
 function sealSample(codec = makeCodec()) {
-  return codec.seal({ topic: "t", subject: "math", level: "school", language: "darija", exercises: sampleLesson().exercises });
+  return codec.seal({ topic: "t", subject: "math", level: "school", language: "en", exercises: sampleLesson().exercises });
 }
 function expectTokenError(fn: () => unknown, code: string) {
   assert.throws(fn, (e: unknown) => e instanceof TokenError && e.code === code, `expected TokenError(${code})`);

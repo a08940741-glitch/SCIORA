@@ -1,5 +1,6 @@
 import type { Config } from "../config.ts";
-import { defaultClientFactory, type ClientFactory } from "../ai/index.ts";
+import { defaultClientFactory, defaultGroqClientFactory, type ClientFactory, type GroqClientFactory } from "../ai/index.ts";
+import { GroqEvidenceProvider } from "./groq-provider.ts";
 import { NoopRetriever, type SourceRetriever } from "../knowledge/retriever.ts";
 import { DEFAULT_RETRIEVAL_TIMEOUT_MS, runRetrieval } from "../knowledge/service.ts";
 import { sanitizeSources } from "../knowledge/sources.ts";
@@ -83,9 +84,16 @@ export class EvidenceService {
 }
 
 /** Same demo/live rule as every other SCIORA module. Live evidence uses the REASON model. */
-export function createEvidenceProvider(config: Config, clientFactory: ClientFactory = defaultClientFactory): EvidenceProvider {
-  if (config.aiMode === "live" && config.anthropicApiKey) {
+export function createEvidenceProvider(
+  config: Config,
+  clientFactory: ClientFactory = defaultClientFactory,
+  groqClientFactory: GroqClientFactory = defaultGroqClientFactory,
+): EvidenceProvider {
+  if (config.aiMode === "live" && config.aiProvider === "anthropic" && config.anthropicApiKey) {
     return new AnthropicEvidenceProvider({ client: clientFactory(config.anthropicApiKey), model: config.models.reason });
+  }
+  if (config.aiMode === "live" && config.aiProvider === "groq" && config.groqApiKey) {
+    return new GroqEvidenceProvider({ client: groqClientFactory(config.groqApiKey), model: config.groqModels.reason });
   }
   return new DemoEvidenceProvider();
 }

@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { T, DEFAULT_CONTENT_LANGUAGE, demoTitle } from "./i18n.js";
+import { T } from "./i18n.js";
 import { el, clear, paragraphs } from "./render.js";
 import { errorMessage } from "./errors.js";
 import { noticesBox } from "./notices.js";
@@ -62,9 +62,9 @@ export function createExplorer({ cards, onCardSaved, onCheckClaim }) {
           el("button", {
             type: "button",
             class: "chip",
-            text: demoTitle(t.topic, t.topicEn),
+            text: t.topic,
             onclick: () => {
-              $("k-question").value = demoTitle(t.topic, t.topicEn);
+              $("k-question").value = t.topic;
               $("k-question").focus();
             },
           }),
@@ -107,7 +107,9 @@ export function createExplorer({ cards, onCardSaved, onCheckClaim }) {
               el("span", { class: "kind-chip", text: K.kinds[s.kind] ?? s.kind }),
               el("span", { class: "segment-text", text: s.text }),
               s.sourceIds.length ? el("span", { class: "segment-refs", dir: "ltr", text: ` [${s.sourceIds.join(", ")}]` }) : null,
-              s.kind === "fact" && onCheckClaim
+              // "Check this claim" only for live answers: demo mode has analyses for 5 fixed claims only,
+              // so for demo text the Evidence Analyzer could only answer "not available in demo mode".
+              s.kind === "fact" && onCheckClaim && !r.meta.simulated
                 ? el("button", { type: "button", class: "btn btn-link check-claim", "data-action": "check-claim", text: K.checkClaim, onclick: () => onCheckClaim(s.text, state.request.language) })
                 : null,
             ),
@@ -276,7 +278,7 @@ export function createExplorer({ cards, onCardSaved, onCheckClaim }) {
     ev.preventDefault();
     const question = $("k-question").value.trim();
     const level = $("k-level").value;
-    const language = $("k-language").value;
+    const language = "en"; // SCIORA is English-only
     const out = $("k-result");
     if (question.length < 3) {
       clear(out);
@@ -307,11 +309,8 @@ export function createExplorer({ cards, onCardSaved, onCheckClaim }) {
     $("k-ask-label").textContent = K.askLabel;
     $("k-question").placeholder = K.askPlaceholder;
     $("k-level-label").textContent = T.levelLabel;
-    $("k-language-label").textContent = K.languageLabel;
     $("k-ask").textContent = K.ask;
     for (const [v, label] of Object.entries(K.levels)) $("k-level").append(el("option", { value: v, text: label, selected: v === "intermediate" }));
-    for (const [v, label] of Object.entries(K.languages)) $("k-language").append(el("option", { value: v, text: label }));
-    $("k-language").value = DEFAULT_CONTENT_LANGUAGE;
     $("k-empty").textContent = K.empty;
     $("k-form").addEventListener("submit", onAsk);
   }

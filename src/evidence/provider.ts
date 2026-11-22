@@ -12,7 +12,7 @@ import { EVIDENCE_SYSTEM_PROMPT, evidenceUserMessage } from "./prompts.ts";
 import { GeneratedClaimAnalysis, type EvidenceRequest } from "./schemas.ts";
 
 export interface EvidenceProvider {
-  readonly name: "anthropic" | "demo";
+  readonly name: "anthropic" | "groq" | "demo";
   readonly simulated: boolean;
   readonly model: string | null;
   analyze(input: { request: EvidenceRequest; sources: PublicSource[] }): Promise<{ analysis: GeneratedClaimAnalysis; meta: KnowledgeMeta; notices?: NoticeCode[] }>;
@@ -60,10 +60,8 @@ export const DemoEvidenceFile = z.strictObject({
   id: z.string().regex(/^[a-z0-9-]+$/),
   reviewed: z.boolean(),
   matchKeywords: z.array(z.string().min(2)).min(1),
-  /** Darija version. */
+  /** English-only, like the rest of SCIORA. */
   analysis: GeneratedClaimAnalysis,
-  /** English version (default English experience); optional, fully validated. */
-  analysisEn: GeneratedClaimAnalysis.optional(),
 });
 export type DemoEvidenceFile = z.infer<typeof DemoEvidenceFile>;
 
@@ -91,8 +89,8 @@ export class DemoEvidenceProvider implements EvidenceProvider {
     this.files = files;
   }
 
-  claims(): { id: string; claim: string; claimEn: string | null; reviewed: boolean }[] {
-    return this.files.map((f) => ({ id: f.id, claim: f.analysis.understood.claimRestated, claimEn: f.analysisEn?.understood.claimRestated ?? null, reviewed: f.reviewed }));
+  claims(): { id: string; claim: string; reviewed: boolean }[] {
+    return this.files.map((f) => ({ id: f.id, claim: f.analysis.understood.claimRestated, reviewed: f.reviewed }));
   }
 
   find(text: string): DemoEvidenceFile | null {
@@ -108,11 +106,8 @@ export class DemoEvidenceProvider implements EvidenceProvider {
   async analyze(input: { request: EvidenceRequest; sources: PublicSource[] }) {
     const f = this.find(input.request.claim);
     if (!f) throw new ProviderError("not_in_demo", "Demo mode: this claim is not available in the Evidence Analyzer without the AI connection. Try one of the listed demo claims.");
-    // English request → English version when available; otherwise the Darija version.
-    const english = input.request.language === "en" && !!f.analysisEn;
-    const base = english ? f.analysisEn! : f.analysis;
+    const base = f.analysis;
     const notices: NoticeCode[] = ["demo_content"];
-    if (input.request.language !== "darija" && !english) notices.push("demo_language_fixed");
     if (!f.reviewed) notices.push("content_unreviewed");
     const analysis: GeneratedClaimAnalysis = {
       ...base,

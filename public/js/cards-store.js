@@ -16,7 +16,8 @@
 export const CARDS_KEY = "sciora.cards.v1";
 export const MAX_CARDS = 200;
 export const CARD_STATUSES = ["demo", "not_source_verified", "sources_attached"];
-const LANGS = ["darija", "msa", "fr", "en"];
+/** Card content language. SCIORA is English-only; older saved cards keep their stored value (data is not rewritten). */
+const LANGS = ["en", "darija", "msa", "fr"];
 
 const str = (v, max) => (typeof v === "string" ? v.replace(/[\u0000-\u001F\u007F‪-‮⁦-⁩]/g, " ").trim().slice(0, max) : "");
 
@@ -61,7 +62,7 @@ export function normalizeCard(c) {
     title,
     summary,
     keyConcepts: Array.isArray(c.keyConcepts) ? c.keyConcepts.map((k) => str(k, 80)).filter(Boolean).slice(0, 8) : [],
-    language: LANGS.includes(c.language) ? c.language : "darija",
+    language: LANGS.includes(c.language) ? c.language : "en",
     sources,
     verificationStatus: status,
     checkedByMe: c.checkedByMe === true,

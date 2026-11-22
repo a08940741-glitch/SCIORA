@@ -12,7 +12,7 @@ import { loadConfig } from "../../src/config.ts";
 import { fakeClient, okResponse } from "../helpers/fake-client.ts";
 import { fakeSource } from "../helpers/knowledge.ts";
 
-const REQ = { claim: "الشمس كتدور على الأرض", language: "darija" as const };
+const REQ = { claim: "The Sun orbits the Earth", language: "en" as const };
 
 function analysis(evidence: GeneratedClaimAnalysis["subClaims"][number]["evidence"], type: any = "factual"): GeneratedClaimAnalysis {
   return {
@@ -37,18 +37,17 @@ test("demo content: 5 files, unreviewed, no evidence and no URLs anywhere (D1)",
   for (const t of ["factual", "opinion", "prediction"]) assert.ok(types.has(t as any), `demo covers ${t}`);
 });
 
-test("demo matches Darija, French, English and Arabizi claims", () => {
+test("demo matches English claims (English-only: French/Arabizi phrasings no longer match)", () => {
   const p = new DemoEvidenceProvider();
   const cases: [string, string][] = [
-    ["الشمس كتدور على الأرض", "earth-sun"],
-    ["la terre tourne autour du soleil", "earth-sun"],
-    ["lard katdor 3la chms", "earth-sun"],
+    ["The Sun orbits the Earth", "earth-sun"],
     ["Water boils at 100 degrees everywhere", "boiling-water"],
-    ["الرياضيات أصعب مادة", "math-hardest"],
-    ["ghda ghadi tchta f rbat", "rain-tomorrow"],
+    ["Mathematics is the hardest school subject", "math-hardest"],
+    ["It will rain tomorrow", "rain-tomorrow"],
     ["Pythagoras works for every triangle", "pythagoras-compound"],
   ];
   for (const [c, id] of cases) assert.equal(p.find(c)?.id, id, c);
+  for (const c of ["la terre tourne autour du soleil", "lard katdor 3la chms", "ghda ghadi tchta f rbat"]) assert.equal(p.find(c), null, c);
 });
 
 test("demo verdicts: factual → insufficient_evidence (no sources), opinion/prediction → not_checkable", async () => {
@@ -61,19 +60,19 @@ test("demo verdicts: factual → insufficient_evidence (no sources), opinion/pre
   assert.deepEqual(earth.sources, []);
   assert.ok(earth.subClaims[0]!.backgroundNote, "background note kept, shown as not-evidence");
   assert.ok(earth.notices.includes("demo_content"));
-  assert.equal((await svc.analyze({ claim: "الرياضيات أصعب مادة", language: "darija" })).overall.verdict, "not_checkable");
-  assert.equal((await svc.analyze({ claim: "غدا غادي تشتا فالرباط", language: "darija" })).overall.verdict, "not_checkable");
-  const compound = await svc.analyze({ claim: "فيثاغورس كتخدم فكل مثلث", language: "darija" });
+  assert.equal((await svc.analyze({ claim: "Mathematics is the hardest school subject", language: "en" })).overall.verdict, "not_checkable");
+  assert.equal((await svc.analyze({ claim: "It will rain in Rabat tomorrow", language: "en" })).overall.verdict, "not_checkable");
+  const compound = await svc.analyze({ claim: "Pythagoras works for every triangle", language: "en" });
   assert.equal(compound.subClaims.length, 2);
   assert.equal(compound.overall.checkableSubClaims, 2);
 });
 
-test("demo: unknown claim → not_in_demo; other language → honest caveat", async () => {
+test("demo: unknown claim → not_in_demo; a known claim is analyzed in English with no language notice", async () => {
   const svc = new EvidenceService({ provider: new DemoEvidenceProvider() });
   await assert.rejects(svc.analyze({ claim: "something completely unknown here", language: "en" }), (e: unknown) => e instanceof ProviderError && e.code === "not_in_demo");
-  // French has no demo version → served in Darija with an honest notice.
-  const r = await svc.analyze({ claim: "Water boils at 100 degrees everywhere", language: "fr" });
-  assert.ok(r.notices.includes("demo_language_fixed"));
+  const r = await svc.analyze({ claim: "Water boils at 100 degrees everywhere", language: "en" });
+  assert.equal(r.understood.detectedLanguage, "en");
+  assert.deepEqual(r.notices, ["demo_content", "content_unreviewed"]);
 });
 
 // ---------------------------------------------------------------- live (fake client)

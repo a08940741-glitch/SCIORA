@@ -2,156 +2,11 @@
   "id": "distributivity",
   "reviewed": false,
   "matchKeywords": [
-    "النشر",
-    "ننشر",
-    "التوزيعية",
-    "développer",
-    "developper",
-    "distributivité",
-    "distributivite",
     "distributive",
-    "nachr",
-    "expand"
+    "expand",
+    "distributive property"
   ],
   "answer": {
-    "understood": {
-      "topic": "النشر والخاصية التوزيعية (La distributivité)",
-      "isEducational": true,
-      "clarification": null,
-      "detectedLanguage": "darija"
-    },
-    "title": "الخاصية التوزيعية والنشر",
-    "summary": "النشر هو نحيدو القوسين: k(a + b) = ka + kb. العدد اللي برا القوس كيضرب فكل حد داخل القوس.",
-    "segments": [
-      {
-        "kind": "fact",
-        "text": "لكل أعداد k و a و b عندنا k(a + b) = ka + kb و k(a − b) = ka − kb.",
-        "sourceIds": []
-      },
-      {
-        "kind": "explanation",
-        "text": "فكر فيها بحال توزيع: إلا عطيتي 3 ديال الصناديق، فكل صندوق جوج تفاحات وحبة ليمون، عطيتي 6 تفاحات و 3 ليمونات.",
-        "sourceIds": []
-      },
-      {
-        "kind": "fact",
-        "text": "العملية العكسية للنشر سميتها التعميل (la factorisation).",
-        "sourceIds": []
-      },
-      {
-        "kind": "assumption",
-        "text": "كنفترض بلي كتعرف قواعد الإشارات (ناقص ضرب ناقص كيعطي زائد).",
-        "sourceIds": []
-      }
-    ],
-    "keyConcepts": [
-      "القوس",
-      "الحد",
-      "النشر",
-      "التعميل"
-    ],
-    "connections": [
-      {
-        "concept": "التعميل",
-        "relation": "هو العكس ديال النشر: كنرجعو المجموع لجداء."
-      },
-      {
-        "concept": "المتطابقات الهامة",
-        "relation": "حالات خاصة ديال النشر بحال (a + b)² = a² + 2ab + b²."
-      },
-      {
-        "concept": "حل المعادلات",
-        "relation": "كثير من المعادلات كتحتاج النشر قبل ما نحلوها."
-      }
-    ],
-    "confidence": "high",
-    "caveats": []
-  },
-  "transforms": {
-    "simplify": {
-      "title": "النشر بكلمات ساهلة",
-      "text": "النشر معناه: العدد اللي برا القوس خاصو يسلم على كل واحد داخل القوس. 3(x + 2) كتولي 3x + 6.",
-      "caveats": []
-    },
-    "examples": {
-      "title": "أمثلة",
-      "examples": [
-        {
-          "title": "الحانوت",
-          "body": "شريتي 4 ديال الدفاتر وكل دفتر فيه 10 دراهم للدفتر و 2 دراهم للغلاف: 4(10 + 2) = 40 + 8 = 48 درهم."
-        },
-        {
-          "title": "تعبير جبري",
-          "body": "5(2x − 1) = 10x − 5."
-        }
-      ],
-      "caveats": []
-    },
-    "quiz": {
-      "title": "اختبر راسك: النشر",
-      "questions": [
-        {
-          "question": "شنو هو نشر 2(x + 4)؟",
-          "choices": [
-            {
-              "id": "a",
-              "text": "2x + 4"
-            },
-            {
-              "id": "b",
-              "text": "2x + 8"
-            },
-            {
-              "id": "c",
-              "text": "x + 8"
-            }
-          ],
-          "correctChoiceId": "b",
-          "explanation": "2 كتضرب فـ x و فـ 4."
-        },
-        {
-          "question": "شنو هو نشر −3(x − 2)؟",
-          "choices": [
-            {
-              "id": "a",
-              "text": "−3x − 6"
-            },
-            {
-              "id": "b",
-              "text": "−3x + 6"
-            },
-            {
-              "id": "c",
-              "text": "3x + 6"
-            }
-          ],
-          "correctChoiceId": "b",
-          "explanation": "ناقص ضرب ناقص كيعطي زائد: −3 × −2 = +6."
-        },
-        {
-          "question": "شنو هي العملية العكسية للنشر؟",
-          "choices": [
-            {
-              "id": "a",
-              "text": "التعميل"
-            },
-            {
-              "id": "b",
-              "text": "القسمة"
-            },
-            {
-              "id": "c",
-              "text": "الجمع"
-            }
-          ],
-          "correctChoiceId": "a",
-          "explanation": "التعميل كيرجع المجموع لجداء."
-        }
-      ],
-      "caveats": []
-    }
-  },
-  "answerEn": {
     "understood": {
       "topic": "Expanding and the distributive property",
       "isEducational": true,
@@ -205,7 +60,7 @@
     "confidence": "high",
     "caveats": []
   },
-  "transformsEn": {
+  "transforms": {
     "simplify": {
       "title": "Expanding in simple words",
       "text": "Expanding means the number outside the brackets has to say hello to everyone inside. 3(x + 2) becomes 3x + 6.",

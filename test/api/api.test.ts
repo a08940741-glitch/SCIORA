@@ -67,7 +67,7 @@ test("live-failure-not-replaced-by-demo: provider error → error response, no l
 
 test("demo unknown topic → 404 not_in_demo", async () => {
   const { app } = await makeApp();
-  const { res, body } = await learn(app, "شكون ربح كاس العالم؟");
+  const { res, body } = await learn(app, "Who won the World Cup?");
   assert.equal(res.statusCode, 404);
   assert.equal(body.error, "not_in_demo");
 });
@@ -224,7 +224,7 @@ test("short_text uncertain: explained, does not count toward estimate, escalatio
   assert.equal(body.result.verdict, "uncertain");
   assert.equal(body.result.score, null);
   assert.equal(body.result.countsTowardEstimate, false);
-  assert.match(body.result.uncertaintyReason, /ما قدرش يتأكد من/);
+  assert.match(body.result.uncertaintyReason, /SCIORA could not determine/);
   assert.equal(p.judgeCalls.length, 1);
 });
 
@@ -250,7 +250,7 @@ test("grading failure: 503, then different answer → 409 answer_locked, same an
   assert.equal(a.res.statusCode, 503);
   assert.match(a.body.message, /NOT graded/);
   fail = false;
-  const b = await grade(app, l.exerciseSet.token, "q4", "جواب آخر مختلف");
+  const b = await grade(app, l.exerciseSet.token, "q4", "A different answer");
   assert.equal(b.res.statusCode, 409);
   assert.equal(b.body.error, "answer_locked");
   const c = await grade(app, l.exerciseSet.token, "q4", STUDENT_ANSWER);
@@ -271,7 +271,7 @@ test("concurrent-20-requests-one-grade: 20 simultaneous different answers → gr
   const { body: l } = await learn(app);
   const token = l.exerciseSet.token;
 
-  const pending = Array.from({ length: 20 }, (_, i) => grade(app, token, "q4", i === 0 ? STUDENT_ANSWER : `جواب رقم ${i}`));
+  const pending = Array.from({ length: 20 }, (_, i) => grade(app, token, "q4", i === 0 ? STUDENT_ANSWER : `Answer number ${i}`));
   // Let all requests reach the server before the grader finishes.
   await new Promise((r) => setTimeout(r, 50));
   release();
@@ -287,7 +287,7 @@ test("concurrent-20-requests-one-grade: 20 simultaneous different answers → gr
   // after-done-all-return-original
   const original = ok[0]!.body.result;
   for (let i = 0; i < 3; i++) {
-    const again = await grade(app, token, "q4", `محاولة ${i}`);
+    const again = await grade(app, token, "q4", `Another attempt ${i}`);
     assert.equal(again.res.statusCode, 409);
     assert.equal(again.body.error, "already_graded");
     assert.equal(again.body.result.verdict, original.verdict);
@@ -439,10 +439,77 @@ test("english demo flow: /api/learn in English → English lesson; rule and writ
   assert.equal(ARABIC.test(q3.body.result.feedback), false);
 });
 
-test("health (demo): English titles are listed for every demo topic and claim", async () => {
+test("health (demo): every demo topic and claim title is English (no bilingual fields)", async () => {
   const { app } = await makeApp();
   const b = (await app.inject({ url: "/api/health" })).json() as any;
-  assert.ok(b.demoTopics.every((t: any) => typeof t.topicEn === "string"));
-  assert.ok(b.knowledge.demoTopics.every((t: any) => typeof t.topicEn === "string"));
-  assert.ok(b.evidence.demoClaims.every((c: any) => typeof c.claimEn === "string"));
+  const titles = [...b.demoTopics.map((t: any) => t.topic), ...b.knowledge.demoTopics.map((t: any) => t.topic), ...b.evidence.demoClaims.map((c: any) => c.claim)];
+  assert.equal(titles.length, 15);
+  assert.ok(titles.every((t: string) => /^[\x20-\x7E]+$/.test(t)), titles.join(" | "));
+  assert.ok([...b.demoTopics, ...b.knowledge.demoTopics].every((t: any) => !("topicEn" in t)));
+});
+
+// ============================================================ English-only policy (HTTP)
+
+test("english-only: non-English questions/claims get 422 with the exact notice on every AI endpoint, before any AI call or budget use", async () => {
+  const p = new StubLiveProvider();
+  const { app } = await makeApp({ provider: p, env: { SCIORA_DAILY_LIMIT: "1" } });
+  const NOTICE = "SCIORA currently supports English only. Please submit your question in English to continue.";
+  const cases: [string, object][] = [
+    ["/api/learn", { question: "شنو هو التركيب الضوئي؟" }],
+    ["/api/learn", { question: "Qu'est-ce que la photosynthèse ?" }],
+    ["/api/knowledge/query", { question: "chno howa tarkib daw2i" }],
+    ["/api/knowledge/transform", { mode: "simplify", content: { topic: "التركيب الضوئي", summary: "النباتات كتصاوب الماكلة", points: [] } }],
+    ["/api/evidence/analyze", { claim: "الما كيغلي ف 100 درجة فكل بلاصة" }],
+  ];
+  for (const [url, payload] of cases) {
+    const r = await app.inject({ method: "POST", url, payload });
+    assert.equal(r.statusCode, 422, url);
+    assert.deepEqual(r.json(), { error: "english_only", message: NOTICE }, url);
+  }
+  // The daily cap (1) was not consumed by the rejected requests: an English lesson still works.
+  const { res } = await learn(app, "What is photosynthesis?");
+  assert.equal(res.statusCode, 200);
+});
+
+test("english-only: a non-English WRITTEN answer is not graded and does not consume the attempt; English then grades normally", async () => {
+  const p = new StubLiveProvider(async () => allMet());
+  const { app } = await makeApp({ provider: p });
+  const { body: l } = await learn(app);
+  const token = l.exerciseSet.token;
+  const ar = await grade(app, token, "q4", "النبتة كتستعمل الضو ديال الشمس");
+  assert.equal(ar.res.statusCode, 422);
+  assert.equal(ar.body.error, "english_only");
+  assert.equal(p.judgeCalls.length, 0, "no AI call for a rejected answer");
+  const en = await grade(app, token, "q4", STUDENT_ANSWER);
+  assert.equal(en.res.statusCode, 200, "attempt was not consumed by the rejected answer");
+  assert.equal(en.body.result.verdict, "correct");
+});
+
+test("english-only: rule-graded answers are never language-checked (numbers, expressions, choices)", async () => {
+  const { app } = await makeApp({ provider: new StubLiveProvider() });
+  const { body: l } = await learn(app);
+  const token = l.exerciseSet.token;
+  assert.equal((await grade(app, token, "q1", "a")).body.result.verdict, "correct");
+  assert.equal((await grade(app, token, "q2", "٠٫٥")).body.result.verdict, "correct", "digits in another script are still read as numbers");
+  assert.equal((await grade(app, token, "q3", "2(x+1)")).body.result.verdict, "correct");
+});
+
+test("english-only: every demo AI response through HTTP is English (lesson, knowledge answer, transforms, evidence)", async () => {
+  const { findNonEnglishOutput } = await import("../../src/domain/english-only.ts");
+  const { app } = await makeApp();
+  const post = async (url: string, payload: object) => (await app.inject({ method: "POST", url, payload })).json();
+  for (const q of ["What is photosynthesis?", "Explain the Pythagorean theorem", "How do I expand 3(x+2)?", "What is inertia?", "What is the water cycle?"]) {
+    const l = await post("/api/learn", { question: q });
+    assert.equal(findNonEnglishOutput(l.lesson), null, q);
+    const k = await post("/api/knowledge/query", { question: q });
+    assert.equal(findNonEnglishOutput(k.answer), null, q);
+    for (const mode of ["simplify", "examples", "quiz"]) {
+      const t = await post("/api/knowledge/transform", { mode, content: { topic: k.answer.title, summary: k.answer.summary, points: [] } });
+      assert.equal(findNonEnglishOutput(t.result), null, `${q} / ${mode}`);
+    }
+  }
+  for (const claim of ["The Sun orbits the Earth", "Water boils at 100 degrees everywhere", "Mathematics is the hardest school subject", "It will rain tomorrow", "Pythagoras works for every triangle"]) {
+    const e = await post("/api/evidence/analyze", { claim });
+    assert.equal(findNonEnglishOutput({ understood: e.understood, subClaims: e.subClaims, caveats: e.caveats }), null, claim);
+  }
 });

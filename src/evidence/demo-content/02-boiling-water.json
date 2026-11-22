@@ -2,44 +2,11 @@
   "id": "boiling-water",
   "reviewed": false,
   "matchKeywords": [
-    "كيغلي",
-    "يغلي",
-    "100 درجة",
-    "100 °c",
-    "bout à 100",
     "boils at 100",
-    "kayghli"
+    "boiling point",
+    "boils at 100 degrees"
   ],
   "analysis": {
-    "understood": {
-      "claimRestated": "الما كيغلي ديما ف 100 درجة فكل بلاصة.",
-      "detectedLanguage": "darija",
-      "isAnalyzable": true,
-      "clarification": null
-    },
-    "subClaims": [
-      {
-        "id": "c1",
-        "text": "الما كيغلي ف 100 درجة سيلسيوس.",
-        "type": "factual",
-        "evidence": [],
-        "missingEvidence": "مرجع فيزيائي كيعطي درجة غليان الما والضغط اللي تقاسات فيه.",
-        "backgroundNote": "المعروف أن الما الصافي كيغلي تقريبا ف 100 درجة تحت الضغط الجوي العادي (فمستوى البحر). معلومة عامة، ماشي دليل."
-      },
-      {
-        "id": "c2",
-        "text": "هادشي صحيح فكل بلاصة (حتى فالجبال).",
-        "type": "factual",
-        "evidence": [],
-        "missingEvidence": "قياسات ديال درجة الغليان فارتفاعات مختلفة، ولا مرجع على العلاقة بين الضغط ودرجة الغليان.",
-        "backgroundNote": "فالأماكن العالية الضغط كيكون أقل، والما كيغلي فدرجة أقل من 100. هادي ملاحظة عامة، ماشي دليل، وكتبين علاش جزء \"فكل بلاصة\" خاصو يتحقق منو بوحدو."
-      }
-    ],
-    "caveats": [
-      "هاد الادعاء فيه جوج أجزاء: درجة الغليان، و\"فكل بلاصة\". الجزء الثاني هو اللي كيحتاج تدقيق."
-    ]
-  },
-  "analysisEn": {
     "understood": {
       "claimRestated": "Water always boils at 100 degrees everywhere.",
       "detectedLanguage": "en",

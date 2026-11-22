@@ -2,36 +2,11 @@
   "id": "rain-tomorrow",
   "reviewed": false,
   "matchKeywords": [
-    "غدا غادي تشتا",
-    "غادي تطيح الشتا",
-    "il va pleuvoir demain",
     "it will rain tomorrow",
-    "ghda ghadi tchta",
     "rain in rabat tomorrow",
     "rain tomorrow"
   ],
   "analysis": {
-    "understood": {
-      "claimRestated": "غدا غادي تشتا فالرباط.",
-      "detectedLanguage": "darija",
-      "isAnalyzable": true,
-      "clarification": null
-    },
-    "subClaims": [
-      {
-        "id": "c1",
-        "text": "غدا غادي تشتا فالرباط.",
-        "type": "prediction",
-        "evidence": [],
-        "missingEvidence": "توقعات رسمية ديال الأرصاد الجوية، ومن بعد ملاحظة الطقس الحقيقي نهار الغد.",
-        "backgroundNote": "التوقعات الجوية كتعطي احتمالات، ماشي يقين. ماشي دليل."
-      }
-    ],
-    "caveats": [
-      "هادا توقع على المستقبل؛ ما يمكنش يتحقق منو دابا."
-    ]
-  },
-  "analysisEn": {
     "understood": {
       "claimRestated": "It will rain in Rabat tomorrow.",
       "detectedLanguage": "en",

@@ -21,7 +21,7 @@ export interface KnowledgeAnswerInput {
 }
 
 export interface KnowledgeProvider {
-  readonly name: "anthropic" | "demo";
+  readonly name: "anthropic" | "groq" | "demo";
   readonly simulated: boolean;
   readonly models: { learn: string; fast: string } | null;
   answer(input: KnowledgeAnswerInput): Promise<{ answer: GeneratedKnowledgeAnswer; meta: KnowledgeMeta; notices?: NoticeCode[] }>;
